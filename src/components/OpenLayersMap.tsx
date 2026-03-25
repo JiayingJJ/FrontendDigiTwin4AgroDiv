@@ -31,7 +31,7 @@ const OpenLayersMap = () => {
       const coor = point?.getCoordinates();
       console.log(coor[0][0])
 
-      olMap?.getView().setCenter(coor[0][0]);
+      olMap?.getView().setCenter(coor[0][10]);
         console.log(features)
         console.log(features)
         

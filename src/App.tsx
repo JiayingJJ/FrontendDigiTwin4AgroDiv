@@ -1,7 +1,9 @@
+import OpenLayersMap from "./components/OpenLayersMap"
+
 function App() {
 
   return (
-   <>Test</>
+     <OpenLayersMap/>
   )
 }
 

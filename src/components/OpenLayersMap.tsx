@@ -94,7 +94,7 @@ const OpenLayersMap = () => {
                 console.log("features: ", features)
                 const stadt = features
                     .filter((feature) =>
-                        feature.values_.GEN.toLowerCase().includes(userInfo)
+                        feature.values_.GEN.toLowerCase().includes(userInfo) || feature.values_.destatis.zip === userInfo
                     )
                     .map((feature) => feature
                     );

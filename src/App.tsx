@@ -5,6 +5,9 @@ function App() {
     <>
       <div
         className="flex flex-col items-center justify-center w-screen h-screen space-y-3"
+        style={{
+          background: "#F8F4E3"
+        }}
       >
         <Crop />
         <OpenLayersMap />

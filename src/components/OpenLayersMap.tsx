@@ -35,6 +35,13 @@ import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import RegularShape from 'ol/style/RegularShape';
 import * as turf from '@turf/turf';
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    AlertAction
+} from "@/components/ui/alert"
 const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
@@ -150,6 +157,10 @@ const OpenLayersMap = () => {
         console.log(ortInfoRef.current?.value)
         if (ortInfoRef.current?.value !== "") {
             getUserGeo(ortInfoRef.current?.value)
+        } else {
+            setAlertTitle("Fehlende Informationen")
+            setAlertMessage("Bitte die Ortname oder ein Postleitzahl geben.")
+            setShowAlert(true)
         }
     }
     let positionFeature = new Feature();
@@ -182,9 +193,24 @@ const OpenLayersMap = () => {
         });
         olMap?.addLayer(positionLayer)
     }
+    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [alertTitle, setAlertTitle] = useState<boolean>(false);
+    const [alertMessage, setAlertMessage] = useState<boolean>(false);
 
     return <>
-        <Card style={{ height: "80vh", width: "70vw" }}>
+        {showAlert && <Alert className="max-w-md">
+            <AlertTitle>{alertTitle}</AlertTitle>
+            <AlertDescription>
+                {alertMessage}
+            </AlertDescription>
+            <AlertAction>
+                <IoMdCloseCircleOutline style={{
+                    display: "flex",
+                }} onClick={() => setShowAlert(false)} />
+            </AlertAction>
+        </Alert>}
+
+        <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#475d5b" }}>
             <CardHeader>
                 <CardTitle>Map</CardTitle>
                 <div style={{
@@ -192,14 +218,15 @@ const OpenLayersMap = () => {
                     justifyContent: "end",
                     alignItems: "center"
                 }}>
-                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} />
+                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{color: "#f2f7f5"}}/>
 
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <FaLocationArrow size={25} style={{
                                 padding: "1px",
                                 marginLeft: "10px",
-                                marginRight: "10px"
+                                marginRight: "10px",
+                                color: "#faae2b"
 
                             }} onClick={handleClick} />
                         </TooltipTrigger>
@@ -212,7 +239,8 @@ const OpenLayersMap = () => {
                         <TooltipTrigger asChild>
                             <FaLocationDot style={{
                                 padding: "1px",
-                                marginRight: "10px"
+                                marginRight: "10px",
+                                color: "#fa5246"
 
                             }} size={25} onClick={getUserLocation} />
                         </TooltipTrigger>
@@ -232,6 +260,8 @@ const OpenLayersMap = () => {
                 }} >
             </CardContent>
         </Card>
+
+
     </>
 
 };

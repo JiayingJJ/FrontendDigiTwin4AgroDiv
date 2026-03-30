@@ -1,6 +1,5 @@
 import Crop from "./components/Crop"
 import OpenLayersMap from "./components/OpenLayersMap"
-
 function App() {
   return (
     <>

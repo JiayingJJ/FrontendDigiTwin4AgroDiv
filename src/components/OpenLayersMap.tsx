@@ -13,7 +13,15 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
+import Geolocation from 'ol/Geolocation.js';
+import { FaLocationArrow } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
 const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
@@ -118,8 +126,43 @@ const OpenLayersMap = () => {
         <Card style={{ height: "80vh", width: "70vw" }}>
             <CardHeader>
                 <CardTitle>Map</CardTitle>
-                <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} />
-                <Button onClick={handleClick}>Search</Button>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    alignItems: "center"
+                }}>
+                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} />
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <FaLocationArrow size={25} style={{
+                                padding: "1px",
+                                marginLeft: "10px",
+                                marginRight: "10px"
+
+                            }} onClick={handleClick} />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Suchen
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <FaLocationDot style={{
+                                padding: "1px",
+                                marginRight: "10px"
+
+                            }} size={25} onClick={() => console.log("Get User Location")} />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            User Location
+                        </TooltipContent>
+                    </Tooltip>
+
+
+
+                </div>
             </CardHeader>
             <CardContent ref={mapDivRef}
                 style={{ height: "80vh", width: "70vw" }}

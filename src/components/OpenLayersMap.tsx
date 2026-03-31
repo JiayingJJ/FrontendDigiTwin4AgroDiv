@@ -8,7 +8,7 @@ import TileLayer from 'ol/layer/Tile';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import MousePosition from 'ol/control/MousePosition.js';
 import Geolocation from 'ol/Geolocation.js';
-
+import VectorImageLayer from 'ol/layer/VectorImage.js';
 import { Point } from 'ol/geom';
 import CircleStyle from 'ol/style/Circle';
 import VectorLayer from 'ol/layer/Vector';
@@ -99,10 +99,21 @@ const OpenLayersMap = () => {
         setOlMap(map)
         getGeoDeu(map)
         console.log(map)
+        map.addLayer(vectorLayer)
         return () => map.setTarget(undefined);
     }, [])
 
+    olMap?.on('click', (e) => {
+        console.log(e)
+        const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
+        console.log(feature)
+        console.log(feature?.getKeys())
 
+    })
+    olMap?.on('pointermove', (event) => {
+        const hit = olMap.hasFeatureAtPixel(event.pixel);
+        olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+    });
     const layers = {
         standard: new TileLayer({
             source: new OSM(),
@@ -136,6 +147,27 @@ const OpenLayersMap = () => {
                 olMap?.addLayer(layers["standard"]);
         }
     }
+
+    const vectorLayer = new VectorLayer({
+        source: new VectorSource({
+            url: "./data/test.geojson",
+            format: new GeoJSON()
+        }),
+        visible: true,
+        style: new Style({
+            image: new Circle({
+                radius: 8,
+                fill: new Fill({ color: 'red' }),
+                stroke: new Stroke({ color: 'red', width: 2 }),
+            }),
+            stroke: new Stroke({
+                color: 'blue',
+                width: 1,
+                lineDash: [30, 10],
+            }),
+        }),
+    });
+
     const getOrtCentroid = (map: Map, feature: Feature) => {
         const coordinates = feature.getGeometry().getCoordinates();
         console.log(coordinates)
@@ -216,6 +248,7 @@ const OpenLayersMap = () => {
     })
     const getUserLocation = () => {
         console.log("Get User Location")
+        console.log(olMap?.getLayers())
         const geolocation = new Geolocation({
             projection: olMap?.getView().getProjection(),
             tracking: true,
@@ -230,11 +263,14 @@ const OpenLayersMap = () => {
             olMap?.getView().setZoom(17)
         });
         console.log(geolocation)
-        console.log(geolocation.getPosition())
         geolocation.on('error', function (evt) {
             window.console.log(evt.message);
         });
-        olMap?.addLayer(positionLayer)
+        const layers = olMap?.getLayers().getArray();
+        const exists = layers.includes(positionLayer);
+        if (!exists) {
+            olMap?.addLayer(positionLayer)
+        }
     }
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [alertTitle, setAlertTitle] = useState<string>("");

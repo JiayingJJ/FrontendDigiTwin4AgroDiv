@@ -48,7 +48,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import * as turf from '@turf/turf';
 // Components
 import MapActions from './MapActions';
-
+import TulpePic from '../assets/Tulpe.jpg'
 const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
@@ -103,10 +103,35 @@ const OpenLayersMap = () => {
         return () => map.setTarget(undefined);
     }, [])
 
+    const newStyle = [new Style({
+        stroke: new Stroke({
+            color: 'blue',
+            width: 1,
+            lineDash: [30, 10],
+        }),
+        fill: new Fill({
+            color: 'rgba(0, 255, 0, 0.3)',
+        }),
+
+    }), new Style({
+        image: new Icon({
+            src: TulpePic,
+            scale: 0.01,
+            anchor: [0.5, 0.5],
+        }),
+        geometry: (feature) => {
+            return feature?.getGeometry().getInteriorPoint();
+        },
+    })
+    ]
+
     olMap?.on('click', (e) => {
         console.log(e)
         const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
         console.log(feature)
+        if (feature) {
+            feature.setStyle(newStyle)
+        }
         console.log(feature?.getKeys())
 
     })
@@ -154,18 +179,44 @@ const OpenLayersMap = () => {
             format: new GeoJSON()
         }),
         visible: true,
-        style: new Style({
-            image: new Circle({
-                radius: 8,
-                fill: new Fill({ color: 'red' }),
-                stroke: new Stroke({ color: 'red', width: 2 }),
-            }),
-            stroke: new Stroke({
-                color: 'blue',
-                width: 1,
-                lineDash: [30, 10],
-            }),
-        }),
+        style: (feature) => {
+            const geometryType = feature.getGeometry().getType();
+            console.log(geometryType)
+            if (geometryType === 'Point' || geometryType === 'MultiPoint') {
+                return new Style({
+                    image: new Icon({
+                        src: TulpePic,
+                        scale: 0.1,
+                        size: [512, 512],
+                        anchor: [0.5, 1],
+                        width: 32,
+                        height: 32,
+                    }),
+                });
+            }
+            if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
+                return new Style({
+                    stroke: new Stroke({
+                        color: 'blue',
+                        width: 1,
+                        lineDash: [30, 10],
+                    }),
+                });
+            }
+            if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
+                return [new Style({
+                    stroke: new Stroke({
+                        color: 'blue',
+                        width: 1,
+                        lineDash: [30, 10],
+                    }),
+                    fill: new Fill({
+                        color: 'rgba(0, 255, 0, 0.3)',
+                    }),
+                }),
+                ]
+            }
+        }
     });
 
     const getOrtCentroid = (map: Map, feature: Feature) => {
@@ -187,15 +238,15 @@ const OpenLayersMap = () => {
 
     }
     const getMousePosition = () => {
-        const pos = new MousePosition({
-            projection: olMap?.getView().getProjection(),
-            coordinateFormat: ol.coordinate.createStringXY(2)
-        });
-        console.log(pos)
-        olMap?.addControl(pos)
-        console.log(olMap)
-        const testPos = pos.getProperties();
-        console.log(testPos)
+        // const pos = new MousePosition({
+        //     projection: olMap?.getView().getProjection(),
+        //     coordinateFormat: ol.coordinate.createStringXY(2)
+        // });
+        // console.log(pos)
+        // olMap?.addControl(pos)
+        // console.log(olMap)
+        // const testPos = pos.getProperties();
+        // console.log(testPos)
     }
 
     const getUserGeo = (info: string) => {

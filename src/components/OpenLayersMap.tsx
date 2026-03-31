@@ -1,27 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+// OpenLayers
 import 'ol/ol.css';
 import { Feature, Map, View } from 'ol';
-import { OSM } from 'ol/source'
+import { OSM } from 'ol/source';
+import StadiaMaps from 'ol/source/StadiaMaps.js';
 import TileLayer from 'ol/layer/Tile';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import MousePosition from 'ol/control/MousePosition.js';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-
 import Geolocation from 'ol/Geolocation.js';
-import { FaLocationArrow } from "react-icons/fa6";
-import { FaLocationDot } from "react-icons/fa6";
+
 import { Point } from 'ol/geom';
 import CircleStyle from 'ol/style/Circle';
 import VectorLayer from 'ol/layer/Vector';
@@ -34,14 +21,34 @@ import Circle from 'ol/style/Circle';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import RegularShape from 'ol/style/RegularShape';
-import * as turf from '@turf/turf';
-import { IoMdCloseCircleOutline } from "react-icons/io";
+// Shadcn
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import {
     Alert,
     AlertDescription,
     AlertTitle,
     AlertAction
 } from "@/components/ui/alert"
+// Icons
+import { FaLocationArrow } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+// Rest
+import * as turf from '@turf/turf';
+// Components
+import MapActions from './MapActions';
+
 const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
@@ -82,9 +89,7 @@ const OpenLayersMap = () => {
         const map = new Map({
             target: mapDivRef.current as HTMLDivElement,
             layers: [
-                new TileLayer({
-                    source: new OSM()
-                })
+                layers.standard
             ],
             view: new View({
                 center: [0, 0],
@@ -93,9 +98,44 @@ const OpenLayersMap = () => {
         })
         setOlMap(map)
         getGeoDeu(map)
+        console.log(map)
         return () => map.setTarget(undefined);
     }, [])
 
+
+    const layers = {
+        standard: new TileLayer({
+            source: new OSM(),
+        }),
+        outdoors: new TileLayer({
+            source: new StadiaMaps({ layer: 'outdoors' }),
+        }),
+        terrain: new TileLayer({
+            source: new StadiaMaps({ layer: 'stamen_terrain' }),
+        }),
+        watercolor: new TileLayer({
+            source: new StadiaMaps({ layer: 'stamen_watercolor' }),
+        })
+    };
+    const switchLayer = (layerType: string) => {
+        olMap?.getLayers().clear();
+        switch (layerType) {
+            case "standard":
+                olMap?.addLayer(layers["standard"]);
+                break;
+            case "outdoors":
+                olMap?.addLayer(layers["outdoors"]);
+                break;
+            case "stamen_terrain":
+                olMap?.addLayer(layers["terrain"]);
+                break;
+            case "stamen_watercolor":
+                olMap?.addLayer(layers["watercolor"]);
+                break;
+            default:
+                olMap?.addLayer(layers["standard"]);
+        }
+    }
     const getOrtCentroid = (map: Map, feature: Feature) => {
         const coordinates = feature.getGeometry().getCoordinates();
         console.log(coordinates)
@@ -115,9 +155,13 @@ const OpenLayersMap = () => {
 
     }
     const getMousePosition = () => {
-        const pos = new MousePosition();
+        const pos = new MousePosition({
+            projection: olMap?.getView().getProjection(),
+            coordinateFormat: ol.coordinate.createStringXY(2)
+        });
         console.log(pos)
-
+        olMap?.addControl(pos)
+        console.log(olMap)
         const testPos = pos.getProperties();
         console.log(testPos)
     }
@@ -147,13 +191,12 @@ const OpenLayersMap = () => {
                 console.log(point)
 
                 getOrtCentroid(olMap, stadt[0])
-                // olMap?.getView().fit(point, { padding: [170, 170, 170, 170], minResolution: 50 })
             })
             .catch((err) => {
                 console.error('❌ Fehler:', err.message);
             });
     }
-    const handleClick = () => {
+    const getLocation = () => {
         console.log(ortInfoRef.current?.value)
         if (ortInfoRef.current?.value !== "") {
             getUserGeo(ortInfoRef.current?.value)
@@ -194,11 +237,11 @@ const OpenLayersMap = () => {
         olMap?.addLayer(positionLayer)
     }
     const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [alertTitle, setAlertTitle] = useState<boolean>(false);
-    const [alertMessage, setAlertMessage] = useState<boolean>(false);
+    const [alertTitle, setAlertTitle] = useState<string>("");
+    const [alertMessage, setAlertMessage] = useState<string>("");
 
     return <>
-        {showAlert && <Alert className="max-w-md">
+        {showAlert && <Alert className="max-w-md" zIndex="2">
             <AlertTitle>{alertTitle}</AlertTitle>
             <AlertDescription>
                 {alertMessage}
@@ -218,7 +261,7 @@ const OpenLayersMap = () => {
                     justifyContent: "end",
                     alignItems: "center"
                 }}>
-                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{color: "#f2f7f5"}}/>
+                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} />
 
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -228,7 +271,7 @@ const OpenLayersMap = () => {
                                 marginRight: "10px",
                                 color: "#faae2b"
 
-                            }} onClick={handleClick} />
+                            }} onClick={getLocation} />
                         </TooltipTrigger>
                         <TooltipContent>
                             Suchen
@@ -260,8 +303,7 @@ const OpenLayersMap = () => {
                 }} >
             </CardContent>
         </Card>
-
-
+        <MapActions switchLayer={switchLayer} />
     </>
 
 };

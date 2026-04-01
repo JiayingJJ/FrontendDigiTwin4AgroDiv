@@ -49,10 +49,20 @@ import * as turf from '@turf/turf';
 // Components
 import MapActions from './MapActions';
 import TulpePic from '../assets/Tulpe.jpg'
+import ModalShowInfo from './ModalShowInfo';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLayerType } from '../stores/openLayersSlice';
 const OpenLayersMap = () => {
+    const dispatch = useDispatch()
+
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
     const ortInfoRef = useRef('');
+    const geoJSONSource = '/data/deutschland.geojson'
+    const [imageSrc, setImageSrc] = useState<String>(null);
+    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [alertTitle, setAlertTitle] = useState<string>("");
+    const [alertMessage, setAlertMessage] = useState<string>("");
     const baseUserFeatureStyle = new Style({
         image: new CircleStyle({
             radius: 12,
@@ -65,8 +75,22 @@ const OpenLayersMap = () => {
             })
         })
     })
+    const layers = {
+        standard: new TileLayer({
+            source: new OSM(),
+        }),
+        outdoors: new TileLayer({
+            source: new StadiaMaps({ layer: 'outdoors' }),
+        }),
+        terrain: new TileLayer({
+            source: new StadiaMaps({ layer: 'stamen_terrain' }),
+        }),
+        watercolor: new TileLayer({
+            source: new StadiaMaps({ layer: 'stamen_watercolor' }),
+        })
+    };
     const getGeoDeu = (map: Map) => {
-        fetch('/data/sachsen_anhalt.geojson')
+        fetch(`${geoJSONSource}`)
             .then((res) => {
                 console.log('Response Status:', res.status);
                 if (!res.ok) throw new Error(`HTTP ${res.status} - Datei nicht gefunden!`);
@@ -124,12 +148,12 @@ const OpenLayersMap = () => {
         },
     })
     ]
-
     olMap?.on('click', (e) => {
         console.log(e)
         const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
         console.log(feature)
         if (feature) {
+            setImageSrc(TulpePic)
             feature.setStyle(newStyle)
         }
         console.log(feature?.getKeys())
@@ -139,22 +163,12 @@ const OpenLayersMap = () => {
         const hit = olMap.hasFeatureAtPixel(event.pixel);
         olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
     });
-    const layers = {
-        standard: new TileLayer({
-            source: new OSM(),
-        }),
-        outdoors: new TileLayer({
-            source: new StadiaMaps({ layer: 'outdoors' }),
-        }),
-        terrain: new TileLayer({
-            source: new StadiaMaps({ layer: 'stamen_terrain' }),
-        }),
-        watercolor: new TileLayer({
-            source: new StadiaMaps({ layer: 'stamen_watercolor' }),
-        })
-    };
+    // dispatch({ type: 'smartSlide/setPptxFile', payload: null });
+
     const switchLayer = (layerType: string) => {
         olMap?.getLayers().clear();
+        // dispatch({ type: 'openLayers/setLayerType', layerType })
+
         switch (layerType) {
             case "standard":
                 olMap?.addLayer(layers["standard"]);
@@ -251,7 +265,7 @@ const OpenLayersMap = () => {
 
     const getUserGeo = (info: string) => {
         const userInfo = info.toLowerCase();
-        fetch('/data/sachsen_anhalt.geojson')
+        fetch(`${geoJSONSource}`)
             .then((res) => {
                 console.log('Response Status:', res.status);
                 if (!res.ok) throw new Error(`HTTP ${res.status} - Datei nicht gefunden!`);
@@ -265,7 +279,7 @@ const OpenLayersMap = () => {
                 console.log("features: ", features)
                 const stadt = features
                     .filter((feature) =>
-                        feature.values_.GEN.toLowerCase().includes(userInfo) || feature.values_.destatis.zip === userInfo
+                        feature.values_.GEN.toLowerCase().includes(userInfo) || feature.values_.destatis?.zip === userInfo
                     )
                     .map((feature) => feature
                     );
@@ -323,9 +337,7 @@ const OpenLayersMap = () => {
             olMap?.addLayer(positionLayer)
         }
     }
-    const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [alertTitle, setAlertTitle] = useState<string>("");
-    const [alertMessage, setAlertMessage] = useState<string>("");
+
 
     return <>
         {showAlert && <Alert className="max-w-md" zIndex="2">
@@ -391,6 +403,7 @@ const OpenLayersMap = () => {
             </CardContent>
         </Card>
         <MapActions switchLayer={switchLayer} />
+        <ModalShowInfo imageSrc={imageSrc} />
     </>
 
 };

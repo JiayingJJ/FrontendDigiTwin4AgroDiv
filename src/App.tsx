@@ -10,6 +10,7 @@ function App() {
         }}
       >
         <Crop />
+
         <OpenLayersMap />
       </div>
     </>

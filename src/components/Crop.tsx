@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@chakra-ui/react'
+
 function Crop() {
 
     const fetchWithLabel = async() => {

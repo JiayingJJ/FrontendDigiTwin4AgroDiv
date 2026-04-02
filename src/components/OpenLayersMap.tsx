@@ -323,7 +323,7 @@ const OpenLayersMap = () => {
     }
     return <>
         {alertInfo.showAlert &&
-            <Alert status={alertInfo.alertStatus}>
+            <Alert status={alertInfo.alertStatus} width= "auto">
                 <AlertIcon />
                 <Box>
                     <AlertTitle>{alertInfo.alertTitle}</AlertTitle>
@@ -354,23 +354,26 @@ const OpenLayersMap = () => {
                 }}>
                     <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} />
 
-                    <Tooltip>
-                        <FaLocationArrow size={25} style={{
-                            padding: "1px",
-                            marginLeft: "10px",
-                            marginRight: "10px",
-                            color: "#faae2b"
-
-                        }} onClick={getLocation} />
+                    <Tooltip label="Suchen" placement='top' hasArrow>
+                        <Box>
+                            <FaLocationArrow size={25} style={{
+                                padding: "1px",
+                                marginLeft: "10px",
+                                marginRight: "10px",
+                                color: "#faae2b"
+                            }} onClick={getLocation} />
+                        </Box> 
                     </Tooltip>
 
-                    <Tooltip>
-                        <FaLocationDot style={{
-                            padding: "1px",
-                            marginRight: "10px",
-                            color: "#fa5246"
+                    <Tooltip label="User Location" placement='top' hasArrow>
 
-                        }} size={25} onClick={getUserLocation} />
+                        <Box>
+                            <FaLocationDot style={{
+                                padding: "1px",
+                                marginRight: "10px",
+                                color: "#fa5246"
+                            }} size={25} onClick={getUserLocation} />
+                        </Box>
                     </Tooltip>
 
 

@@ -21,25 +21,14 @@ import Circle from 'ol/style/Circle';
 import Icon from 'ol/style/Icon';
 import Text from 'ol/style/Text';
 import RegularShape from 'ol/style/RegularShape';
-// Shadcn
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Tooltip } from '@chakra-ui/react'
 import {
     Alert,
-    AlertDescription,
     AlertTitle,
-    AlertAction
-} from "@/components/ui/alert"
+    AlertDescription,
+} from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
 // Icons
 import { FaLocationArrow } from "react-icons/fa6";
 import { FaLocationDot } from "react-icons/fa6";
@@ -49,9 +38,8 @@ import * as turf from '@turf/turf';
 // Components
 import MapActions from './MapActions';
 import TulpePic from '../assets/Tulpe.jpg'
-import ModalShowInfo from './ModalShowInfo';
+// import ModalShowInfo from './ModalShowInfo';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLayerType } from '../stores/openLayersSlice';
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
 
@@ -163,12 +151,10 @@ const OpenLayersMap = () => {
         const hit = olMap.hasFeatureAtPixel(event.pixel);
         olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
     });
-    // dispatch({ type: 'smartSlide/setPptxFile', payload: null });
 
     const switchLayer = (layerType: string) => {
         olMap?.getLayers().clear();
-        // dispatch({ type: 'openLayers/setLayerType', layerType })
-
+        dispatch({ type: 'openLayers/setLayerType', payload: layerType })
         switch (layerType) {
             case "standard":
                 olMap?.addLayer(layers["standard"]);
@@ -345,16 +331,13 @@ const OpenLayersMap = () => {
             <AlertDescription>
                 {alertMessage}
             </AlertDescription>
-            <AlertAction>
-                <IoMdCloseCircleOutline style={{
-                    display: "flex",
-                }} onClick={() => setShowAlert(false)} />
-            </AlertAction>
+            <IoMdCloseCircleOutline style={{
+                display: "flex",
+            }} onClick={() => setShowAlert(false)} />
         </Alert>}
 
         <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#475d5b" }}>
             <CardHeader>
-                <CardTitle>Map</CardTitle>
                 <div style={{
                     display: "flex",
                     justifyContent: "end",
@@ -363,47 +346,37 @@ const OpenLayersMap = () => {
                     <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} />
 
                     <Tooltip>
-                        <TooltipTrigger asChild>
-                            <FaLocationArrow size={25} style={{
-                                padding: "1px",
-                                marginLeft: "10px",
-                                marginRight: "10px",
-                                color: "#faae2b"
+                        <FaLocationArrow size={25} style={{
+                            padding: "1px",
+                            marginLeft: "10px",
+                            marginRight: "10px",
+                            color: "#faae2b"
 
-                            }} onClick={getLocation} />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            Suchen
-                        </TooltipContent>
+                        }} onClick={getLocation} />
                     </Tooltip>
 
                     <Tooltip>
-                        <TooltipTrigger asChild>
-                            <FaLocationDot style={{
-                                padding: "1px",
-                                marginRight: "10px",
-                                color: "#fa5246"
+                        <FaLocationDot style={{
+                            padding: "1px",
+                            marginRight: "10px",
+                            color: "#fa5246"
 
-                            }} size={25} onClick={getUserLocation} />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            User Location
-                        </TooltipContent>
+                        }} size={25} onClick={getUserLocation} />
                     </Tooltip>
 
 
 
                 </div>
             </CardHeader>
-            <CardContent ref={mapDivRef}
+            <CardBody ref={mapDivRef}
                 style={{ height: "80vh", width: "70vw" }}
                 onClick={() => {
                     getMousePosition()
                 }} >
-            </CardContent>
+            </CardBody>
         </Card>
         <MapActions switchLayer={switchLayer} />
-        <ModalShowInfo imageSrc={imageSrc} />
+        {/* <ModalShowInfo imageSrc={imageSrc} /> */}
     </>
 
 };

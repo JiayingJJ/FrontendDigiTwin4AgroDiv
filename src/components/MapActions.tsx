@@ -6,12 +6,7 @@ import { BsWater } from "react-icons/bs";
 import { FaLayerGroup } from "react-icons/fa";
 import { MdCameraOutdoor } from "react-icons/md";
 import { MdTerrain } from "react-icons/md";
-// Shadcn
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip } from '@chakra-ui/react'
 
 
 type Props = {
@@ -34,17 +29,13 @@ const MapActions = ({ switchLayer }: Props) => {
       <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => console.log("click")} />
       {layerButtons.map(({ icon: Icon, layerType, layerTooltip }) => (
         <Tooltip key={`${layerType}-tooltip`}>
-          <TooltipTrigger asChild>
             <Icon
               key={layerType}
               style={{ padding: "5px", margin: "5px" }}
               size="30"
               onClick={() => switchLayer(layerType)}
             />
-          </TooltipTrigger>
-          <TooltipContent>
             {layerTooltip}
-          </TooltipContent>
         </Tooltip>
       ))}
     </div>

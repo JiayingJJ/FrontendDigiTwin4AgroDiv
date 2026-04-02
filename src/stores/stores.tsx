@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import OpenLayersMapReducer from '../stores/openLayersSlice';
+import PlantInfoReducer from '../stores/plantInfoSlice';
+import AlertInfoReducer from '../stores/alertInfoSlice';
 const store = configureStore({
     reducer: {
         openlayers: OpenLayersMapReducer,
+        plantInfo: PlantInfoReducer,
+        alertInfo: AlertInfoReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

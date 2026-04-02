@@ -27,12 +27,12 @@ import {
     Alert,
     AlertTitle,
     AlertDescription,
+    AlertIcon
 } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
+import { Input, Box, CloseButton } from '@chakra-ui/react'
 // Icons
 import { FaLocationArrow } from "react-icons/fa6";
 import { FaLocationDot } from "react-icons/fa6";
-import { IoMdCloseCircleOutline } from "react-icons/io";
 // Rest
 import * as turf from '@turf/turf';
 // Components
@@ -42,15 +42,14 @@ import TulpePic from '../assets/Tulpe.jpg'
 import { useSelector, useDispatch } from 'react-redux';
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
-
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
     const ortInfoRef = useRef('');
-    const geoJSONSource = '/data/deutschland.geojson'
-    const [imageSrc, setImageSrc] = useState<String>(null);
-    const [showAlert, setShowAlert] = useState<boolean>(false);
-    const [alertTitle, setAlertTitle] = useState<string>("");
-    const [alertMessage, setAlertMessage] = useState<string>("");
+    const geoJSONSource = '/data/deutschland.geojson';
+    // const smartSlideState = useSelector((state: any) => state.smartSlide);
+    const alertInfo = useSelector((state: any) => state.alertInfo);
+    let positionFeature = new Feature();
+    let accuracyFeature = new Feature();
     const baseUserFeatureStyle = new Style({
         image: new CircleStyle({
             radius: 12,
@@ -141,7 +140,7 @@ const OpenLayersMap = () => {
         const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
         console.log(feature)
         if (feature) {
-            setImageSrc(TulpePic)
+            dispatch({ type: 'plantInfo/setImageSrc', payload: TulpePic })
             feature.setStyle(newStyle)
         }
         console.log(feature?.getKeys())
@@ -284,13 +283,12 @@ const OpenLayersMap = () => {
         if (ortInfoRef.current?.value !== "") {
             getUserGeo(ortInfoRef.current?.value)
         } else {
-            setAlertTitle("Fehlende Informationen")
-            setAlertMessage("Bitte die Ortname oder ein Postleitzahl geben.")
-            setShowAlert(true)
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'warning' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Fehlende Informationen" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte die Ortname oder ein Postleitzahl geben." })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         }
     }
-    let positionFeature = new Feature();
-    let accuracyFeature = new Feature();
 
     const positionLayer = new VectorLayer({
         source: new VectorSource({
@@ -323,18 +321,29 @@ const OpenLayersMap = () => {
             olMap?.addLayer(positionLayer)
         }
     }
-
-
     return <>
-        {showAlert && <Alert className="max-w-md" zIndex="2">
-            <AlertTitle>{alertTitle}</AlertTitle>
-            <AlertDescription>
-                {alertMessage}
-            </AlertDescription>
-            <IoMdCloseCircleOutline style={{
-                display: "flex",
-            }} onClick={() => setShowAlert(false)} />
-        </Alert>}
+        {alertInfo.showAlert &&
+            <Alert status={alertInfo.alertStatus}>
+                <AlertIcon />
+                <Box>
+                    <AlertTitle>{alertInfo.alertTitle}</AlertTitle>
+                    <AlertDescription>
+                        {alertInfo.alertMessage}
+                    </AlertDescription>
+                </Box>
+                <CloseButton
+                    alignSelf='flex-start'
+                    position='relative'
+                    right={-1}
+                    top={-1}
+                    onClick={() => {
+                        dispatch({ type: 'alertInfo/setShowAlert', payload: false })
+                        dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
+                        dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
+                    }
+                    }
+                />
+            </Alert>}
 
         <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#475d5b" }}>
             <CardHeader>

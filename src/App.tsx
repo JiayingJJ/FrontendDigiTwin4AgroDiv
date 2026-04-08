@@ -2,6 +2,7 @@ import OpenLayersMap from "./components/OpenLayersMap"
 import { ChakraProvider } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
 import Crop from "./components/Crop"
+import Login from "./components/Login"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           background: "#F8F4E3"
         }}
       >
+        <Login/>
         <OpenLayersMap />
         <Crop/>
       </Flex>

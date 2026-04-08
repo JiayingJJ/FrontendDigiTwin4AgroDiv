@@ -46,8 +46,6 @@ const OpenLayersMap = () => {
     const [olMap, setOlMap] = useState<Map>();
     const ortInfoRef = useRef('');
     const geoJSONSource = '/data/deutschland.geojson';
-    // const smartSlideState = useSelector((state: any) => state.smartSlide);
-    const alertInfo = useSelector((state: any) => state.alertInfo);
     let positionFeature = new Feature();
     let accuracyFeature = new Feature();
     const baseUserFeatureStyle = new Style({
@@ -322,28 +320,7 @@ const OpenLayersMap = () => {
         }
     }
     return <>
-        {alertInfo.showAlert &&
-            <Alert status={alertInfo.alertStatus} width= "auto">
-                <AlertIcon />
-                <Box>
-                    <AlertTitle>{alertInfo.alertTitle}</AlertTitle>
-                    <AlertDescription>
-                        {alertInfo.alertMessage}
-                    </AlertDescription>
-                </Box>
-                <CloseButton
-                    alignSelf='flex-start'
-                    position='relative'
-                    right={-1}
-                    top={-1}
-                    onClick={() => {
-                        dispatch({ type: 'alertInfo/setShowAlert', payload: false })
-                        dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
-                        dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
-                    }
-                    }
-                />
-            </Alert>}
+        
 
         <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#475d5b" }}>
             <CardHeader>

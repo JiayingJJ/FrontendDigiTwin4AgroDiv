@@ -26,6 +26,10 @@ const Login = () => {
         const data = await response.json();
         if (response.status === 500) {
             console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
             dispatch({ type: 'user/setName', payload: data.Name })
             dispatch({ type: 'user/setEmail', payload: data.Email })

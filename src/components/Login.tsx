@@ -1,24 +1,43 @@
-import { useEffect, useRef, useState } from 'react';
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { VStack, Input, Button, } from '@chakra-ui/react'
-import { RiAdminLine } from "react-icons/ri";
+import { IoIosLogIn } from "react-icons/io";
 const Login = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    const [value, setValue] = useState<string>('')
-    
-    const handleChange = (event: any) => setValue(event.target.value)
-    const createUser = async() => {
-        const data = await fetch(`${apiUrl}/users`, {
+    const dispatch = useDispatch()
+
+    const [valueName, setValueName] = useState<string>('')
+    const [valueEmail, setValueEmail] = useState<string>('')
+
+    const handleChange = (event: any, value) => {
+        if (value === "email") {
+            setValueEmail(event.target.value)
+        } else if (value === "name") {
+            setValueName(event.target.value)
+        }
+    }
+    const createUser = async () => {
+        const response = await fetch(`${apiUrl}/users`, {
             method: "POST",
-            body: JSON.stringify({ name: value }),
+            body: JSON.stringify({ name: valueName, email: valueEmail }),
         })
-        console.log(data)
+        dispatch({ type: 'user.setName', valueName })
+        const data = await response.json();
+        if (response.status === 500) {
+            console.log("Alert Message")
+        } else {
+            dispatch({ type: 'user/setName', payload: data.Name })
+            dispatch({ type: 'user/setEmail', payload: data.Email })
+        }
     }
     return (
         <VStack>
-            <Input placeholder='Username' value={value}
-        onChange={handleChange}/>
-            <Button rightIcon={<RiAdminLine />} colorScheme='teal' variant='outline' onClick={createUser}>
+            <Input placeholder='UserName' value={valueName}
+                onChange={(e) => handleChange(e, "name")} />
+            <Input placeholder='UserEmail' value={valueEmail}
+                onChange={(e) => handleChange(e, "email")} />
+            <Button rightIcon={<IoIosLogIn />} colorScheme='teal' variant='outline' onClick={createUser}>
                 Create User
             </Button>
         </VStack>

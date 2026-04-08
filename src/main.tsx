@@ -1,13 +1,27 @@
+import { ChakraProvider } from '@chakra-ui/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import "./main.css"
 import { Provider } from 'react-redux'
 import store from './stores/stores.tsx'
+import Dashboard from './components/Dashboard.tsx';
+import Login from './components/Login.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}> 
-    <App />
+    <ChakraProvider>
+
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<App />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
+    </ChakraProvider>
   </StrictMode>,
 )

@@ -10,7 +10,7 @@ const Login = () => {
     const [valueName, setValueName] = useState<string>('')
     const [valueEmail, setValueEmail] = useState<string>('')
 
-    const handleChange = (event: any, value) => {
+    const handleChange = (event: any, value: string) => {
         if (value === "email") {
             setValueEmail(event.target.value)
         } else if (value === "name") {

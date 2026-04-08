@@ -3,9 +3,11 @@ import OpenLayersMapReducer from '../stores/openLayersSlice';
 import PlantInfoReducer from '../stores/plantInfoSlice';
 import AlertInfoReducer from '../stores/alertInfoSlice';
 import UserReducer from '../stores/userSlice';
+import PageReducer from '../stores/pageSlice';
 const store = configureStore({
     reducer: {
         user: UserReducer,
+        page: PageReducer,
         openlayers: OpenLayersMapReducer,
         plantInfo: PlantInfoReducer,
         alertInfo: AlertInfoReducer,

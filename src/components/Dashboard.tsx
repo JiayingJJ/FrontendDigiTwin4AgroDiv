@@ -2,17 +2,10 @@ import React, { } from 'react';
 import Crop from "./Crop";
 import OpenLayersMap from "./OpenLayersMap";
 import {
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    useDisclosure,
     Button,
-    Flex,
-    Box
+    Box,
+    HStack,
+    VStack
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -29,7 +22,6 @@ const Dashboard = () => {
     const activePage = useSelector((state: any) => state.page.pageName)
     const alertInfo = useSelector((state: any) => state.alertInfo);
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const rendernPage = () => {
         switch (activePage) {
             case "maps":
@@ -40,18 +32,26 @@ const Dashboard = () => {
                 return <InfoPage />
         }
     }
+
     return (
-        <Flex
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            width="100vw"
-            height="100vh"
-            gap={3}
+        <VStack
+            minH={"100vh"}
+            width={"100%"}
+            flex={1}
+            display="flex"
+            justifyContent="flex-start"
+            data-tour="dashboard-whole-page"
             backgroundColor={"#f8f1e3"}
         >
             {alertInfo.showAlert &&
-                <Alert status={alertInfo.alertStatus} width="auto">
+                <Alert status={alertInfo.alertStatus} width="auto" 
+                    position="fixed"
+                    top="10px"
+                    shadow={"lg"}
+                    zIndex="banner"
+                    pointerEvents="auto"
+                    borderRadius={"5px"}
+                    >
                     <AlertIcon />
                     <Box>
                         <AlertTitle>{alertInfo.alertTitle}</AlertTitle>
@@ -62,8 +62,8 @@ const Dashboard = () => {
                     <CloseButton
                         alignSelf='flex-start'
                         position='relative'
-                        right={-1}
-                        top={-1}
+                        right={-3}
+                        top={-2}
                         onClick={() => {
                             dispatch({ type: 'alertInfo/setShowAlert', payload: false })
                             dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
@@ -72,41 +72,20 @@ const Dashboard = () => {
                         }
                     />
                 </Alert>}
-            <Box
-                minH={"100vh"}
-                width={isOpen ? "100%" : "100%"}
-                flex={isOpen ? 1 : 1}
-                overflowY={isOpen ? 'hidden' : 'scroll'}
-                display="flex"
-                justifyContent="flex-start"
-                data-tour="dashboard-whole-page"
+         
+            <HStack 
+                justifyContent={"space-between"} 
+                width={"100vw"} 
+                padding={"1rem 5vw"} 
+                gap="2rem"
+                backgroundColor="#14342B"
             >
-                <Button colorScheme='teal' onClick={onOpen}>
-                    Menü
-                </Button>
-                <Drawer
-                    isOpen={isOpen}
-                    placement='left'
-                    onClose={onClose}
-                    size='xs'
-                >
-                    <DrawerOverlay />
-                    <DrawerContent>
-                        <DrawerCloseButton />
-                        <DrawerHeader>Menü</DrawerHeader>
-                        <DrawerBody>
-                            <Button onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
-                            <Button onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
-                        </DrawerBody>
+                <Button width="100%" backgroundColor={activePage == "dashboard" ? "#E8871E" : "#F7EDE2"} _hover={{backgroundColor: "#EDB458"}} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
+                <Button width="100%" backgroundColor={activePage == "maps"      ? "#E8871E" : "#F7EDE2"} _hover={{backgroundColor: "#EDB458"}} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
+            </HStack>
 
-                        <DrawerFooter>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
-                {rendernPage()}
-            </Box>
-            {/* <Crop/> */}
-        </Flex>
+            {rendernPage()}
+        </VStack>
     );
 }
 

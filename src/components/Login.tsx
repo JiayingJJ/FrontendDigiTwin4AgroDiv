@@ -1,11 +1,14 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { VStack, Input, Button, } from '@chakra-ui/react'
+import { VStack, Input, Button, Box, } from '@chakra-ui/react'
 import { IoIosLogIn } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const [valueName, setValueName] = useState<string>('')
     const [valueEmail, setValueEmail] = useState<string>('')
@@ -33,16 +36,17 @@ const Login = () => {
         } else {
             dispatch({ type: 'user/setName', payload: data.Name })
             dispatch({ type: 'user/setEmail', payload: data.Email })
+            navigate("/dashboard")
         }
     }
     return (
-        <VStack>
-            <Input placeholder='UserName' value={valueName}
+        <VStack display="flex" justifyContent="center" height={"100%"}>
+            <Input width="400px" borderColor="#60935D" placeholder='Username' value={valueName}
                 onChange={(e) => handleChange(e, "name")} />
-            <Input placeholder='UserEmail' value={valueEmail}
+            <Input width="400px" borderColor="#60935D" placeholder='Email' outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
-            <Button rightIcon={<IoIosLogIn />} colorScheme='teal' variant='outline' onClick={createUser}>
-                Create User
+            <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={createUser}>
+                Sign Up
             </Button>
         </VStack>
 

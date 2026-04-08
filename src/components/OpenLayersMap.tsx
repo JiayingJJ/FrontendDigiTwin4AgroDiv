@@ -322,14 +322,14 @@ const OpenLayersMap = () => {
     return <>
         
 
-        <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#475d5b" }}>
+        <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#60935D" }}>
             <CardHeader>
                 <div style={{
                     display: "flex",
                     justifyContent: "end",
                     alignItems: "center"
                 }}>
-                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} />
+                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} _placeholder={{ color: "#f2f7f5" }} />
 
                     <Tooltip label="Suchen" placement='top' hasArrow>
                         <Box>

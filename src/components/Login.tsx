@@ -21,7 +21,7 @@ const Login = () => {
         }
     }
     const createUser = async () => {
-        const response = await fetch(`${apiUrl}/users`, {
+        const response = await fetch(`${apiUrl}/user`, {
             method: "POST",
             body: JSON.stringify({ name: valueName, email: valueEmail }),
         })
@@ -34,6 +34,26 @@ const Login = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
+            dispatch({ type: 'user/setUserId', payload: data.Id })
+            dispatch({ type: 'user/setName', payload: data.Name })
+            dispatch({ type: 'user/setEmail', payload: data.Email })
+            navigate("/")
+        }
+    }
+    const getUserWithEmail = async() => {
+        const response = await fetch(`${apiUrl}/user/${valueEmail}`, {
+            method: "GET"
+        })
+        const data = await response.json();
+        console.log(data)
+        if (response.status === 500) {
+            console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte valide Informationen geben." })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        } else {
+            dispatch({ type: 'user/setUserId', payload: data.Id })
             dispatch({ type: 'user/setName', payload: data.Name })
             dispatch({ type: 'user/setEmail', payload: data.Email })
             navigate("/dashboard")
@@ -46,7 +66,10 @@ const Login = () => {
             <Input width="400px" borderColor="#60935D" placeholder='Email' outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
             <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={createUser}>
-                Sign Up
+                Register
+            </Button>
+            <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={getUserWithEmail}>
+                Log in
             </Button>
         </VStack>
 

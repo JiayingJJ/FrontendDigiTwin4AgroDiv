@@ -70,16 +70,24 @@ const OpenLayersMap = () => {
         },
     })
     ]
+    const isDrawing = useSelector((state: any) => state.openLayers.drawInteraction)
+    const isDrawingRef = useRef(isDrawing);
+    useEffect(() => {
+        isDrawingRef.current = isDrawing;
+    }, [isDrawing]);
     olMap?.on('click', (e) => {
-        console.log(e)
-        const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
-        if (feature !== undefined) {
-            console.log(feature)
-            dispatch({ type: 'plantInfo/setImageSrc', payload: TulpePic })
-            feature.setStyle(newStyle)
+        console.log(isDrawingRef.current)
+        if (isDrawingRef.current === true) {
+            return
+        } else {
+            console.log(e)
+            const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
+            if (feature !== undefined) {
+                console.log(feature)
+                dispatch({ type: 'plantInfo/setImageSrc', payload: TulpePic })
+                feature.setStyle(newStyle)
+            }
         }
-        console.log(feature?.getKeys())
-
     })
     olMap?.on('pointermove', (event) => {
         const hit = olMap.hasFeatureAtPixel(event.pixel);
@@ -134,7 +142,6 @@ const OpenLayersMap = () => {
 
     const getOrtCentroid = (map: Map, feature: Feature) => {
         const coordinates = feature.getGeometry().getCoordinates();
-        console.log(coordinates)
         const turfPolygon = {
             type: "Feature",
             geometry: {
@@ -143,7 +150,6 @@ const OpenLayersMap = () => {
             }
         };
         const centroid = turf.centroid(turfPolygon);
-        console.log(centroid)
         positionFeature?.setGeometry(new Point(centroid.geometry.coordinates))
         console.log(positionFeature.getGeometry())
         map?.getView().fit(positionFeature.getGeometry(), { padding: [170, 50, 30, 150], minResolution: 50 })

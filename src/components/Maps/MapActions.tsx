@@ -6,11 +6,16 @@ import { MdCameraOutdoor } from "react-icons/md";
 import { MdTerrain } from "react-icons/md";
 import { Tooltip, Box } from '@chakra-ui/react'
 import { Map } from 'ol';
-import DrawMap from './DrawMap';
 import TileLayer from 'ol/layer/Tile';
 import StadiaMaps from 'ol/source/StadiaMaps.js';
 import { OSM } from 'ol/source';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { Draw } from 'ol/interaction';
+import { MdCancel } from "react-icons/md";
+import Snap from 'ol/interaction/Snap.js';
+import { useRef } from 'react';
 
 type Props = {
   olMap: Map
@@ -62,13 +67,71 @@ const MapActions = ({ olMap }: Props) => {
         olMap?.addLayer(layers["standard"]);
     }
   }
+  const drawRef = useRef<Draw>(null)
+  const snapRef = useRef<Snap | null>(null);
+  const sourceRef = useRef<VectorSource>(new VectorSource({ wrapX: false }));
+  const vectorRef = useRef<VectorLayer | null>(null);
+
+  const removeDrawInteraction = () => {
+    if (drawRef.current) {
+      drawRef.current.abortDrawing();
+      drawRef.current.setActive(false);
+      olMap?.removeInteraction(drawRef.current);
+      drawRef.current = null;
+    }
+
+    if (snapRef.current) {
+      olMap?.removeInteraction(snapRef.current);
+      snapRef.current = null;
+    }
+  };
+
+  const addInteractionInMap = () => {
+    removeDrawInteraction();
+    vectorRef.current = new VectorLayer({
+      source: sourceRef.current,
+    });
+    olMap?.addLayer(vectorRef.current);
+    const newDraw = new Draw({
+      source: sourceRef.current,
+      type: 'Polygon'
+    });
+
+    newDraw.on('drawstart', (event) => {
+      console.log('Zeichnen gestartet:', event.feature);
+    });
+
+    newDraw.on('drawend', (event) => {
+      console.log('Gezeichnet:', event.feature.getGeometry()?.getCoordinates());
+      // removeDrawInteraction();
+      // dispatch({ type: 'openLayers/setDrawInteraction', payload: false });
+    });
+
+    newDraw.on('drawabort', () => {
+      console.log('drawabort');
+      // removeDrawInteraction();
+      // dispatch({ type: 'openLayers/setDrawInteraction', payload: false });
+    });
+
+    drawRef.current = newDraw;
+    olMap?.addInteraction(newDraw);
+
+    const newSnap = new Snap({ source: sourceRef.current });
+    snapRef.current = newSnap;
+    olMap?.addInteraction(newSnap);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: "center" }}>
       <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
         console.log("click")
-        return (
-          <DrawMap olMap={olMap} />
-        )
+        dispatch({ type: 'openLayers/setDrawInteraction', payload: true })
+        addInteractionInMap()
+      }} />
+      <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+        console.log("click cancel")
+        dispatch({ type: 'openLayers/setDrawInteraction', payload: false })
+        removeDrawInteraction()
       }} />
       {layerButtons.map(({ icon: Icon, layerType, layerTooltip }) => (
         <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >

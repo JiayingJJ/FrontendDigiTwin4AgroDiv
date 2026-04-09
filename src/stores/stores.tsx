@@ -8,7 +8,7 @@ const store = configureStore({
     reducer: {
         user: UserReducer,
         page: PageReducer,
-        openlayers: OpenLayersMapReducer,
+        openLayers: OpenLayersMapReducer,
         plantInfo: PlantInfoReducer,
         alertInfo: AlertInfoReducer,
     },

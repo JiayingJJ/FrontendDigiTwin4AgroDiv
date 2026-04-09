@@ -1,6 +1,5 @@
 import React, { } from 'react';
-import Crop from "./Crop";
-import OpenLayersMap from "./OpenLayersMap";
+import OpenLayersMap from "./Maps/OpenLayersMap";
 import {
     Button,
     Box,
@@ -17,11 +16,9 @@ import {
 } from '@chakra-ui/react'
 import InfoPage from './InfoPage';
 const Dashboard = () => {
-
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
     const alertInfo = useSelector((state: any) => state.alertInfo);
-
     const rendernPage = () => {
         switch (activePage) {
             case "maps":
@@ -83,7 +80,6 @@ const Dashboard = () => {
                 <Button width="100%" backgroundColor={activePage == "dashboard" ? "#E8871E" : "#F7EDE2"} _hover={{backgroundColor: "#EDB458"}} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
                 <Button width="100%" backgroundColor={activePage == "maps"      ? "#E8871E" : "#F7EDE2"} _hover={{backgroundColor: "#EDB458"}} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
             </HStack>
-
             {rendernPage()}
         </VStack>
     );

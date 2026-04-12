@@ -1,0 +1,84 @@
+import React, { useState } from 'react';
+import {
+    Button,
+    Box,
+    HStack,
+    VStack,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+    Input,
+    RadioGroup,
+    Radio,
+    Select
+} from '@chakra-ui/react'
+import { FaCheck } from "react-icons/fa";
+import { useSelector, useDispatch } from 'react-redux';
+
+const UserTable = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const dispatch = useDispatch()
+    const userInfo = useSelector((state: any) => state.user)
+    const [tableName, setTableName] = useState<String>("");
+
+    const handleChange = (e: any) => {
+        setTableName(e.target.value)
+    }
+
+    const createTable = async () => {
+        const response = await fetch(`${apiUrl}/usertables`, {
+            method: "POST",
+            body: JSON.stringify({ user_id: userInfo.id, name: tableName }),
+        })
+        const data = await response.json();
+        console.log(data)
+    }
+    return (
+        <>
+            <VStack>
+                <FormControl>
+                    <FormLabel>User Name</FormLabel>
+                    <Input placeholder='Name' defaultValue={userInfo.name} />
+                </FormControl>
+
+                <FormControl>
+                    <FormLabel>Email address</FormLabel>
+                    <Input type='email' defaultValue={userInfo.email} />
+                    <FormHelperText>Prüfen, ob Email Address korrekt ist</FormHelperText>
+                </FormControl>
+
+                <FormControl isRequired>
+                    <FormLabel>Tabelle Name</FormLabel>
+                    <Input placeholder='Name' onChange={(e) => handleChange(e)} />
+                </FormControl>
+
+                <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => createTable()}>
+                    Tabelle erstellen
+                </Button>
+
+                {/* <FormControl>
+                    <FormLabel as='legend'>Datenbankformat mit anderen Projektmitglied mitteilen</FormLabel>
+                    <RadioGroup defaultValue='Ja'>
+                        <HStack spacing='24px'>
+                            <Radio value='Ja'>Ja</Radio>
+                            <Radio value='Nein'>Nein</Radio>
+                        </HStack>
+                    </RadioGroup>
+                </FormControl>
+
+                <FormControl>
+                    <FormLabel>Jahreszeit</FormLabel>
+                    <Select placeholder='auswählen'>
+                        <option>Winter</option>
+                        <option>Frühling</option>
+                        <option>Sommer</option>
+                        <option>Herbst</option>
+                    </Select>
+                </FormControl> */}
+            </VStack>
+        </>
+    );
+}
+
+export default UserTable;

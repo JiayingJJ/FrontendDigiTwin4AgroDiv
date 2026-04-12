@@ -15,8 +15,9 @@ import VectorSource from 'ol/source/Vector';
 import { Draw } from 'ol/interaction';
 import { MdCancel } from "react-icons/md";
 import Snap from 'ol/interaction/Snap.js';
-import { useRef } from 'react';
-
+import { useRef, useState } from 'react';
+import { BiShapePolygon } from "react-icons/bi";
+import { TbPoint } from "react-icons/tb";
 type Props = {
   olMap: Map
 };
@@ -86,7 +87,7 @@ const MapActions = ({ olMap }: Props) => {
     }
   };
 
-  const addInteractionInMap = () => {
+  const addInteractionInMap = (type: string) => {
     removeDrawInteraction();
     vectorRef.current = new VectorLayer({
       source: sourceRef.current,
@@ -94,7 +95,7 @@ const MapActions = ({ olMap }: Props) => {
     olMap?.addLayer(vectorRef.current);
     const newDraw = new Draw({
       source: sourceRef.current,
-      type: 'Polygon'
+      type: type
     });
 
     newDraw.on('drawstart', (event) => {
@@ -120,19 +121,45 @@ const MapActions = ({ olMap }: Props) => {
     snapRef.current = newSnap;
     olMap?.addInteraction(newSnap);
   };
-
+  const [selectType, setSelectType] = useState<boolean>(false);
   return (
     <div style={{ display: 'flex', justifyContent: "center" }}>
-      <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-        console.log("click")
-        dispatch({ type: 'openLayers/setDrawInteraction', payload: true })
-        addInteractionInMap()
-      }} />
-      <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-        console.log("click cancel")
-        dispatch({ type: 'openLayers/setDrawInteraction', payload: false })
-        removeDrawInteraction()
-      }} />
+      <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+        <Box>
+          <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+            console.log("click")
+            dispatch({ type: 'openLayers/setDrawInteraction', payload: true })
+            setSelectType(true)
+          }} />
+        </Box>
+      </Tooltip>
+      {selectType &&
+        <Box style={{
+          display: "flex",
+        }}>
+          <Tooltip label={"Ein Punkt hinzufügen"} hasArrow >
+            <Box>
+              <TbPoint style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('Point')} />
+            </Box>
+          </Tooltip>
+          <Tooltip label={"Ein Polygon hinzufügen"} hasArrow >
+            <Box>
+              <BiShapePolygon style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('Polygon')} />
+            </Box>
+          </Tooltip>
+          <Tooltip label={"Abbrechen"} hasArrow >
+            <Box>
+              <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+                console.log("click cancel")
+                dispatch({ type: 'openLayers/setDrawInteraction', payload: false })
+                removeDrawInteraction()
+                setSelectType(false)
+              }} />
+            </Box>
+          </Tooltip>
+        </Box>
+      }
+
       {layerButtons.map(({ icon: Icon, layerType, layerTooltip }) => (
         <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >
           <Box>

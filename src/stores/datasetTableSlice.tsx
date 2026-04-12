@@ -4,12 +4,14 @@ interface DatasetTableState {
     id: string | null;
     name: string | null;
     userId: string | null;
+    tableColumns: [];
 }
 
 const initialState: DatasetTableState = {
     id: null,
     name: null,
     userId: null,
+    tableColumns: [],
 }
 
 const datasetTableSlice = createSlice({
@@ -24,6 +26,9 @@ const datasetTableSlice = createSlice({
         },
         setUserId: (state, action) => {
             state.userId = action.payload;
+        },
+        setTableColumns: (state, action) => {
+            state.tableColumns = action.payload;
         }
     }
 });

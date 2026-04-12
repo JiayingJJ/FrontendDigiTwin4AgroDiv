@@ -4,6 +4,7 @@ import PlantInfoReducer from '../stores/plantInfoSlice';
 import AlertInfoReducer from '../stores/alertInfoSlice';
 import UserReducer from '../stores/userSlice';
 import PageReducer from '../stores/pageSlice';
+import DatasetTableReducer from '../stores/datasetTableSlice';
 const store = configureStore({
     reducer: {
         user: UserReducer,
@@ -11,6 +12,7 @@ const store = configureStore({
         openLayers: OpenLayersMapReducer,
         plantInfo: PlantInfoReducer,
         alertInfo: AlertInfoReducer,
+        datasetTable: DatasetTableReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

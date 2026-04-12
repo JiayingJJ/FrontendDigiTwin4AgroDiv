@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface AlertInfoState {
+interface UserState {
     id: string | null;
     name: string | null;
     email: string | null;
 }
 
-const initialState: AlertInfoState = {
+const initialState: UserState = {
     id: null,
     name: null,
     email: null,

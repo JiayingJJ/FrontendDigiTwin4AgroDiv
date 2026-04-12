@@ -20,19 +20,31 @@ const UserTable = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
     const userInfo = useSelector((state: any) => state.user)
-    const [tableName, setTableName] = useState<String>("");
+    const [tableName, setTableName] = useState<string>("");
 
     const handleChange = (e: any) => {
         setTableName(e.target.value)
     }
 
     const createTable = async () => {
-        const response = await fetch(`${apiUrl}/usertables`, {
+        setTableName("")
+        const response = await fetch(`${apiUrl}/usertable`, {
             method: "POST",
             body: JSON.stringify({ user_id: userInfo.id, name: tableName }),
         })
         const data = await response.json();
         console.log(data)
+        if (response.status === 500) {
+            console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        } else {
+            dispatch({ type: 'datasetTable/setId', payload: data.ID })
+            dispatch({ type: 'datasetTable/setName', payload: data.Name })
+            dispatch({ type: 'datasetTable/setUserId', payload: data.UserID })
+        }
     }
     return (
         <>
@@ -50,7 +62,7 @@ const UserTable = () => {
 
                 <FormControl isRequired>
                     <FormLabel>Tabelle Name</FormLabel>
-                    <Input placeholder='Name' onChange={(e) => handleChange(e)} />
+                    <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
                 </FormControl>
 
                 <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => createTable()}>

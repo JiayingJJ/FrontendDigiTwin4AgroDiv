@@ -34,13 +34,13 @@ const Login = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
-            dispatch({ type: 'user/setUserId', payload: data.Id })
+            dispatch({ type: 'user/setUserId', payload: data.ID })
             dispatch({ type: 'user/setName', payload: data.Name })
             dispatch({ type: 'user/setEmail', payload: data.Email })
             navigate("/")
         }
     }
-    const getUserWithEmail = async() => {
+    const getUserWithEmail = async () => {
         const response = await fetch(`${apiUrl}/user/${valueEmail}`, {
             method: "GET"
         })
@@ -53,7 +53,7 @@ const Login = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte valide Informationen geben." })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
-            dispatch({ type: 'user/setUserId', payload: data.Id })
+            dispatch({ type: 'user/setUserId', payload: data.ID })
             dispatch({ type: 'user/setName', payload: data.Name })
             dispatch({ type: 'user/setEmail', payload: data.Email })
             navigate("/dashboard")

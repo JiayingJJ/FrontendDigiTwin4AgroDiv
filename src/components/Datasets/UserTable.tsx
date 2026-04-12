@@ -68,26 +68,6 @@ const UserTable = () => {
                 <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => createTable()}>
                     Tabelle erstellen
                 </Button>
-
-                {/* <FormControl>
-                    <FormLabel as='legend'>Datenbankformat mit anderen Projektmitglied mitteilen</FormLabel>
-                    <RadioGroup defaultValue='Ja'>
-                        <HStack spacing='24px'>
-                            <Radio value='Ja'>Ja</Radio>
-                            <Radio value='Nein'>Nein</Radio>
-                        </HStack>
-                    </RadioGroup>
-                </FormControl>
-
-                <FormControl>
-                    <FormLabel>Jahreszeit</FormLabel>
-                    <Select placeholder='auswählen'>
-                        <option>Winter</option>
-                        <option>Frühling</option>
-                        <option>Sommer</option>
-                        <option>Herbst</option>
-                    </Select>
-                </FormControl> */}
             </VStack>
         </>
     );

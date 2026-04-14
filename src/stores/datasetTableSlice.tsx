@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 export interface ColumnType {
-    id: number;
+    id: string;
     name: string;
     type: string;
     position: number;

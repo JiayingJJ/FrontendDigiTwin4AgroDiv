@@ -4,6 +4,7 @@ interface DatasetTableState {
     id: string | null;
     name: string | null;
     userId: string | null;
+    tables: [];
     tableColumns: [];
 }
 
@@ -11,6 +12,7 @@ const initialState: DatasetTableState = {
     id: null,
     name: null,
     userId: null,
+    tables: [],
     tableColumns: [],
 }
 
@@ -27,6 +29,9 @@ const datasetTableSlice = createSlice({
         setUserId: (state, action) => {
             state.userId = action.payload;
         },
+        setTables: (state, action) => {
+            state.tables = action.payload;
+        },
         setTableColumns: (state, action) => {
             state.tableColumns = action.payload;
         }
@@ -36,7 +41,9 @@ const datasetTableSlice = createSlice({
 export const {
     setId,
     setName,
-    setUserId
+    setUserId,
+    setTables,
+    setTableColumns
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

@@ -1,5 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
-
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+export interface ColumnType {
+    id: number;
+    name: string;
+    type: string;
+    position: number;
+}
 interface DatasetTableState {
     selectedTableId: string | null;
     selectedTableName: string | null;
@@ -8,6 +13,8 @@ interface DatasetTableState {
     tableColumns: [];
     createColumns: boolean;
     updatedTables: boolean;
+    userTableColumns: ColumnType[];
+    userTableColumnIndex: number;
 }
 
 const initialState: DatasetTableState = {
@@ -18,6 +25,8 @@ const initialState: DatasetTableState = {
     tableColumns: [],
     createColumns: false,
     updatedTables: false,
+    userTableColumns: [],
+    userTableColumnIndex: 0
 }
 
 const datasetTableSlice = createSlice({
@@ -44,6 +53,33 @@ const datasetTableSlice = createSlice({
         },
         setUpdatedTables: (state, action) => {
             state.updatedTables = action.payload;
+        },
+        addUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
+            console.log(action.payload)
+            state.userTableColumns.push(action.payload);
+        },
+        updateUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
+            const index = state.userTableColumns.findIndex(
+                col => col.id === action.payload.id
+            );
+            if (index !== -1) {
+                state.userTableColumns[index] = action.payload;
+            }
+
+            console.log(JSON.parse(JSON.stringify(state.userTableColumns)))
+        },
+        removeUserTableColumn: (state, action: PayloadAction<number>) => {
+            state.userTableColumns = state.userTableColumns.filter(
+                col => {
+                    if (col.id !== action.payload) {
+                        console.log(JSON.parse(JSON.stringify(col)))
+                    }
+                    return col.id !== action.payload
+                }
+            );
+        },
+        setUserTableColumnIndex: (state, action) => {
+            state.userTableColumnIndex = action.payload;
         }
     }
 });
@@ -55,7 +91,11 @@ export const {
     setTables,
     setTableColumns,
     setCreateColumns,
-    setUpdatedTables
+    setUpdatedTables,
+    addUserTableColumns,
+    setUserTableColumnIndex,
+    updateUserTableColumns,
+    removeUserTableColumn
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

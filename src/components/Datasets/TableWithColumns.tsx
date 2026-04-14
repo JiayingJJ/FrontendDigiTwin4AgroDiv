@@ -18,11 +18,11 @@ const TableWithColumns = () => {
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const [sortedTableColumns, setSortedTableColumns] = useState<any>();
     useEffect(() => {
+        if (tableColumns === undefined || tableColumns === null) return;
         const sortedColumns = [...tableColumns].sort(
-  (a, b) => parseInt(a.position) - parseInt(b.position)
-);
-setSortedTableColumns(sortedColumns)
-  console.log(sortedColumns)
+            (a, b) => parseInt(a.position) - parseInt(b.position)
+        );
+        setSortedTableColumns(sortedColumns)
 
     }, [tableColumns])
     const renderFormControl = (column: any) => {

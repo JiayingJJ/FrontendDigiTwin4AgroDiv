@@ -20,6 +20,9 @@ const CreatedTables = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
             dispatch({ type: 'datasetTable/setCreateColumns', payload: true})
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.ID})
+            dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.Name})
+            dispatch({ type: 'datasetTable/setUserId', payload: t.UserID})
         } else {
             dispatch({ type: 'datasetTable/setTableColumns', payload: data.Columns })
         }
@@ -33,7 +36,6 @@ const CreatedTables = () => {
             <CardBody>
                 <Stack divider={<StackDivider />} spacing='4'>
                     {tables?.map((t: any) => {
-                        console.log(t)
                         return (
                             <Box onClick={() => {
                                 console.log("click")

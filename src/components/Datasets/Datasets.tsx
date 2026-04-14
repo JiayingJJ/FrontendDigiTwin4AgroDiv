@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
-    Box,
-    HStack,
-    VStack
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import UserTable from './UserTable';
+import TableWithColumns from './TableWithColumns';
+import CreatedTables from './CreatedTables';
 
 const Datasets = () => {
+    const dispatch = useDispatch()
     const [addFormat, setAddFormat] = useState<boolean>(false);
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const userInfo = useSelector((state: any) => state.user)
+    const getTablesWithUserId = async () => {
+        const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
+            method: "GET"
+        })
+        const data = await response.json();
+        console.log(data)
+        dispatch({ type: 'datasetTable/setTables', payload: data })
+    }
+    useEffect(() => {
+        getTablesWithUserId()
+    }, [])
     return (
         <>
             <Button backgroundColor='#EDB458' onClick={() => {
@@ -17,7 +30,9 @@ const Datasets = () => {
             }}>
                 Füge ein neue Datenbankformat hinzu
             </Button>
-            {addFormat && <UserTable/>}
+            {addFormat && <UserTable />}
+            <CreatedTables />
+            <TableWithColumns />
         </>
     );
 }

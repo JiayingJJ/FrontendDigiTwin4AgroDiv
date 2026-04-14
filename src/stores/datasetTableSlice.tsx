@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface DatasetTableState {
-    id: string | null;
-    name: string | null;
+    selectedTableId: string | null;
+    selectedTableName: string | null;
     userId: string | null;
     tables: [];
     tableColumns: [];
@@ -11,8 +11,8 @@ interface DatasetTableState {
 }
 
 const initialState: DatasetTableState = {
-    id: null,
-    name: null,
+    selectedTableId: null,
+    selectedTableName: null,
     userId: null,
     tables: [],
     tableColumns: [],
@@ -24,11 +24,11 @@ const datasetTableSlice = createSlice({
     name: 'datasetTable',
     initialState,
     reducers: {
-        setId: (state, action) => {
-            state.id = action.payload;
+        setSelectedTableId: (state, action) => {
+            state.selectedTableId = action.payload;
         },
-        setName: (state, action) => {
-            state.name = action.payload;
+        setSelectedTableName: (state, action) => {
+            state.selectedTableName = action.payload;
         },
         setUserId: (state, action) => {
             state.userId = action.payload;
@@ -49,8 +49,8 @@ const datasetTableSlice = createSlice({
 });
 
 export const {
-    setId,
-    setName,
+    setSelectedTableId,
+    setSelectedTableName,
     setUserId,
     setTables,
     setTableColumns,

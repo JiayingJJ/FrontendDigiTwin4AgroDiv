@@ -7,6 +7,7 @@ interface DatasetTableState {
     tables: [];
     tableColumns: [];
     createColumns: boolean;
+    updatedTables: boolean;
 }
 
 const initialState: DatasetTableState = {
@@ -16,6 +17,7 @@ const initialState: DatasetTableState = {
     tables: [],
     tableColumns: [],
     createColumns: false,
+    updatedTables: false,
 }
 
 const datasetTableSlice = createSlice({
@@ -39,6 +41,9 @@ const datasetTableSlice = createSlice({
         },
         setCreateColumns: (state, action) => {
             state.createColumns = action.payload;
+        },
+        setUpdatedTables: (state, action) => {
+            state.updatedTables = action.payload;
         }
     }
 });
@@ -49,7 +54,8 @@ export const {
     setUserId,
     setTables,
     setTableColumns,
-    setCreateColumns
+    setCreateColumns,
+    setUpdatedTables
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

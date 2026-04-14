@@ -24,11 +24,11 @@ const ColumnsComponent = ({ postUserColumns }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     console.log(userTableColumns)
-    const renderForm = (column: ColumnType) => {
+    const renderForm = (column: ColumnType, index: number) => {
         switch (column.type) {
             case 'radio':
                 return (
-                    <FormControl >
+                    <FormControl>
                         <FormLabel as='legend'>{column.type}</FormLabel>
                         <RadioGroup defaultValue='Ja'>
                             <HStack spacing='24px'>
@@ -40,13 +40,13 @@ const ColumnsComponent = ({ postUserColumns }: Props) => {
                 );
             case 'select':
                 return (
-                    <Box key={column.id}>
-                        <SelectComponent index={column.id} /></Box>
+                    <Box key={column.id} draggable onDrag={() => console.log(index)}>
+                        <SelectComponent id={column.id} index={index}/></Box>
                 );
             case 'text':
                 return (
-                    <Box key={column.id}>
-                        <TextComponent index={column.id} />
+                    <Box key={column.id} draggable>
+                        <TextComponent id={column.id} index={index}/>
                     </Box>
                 );
             default:
@@ -57,7 +57,7 @@ const ColumnsComponent = ({ postUserColumns }: Props) => {
     return (
         <>
             <Box>
-                {userTableColumns?.map((column: ColumnType) => renderForm(column))}
+                {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
                     console.log("Post columns in Backend")
                     postUserColumns()

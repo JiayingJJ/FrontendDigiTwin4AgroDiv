@@ -8,6 +8,7 @@ const CreateColumns = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
+    const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
 
     const [selectType, setSelectType] = useState<boolean>(false);
     const [userColumns, setUserColumns] = useState<string[]>([]);
@@ -18,17 +19,13 @@ const CreateColumns = () => {
         dispatch({ type: 'datasetTable/setUserTableColumnIndex', payload: 1 })
 
     }
-    useEffect(() => {
-        console.log(userColumns)
-        console.log(userTableColumns)
 
-    }, [userTableColumns])
     const postUserColumns = async () => {
-        // const response = await fetch(`${apiUrl}/usertable/columns`, {
-        //     method: "POST",
-        //     body: JSON.stringify({ table_id: valueName, columns: valueEmail }),
-        // })
-        console.log(userColumns)
+        const response = await fetch(`${apiUrl}/usertable/columns`, {
+            method: "POST",
+            body: JSON.stringify({ "table_id": tableId, "columns": userTableColumns }),
+        })
+        const data = await response.json();
     }
     return (
         <>

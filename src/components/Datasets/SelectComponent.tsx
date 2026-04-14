@@ -15,13 +15,14 @@ import {
     Select
 } from '@chakra-ui/react'
 type Props = {
-    index: string
+    id: string,
+    index: number
 }
-const SelectComponent = ({ index }: Props) => {
+const SelectComponent = ({ id, index }: Props) => {
     const [labelName, setLabelName] = useState<string>("");
 
     return (
-        <FormControl >
+        <FormControl onMouseOver={() => {console.log(index)}}>
             <FormLabel>{labelName}</FormLabel>
             <Input placeholder='Component name' value={labelName} onChange={(e) => {
                 setLabelName(e.target.value)

@@ -32,7 +32,7 @@ const TableWithColumns = () => {
         switch (column.type) {
             case 'radio':
                 return (
-                    <FormControl key={`${column.type}-${column.position}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel as='legend'>{column.name}</FormLabel>
                         <RadioGroup defaultValue='Ja'>
                             <HStack spacing='24px'>
@@ -44,7 +44,7 @@ const TableWithColumns = () => {
                 );
             case 'select':
                 return (
-                    <FormControl key={`${column.type}-${column.position}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Select placeholder='auswählen'>
                             <option>Winter</option>
@@ -56,7 +56,7 @@ const TableWithColumns = () => {
                 );
             case 'text':
                 return (
-                    <FormControl key={`${column.type}-${column.position}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Input placeholder='Name' />
                     </FormControl>

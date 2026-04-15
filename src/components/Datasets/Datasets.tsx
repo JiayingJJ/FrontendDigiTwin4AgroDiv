@@ -10,11 +10,11 @@ import CreateColumns from './CreateColumns';
 
 const Datasets = () => {
     const dispatch = useDispatch()
-    const [addFormat, setAddFormat] = useState<boolean>(false);
     const apiUrl = import.meta.env.VITE_API_URL;
     const userInfo = useSelector((state: any) => state.user)
-    const createColumns = useSelector((state: any) => state.datasetTable.createColumns)
+    const createColumnsButton = useSelector((state: any) => state.datasetTable.createColumnsButton)
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
+    const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
 
     const getTablesWithUserId = async () => {
         const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
@@ -34,14 +34,15 @@ const Datasets = () => {
     return (
         <>
             <Button backgroundColor='#EDB458' onClick={() => {
-                setAddFormat(true)
+                dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
+                dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
             }}>
                 Füge ein neue Datenbankformat hinzu
             </Button>
-            {addFormat && <UserTable />}
+            {addNewDataset && <UserTable />}
             <CreatedTables />
             <TableWithColumns />
-            {createColumns && <CreateColumns />}
+            {createColumnsButton && <CreateColumns />}
         </>
     );
 }

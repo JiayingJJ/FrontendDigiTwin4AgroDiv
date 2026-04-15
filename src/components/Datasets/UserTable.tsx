@@ -45,6 +45,7 @@ const UserTable = () => {
             dispatch({ type: 'datasetTable/setSelectedTableId', payload: data.ID })
             dispatch({ type: 'datasetTable/setSelectedTableName', payload: data.Name })
             dispatch({ type: 'datasetTable/setUserId', payload: data.UserID })
+            dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         }
     }
     return (

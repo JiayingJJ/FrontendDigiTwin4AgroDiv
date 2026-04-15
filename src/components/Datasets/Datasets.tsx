@@ -7,15 +7,7 @@ import UserTable from './UserTable';
 import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import CreateColumns from './CreateColumns';
-export const getTablesWithUserId = async (userInfo: any) => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
-        method: "GET"
-    })
-    const data = await response.json();
-    console.log(data)
-    return data;
-}
+import { getTablesWithUserId } from '../../api/dataset';
 const Datasets = () => {
     const dispatch = useDispatch()
     const createColumnsButton = useSelector((state: any) => state.datasetTable.createColumnsButton)

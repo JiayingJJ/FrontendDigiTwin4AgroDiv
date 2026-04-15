@@ -15,9 +15,9 @@ import {
 } from '@chakra-ui/react'
 import { FaCheck } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
+import { createTable } from '../../api/dataset';
 
 const UserTable = () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
     const userInfo = useSelector((state: any) => state.user)
     const [tableName, setTableName] = useState<string>("");
@@ -26,25 +26,20 @@ const UserTable = () => {
         setTableName(e.target.value)
     }
 
-    const createTable = async () => {
+    const clickForCreateTable = async (userInfo: any, tableName: string) => {
         setTableName("")
-        const response = await fetch(`${apiUrl}/usertable`, {
-            method: "POST",
-            body: JSON.stringify({ user_id: userInfo.id, name: tableName }),
-        })
-        const data = await response.json();
-        console.log(data)
-        if (response.status === 500) {
+        const data = await createTable(userInfo, tableName)
+        if (data[1] === 500) {
             console.log("Alert Message")
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
             dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
-            dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
             dispatch({ type: 'datasetTable/setUpdatedTables', payload: true })
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data.ID })
-            dispatch({ type: 'datasetTable/setSelectedTableName', payload: data.Name })
-            dispatch({ type: 'datasetTable/setUserId', payload: data.UserID })
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
+            dispatch({ type: 'datasetTable/setSelectedTableName', payload: data[0].Name })
+            dispatch({ type: 'datasetTable/setUserId', payload: data[0].UserID })
             dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         }
     }
@@ -67,7 +62,9 @@ const UserTable = () => {
                     <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
                 </FormControl>
 
-                <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => createTable()}>
+                <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                    clickForCreateTable(userInfo, tableName)
+                }}>
                     Tabelle erstellen
                 </Button>
             </VStack>

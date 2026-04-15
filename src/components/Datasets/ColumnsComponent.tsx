@@ -23,7 +23,6 @@ type Props = {
 const ColumnsComponent = ({ postUserColumns }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
-    console.log(userTableColumns)
     const renderForm = (column: ColumnType, index: number) => {
         switch (column.type) {
             case 'radio':

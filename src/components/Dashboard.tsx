@@ -13,7 +13,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import OpenLayersMap from "./Maps/OpenLayersMap";
 import InfoPage from './InfoPage';
-import Datasets, { getTablesWithUserId } from './Datasets/Datasets';
+import Datasets from './Datasets/Datasets';
+import { getTablesWithUserId } from '../api/dataset';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)

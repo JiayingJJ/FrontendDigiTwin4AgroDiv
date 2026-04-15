@@ -7,8 +7,8 @@ import { CiCircleRemove } from "react-icons/ci";
 import ColumnsComponent from './ColumnsComponent';
 import { v4 as uuidv4 } from 'uuid';
 import ModalComponent from '../ModalComponent';
+import { postUserColumns } from '../../api/dataset';
 const CreateColumns = () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
@@ -23,13 +23,6 @@ const CreateColumns = () => {
 
     }
 
-    const postUserColumns = async () => {
-        const response = await fetch(`${apiUrl}/usertable/columns`, {
-            method: "POST",
-            body: JSON.stringify({ "table_id": tableId, "columns": userTableColumns }),
-        })
-        const data = await response.json();
-    }
     const clickOnSaveBtn = () => {
         dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
@@ -55,7 +48,7 @@ const CreateColumns = () => {
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Select</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Input</Button>
             </Box>}
-            {userTableColumns.length !== 0 ? <ColumnsComponent postUserColumns={postUserColumns} /> : null}
+            {userTableColumns.length !== 0 ? <ColumnsComponent postUserColumns={() => postUserColumns(tableId, userTableColumns)} /> : null}
             <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn}/>
         </>
     );

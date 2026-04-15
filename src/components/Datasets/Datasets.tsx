@@ -7,28 +7,34 @@ import UserTable from './UserTable';
 import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import CreateColumns from './CreateColumns';
-
+export const getTablesWithUserId = async (userInfo: any) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
+        method: "GET"
+    })
+    const data = await response.json();
+    console.log(data)
+    return data;
+}
 const Datasets = () => {
     const dispatch = useDispatch()
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const userInfo = useSelector((state: any) => state.user)
     const createColumnsButton = useSelector((state: any) => state.datasetTable.createColumnsButton)
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
     const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
-
-    const getTablesWithUserId = async () => {
-        const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
-            method: "GET"
-        })
-        const data = await response.json();
-        console.log(data)
-        dispatch({ type: 'datasetTable/setTables', payload: data })
-    }
+    const userInfo = useSelector((state: any) => state.user)
     useEffect(() => {
-        getTablesWithUserId()
+        async function fechtData() {
+            const data = await getTablesWithUserId(userInfo)
+            dispatch({ type: 'datasetTable/setTables', payload: data })
+        }
+        fechtData()
     }, [])
     useEffect(() => {
-        getTablesWithUserId()
+        async function fechtData() {
+            const data = await getTablesWithUserId(userInfo)
+            dispatch({ type: 'datasetTable/setTables', payload: data })
+        }
+        fechtData()
         dispatch({ type: 'datasetTable/setUpdatedTables', payload: false })
     }, [updatedTables])
     return (

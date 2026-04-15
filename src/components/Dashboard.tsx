@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect } from 'react';
 import {
     Button,
     Box,
@@ -13,11 +13,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import OpenLayersMap from "./Maps/OpenLayersMap";
 import InfoPage from './InfoPage';
-import Datasets from './Datasets/Datasets';
+import Datasets, { getTablesWithUserId } from './Datasets/Datasets';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
     const alertInfo = useSelector((state: any) => state.alertInfo);
+    const userInfo = useSelector((state: any) => state.user)
     const rendernPage = () => {
         switch (activePage) {
             case "maps":
@@ -31,6 +32,13 @@ const Dashboard = () => {
         }
     }
 
+    useEffect(() => {
+        async function fechtData() {
+            const data = await getTablesWithUserId(userInfo)
+            dispatch({ type: 'datasetTable/setTables', payload: data })
+        }
+        fechtData()
+    }, [])
     return (
         <VStack
             minH={"100vh"}

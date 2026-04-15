@@ -11,10 +11,12 @@ interface DatasetTableState {
     userId: string | null;
     tables: [];
     tableColumns: [];
-    createColumns: boolean;
+    createColumnsButton: boolean;
     updatedTables: boolean;
     userTableColumns: ColumnType[];
     userTableColumnIndex: number;
+    addNewDataset: boolean;
+    addingColumns: boolean;
 }
 
 const initialState: DatasetTableState = {
@@ -23,10 +25,12 @@ const initialState: DatasetTableState = {
     userId: null,
     tables: [],
     tableColumns: [],
-    createColumns: false,
+    createColumnsButton: false,
     updatedTables: false,
     userTableColumns: [],
-    userTableColumnIndex: 0
+    userTableColumnIndex: 0,
+    addNewDataset: false,
+    addingColumns: false
 }
 
 const datasetTableSlice = createSlice({
@@ -48,11 +52,15 @@ const datasetTableSlice = createSlice({
         setTableColumns: (state, action) => {
             state.tableColumns = action.payload;
         },
-        setCreateColumns: (state, action) => {
-            state.createColumns = action.payload;
+        setCreateColumnsButton: (state, action) => {
+            state.createColumnsButton = action.payload;
         },
         setUpdatedTables: (state, action) => {
             state.updatedTables = action.payload;
+        },
+        clearUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
+            console.log(action.payload)
+            state.userTableColumns = [];
         },
         addUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
             console.log(action.payload)
@@ -80,7 +88,14 @@ const datasetTableSlice = createSlice({
         },
         setUserTableColumnIndex: (state, action) => {
             state.userTableColumnIndex = action.payload;
+        },
+        setAddNewDataset: (state, action) => {
+            state.addNewDataset = action.payload;
+        },
+        setAddingColumns: (state, action) => {
+            state.addingColumns = action.payload;
         }
+
     }
 });
 
@@ -90,12 +105,15 @@ export const {
     setUserId,
     setTables,
     setTableColumns,
-    setCreateColumns,
+    setCreateColumnsButton,
     setUpdatedTables,
     addUserTableColumns,
     setUserTableColumnIndex,
     updateUserTableColumns,
-    removeUserTableColumn
+    removeUserTableColumn,
+    setAddNewDataset,
+    setAddingColumns,
+    clearUserTableColumns
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

@@ -28,3 +28,13 @@ export const createTable = async (userInfo: any, tableName: string) => {
 
     return [data, response.status]
 }
+
+export const fetchTableWithId = async (t: any) => {
+        const tableId = t.ID;
+        const response = await fetch(`${apiUrl}/usertable/${tableId}/columns`, {
+            method: "GET"
+        })
+        const data = await response.json();
+        console.log(data)
+        return [data, response.status]
+    }

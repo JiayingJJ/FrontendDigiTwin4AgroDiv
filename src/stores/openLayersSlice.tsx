@@ -2,12 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface OpenLayersState {
     layerType: string | null;
-    drawInteraction: boolean;
+    drawingInteraction: boolean;
+    addDrawedInteractionInfo: boolean;
 }
 
 const initialState: OpenLayersState = {
     layerType: 'standard',
-    drawInteraction: false
+    drawingInteraction: false,
+    addDrawedInteractionInfo: false
+
 }
 
 const openLayersSlice = createSlice({
@@ -17,15 +20,19 @@ const openLayersSlice = createSlice({
         setLayerType: (state, action) => {
             state.layerType = action.payload;
         },
-        setDrawInteraction: (state, action) => {
-            state.drawInteraction = action.payload;
+        setDrawingInteraction: (state, action) => {
+            state.drawingInteraction = action.payload;
+        },
+        setAddDrawedInteractionInfo: (state, action) => {
+            state.addDrawedInteractionInfo = action.payload;
         }
     }
 });
 
 export const {
     setLayerType,
-    setDrawInteraction
+    setDrawingInteraction,
+    setAddDrawedInteractionInfo
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

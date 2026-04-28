@@ -12,7 +12,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Icon from 'ol/style/Icon';
-import { Card, CardHeader, CardBody } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, VStack, HStack } from '@chakra-ui/react'
 import { Tooltip } from '@chakra-ui/react'
 import { Input, Box } from '@chakra-ui/react'
 // Rest
@@ -23,6 +23,7 @@ import TulpePic from '../../assets/Tulpe.jpg'
 import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
+import AddDataInTable from './AddDataInTable';
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
     const geoJSONSource = '/data/deutschland.geojson';
@@ -31,6 +32,7 @@ const OpenLayersMap = () => {
     let positionFeature = new Feature();
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
+    const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
 
     useEffect(() => {
         const map = new Map({
@@ -70,7 +72,7 @@ const OpenLayersMap = () => {
         },
     })
     ]
-    const isDrawing = useSelector((state: any) => state.openLayers.drawInteraction)
+    const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     useEffect(() => {
         isDrawingRef.current = isDrawing;
@@ -84,8 +86,8 @@ const OpenLayersMap = () => {
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 console.log(feature)
-                dispatch({ type: 'plantInfo/setImageSrc', payload: TulpePic })
-                feature.setStyle(newStyle)
+                dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+                // feature.setStyle(newStyle)
             }
         }
     })
@@ -184,7 +186,7 @@ const OpenLayersMap = () => {
             });
     }
 
-    return <>
+    return <HStack>
         <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#60935D" }}>
             <CardHeader>
                 <div style={{
@@ -211,8 +213,11 @@ const OpenLayersMap = () => {
                 style={{ height: "80vh", width: "70vw" }}>
             </CardBody>
         </Card>
-        <MapActions olMap={olMap} />
-    </>
+        <VStack>
+            <MapActions olMap={olMap} />
+            {addDrawedInteractionInfo && <AddDataInTable />}
+        </VStack>
+    </HStack>
 };
 
 export default OpenLayersMap;

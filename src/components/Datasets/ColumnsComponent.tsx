@@ -17,7 +17,7 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { postUserColumns } from '../../api/dataset';
+import { postColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -61,7 +61,7 @@ const ColumnsComponent = ({ }: Props) => {
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
                     console.log("Post columns in Backend")
                     console.log(userTableColumns)
-                    postUserColumns(tableId, userTableColumns)
+                    postColumns(tableId, userTableColumns)
                 }}>Submit</Button>
 
             </Box>

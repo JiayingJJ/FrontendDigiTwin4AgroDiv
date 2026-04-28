@@ -24,8 +24,8 @@ const getTableWithId = async (t: any) => {
             dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.Name })
             dispatch({ type: 'datasetTable/setUserId', payload: t.UserID })
         } else {
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].TableID })
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].Columns })
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
         }
     }
     return (

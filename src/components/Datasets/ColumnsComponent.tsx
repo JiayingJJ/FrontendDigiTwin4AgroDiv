@@ -17,12 +17,13 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
+import { postUserColumns } from '../../api/dataset';
 type Props = {
-    postUserColumns: () => void
 }
-const ColumnsComponent = ({ postUserColumns }: Props) => {
+const ColumnsComponent = ({ }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
+    const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const renderForm = (column: ColumnType, index: number) => {
         switch (column.type) {
             case 'radio':
@@ -59,7 +60,8 @@ const ColumnsComponent = ({ postUserColumns }: Props) => {
                 {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
                     console.log("Post columns in Backend")
-                    postUserColumns()
+                    console.log(userTableColumns)
+                    postUserColumns(tableId, userTableColumns)
                 }}>Submit</Button>
 
             </Box>

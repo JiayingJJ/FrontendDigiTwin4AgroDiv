@@ -7,7 +7,6 @@ import { CiCircleRemove } from "react-icons/ci";
 import ColumnsComponent from './ColumnsComponent';
 import { v4 as uuidv4 } from 'uuid';
 import ModalComponent from '../ModalComponent';
-import { postUserColumns } from '../../api/dataset';
 const CreateColumns = () => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
@@ -48,7 +47,7 @@ const CreateColumns = () => {
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Select</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Input</Button>
             </Box>}
-            {userTableColumns.length !== 0 ? <ColumnsComponent postUserColumns={() => postUserColumns(tableId, userTableColumns)} /> : null}
+            {userTableColumns.length !== 0 ? <ColumnsComponent /> : null}
             <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn}/>
         </>
     );

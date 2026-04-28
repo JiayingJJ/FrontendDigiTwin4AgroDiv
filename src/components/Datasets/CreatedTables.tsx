@@ -46,7 +46,7 @@ const CreatedTables = () => {
                                 }} cursor={"pointer"}
                                 key={`${t.ID}-table-box`}>
                                 <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                    {t.Name}
+                                    {t.TableName}
                                 </Heading>
                             </Button>
                         )

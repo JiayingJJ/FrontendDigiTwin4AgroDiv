@@ -105,13 +105,13 @@ const MapActions = ({ olMap }: Props) => {
     newDraw.on('drawend', (event) => {
       console.log('Gezeichnet:', event.feature.getGeometry()?.getCoordinates());
       // removeDrawInteraction();
-      // dispatch({ type: 'openLayers/setDrawInteraction', payload: false });
+      // dispatch({ type: 'openLayers/setDrawingInteraction', payload: false });
     });
 
     newDraw.on('drawabort', () => {
       console.log('drawabort');
       // removeDrawInteraction();
-      // dispatch({ type: 'openLayers/setDrawInteraction', payload: false });
+      // dispatch({ type: 'openLayers/setDrawingInteraction', payload: false });
     });
 
     drawRef.current = newDraw;
@@ -128,7 +128,7 @@ const MapActions = ({ olMap }: Props) => {
         <Box>
           <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
             console.log("click")
-            dispatch({ type: 'openLayers/setDrawInteraction', payload: true })
+            dispatch({ type: 'openLayers/setDrawingInteraction', payload: true })
             setSelectType(true)
           }} />
         </Box>
@@ -151,7 +151,7 @@ const MapActions = ({ olMap }: Props) => {
             <Box>
               <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
                 console.log("click cancel")
-                dispatch({ type: 'openLayers/setDrawInteraction', payload: false })
+                dispatch({ type: 'openLayers/setDrawingInteraction', payload: false })
                 removeDrawInteraction()
                 setSelectType(false)
               }} />

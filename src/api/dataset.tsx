@@ -11,15 +11,6 @@ export const getTablesWithUserId = async (userInfo: any) => {
     return data;
 }
 
-export const postUserColumns = async (tableId: string, userTableColumns: any) => {
-    const time = getCurrentTime()
-    const response = await fetch(`${apiUrl}/usertable/columns`, {
-        method: "POST",
-        body: JSON.stringify({ table_id: tableId, columns: userTableColumns, created_at: time, updated_at: time }),
-    })
-    const data = await response.json();
-    return data;
-}
 export const postColumns = async (tableId: string, userTableColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {

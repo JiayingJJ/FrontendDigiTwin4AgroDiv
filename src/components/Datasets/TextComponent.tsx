@@ -20,28 +20,42 @@ type Props = {
     id: string,
     index: number
 }
-const TextComponent = ({id, index }: Props) => {
+const TextComponent = ({ id, index }: Props) => {
     console.log(index)
     const dispatch = useDispatch()
     const [labelName, setLabelName] = useState<string>("");
+    const [labelInfo, setLabelInfo] = useState<string>("");
+
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
     return (
-        <FormControl onMouseOver={() => {console.log(index)}}>
-            <Text mb='8px'>Geben Sie bitte ein Name für das Input {id}</Text>
+        <FormControl onMouseOver={() => { console.log(index) }}>
+            <Text mb='8px'>Geben Sie bitte ein Name für das Input</Text>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Input placeholder='Component name' value={labelName} onChange={(e) => {
-                    if (e.target.value !== "") {
-                        setIsDisabled(false)
-                    } else {
-                        setIsDisabled(true)
-                    }
-                    console.log(e.target.value)
-                    setLabelName(e.target.value)
-                }} />
-                <Button disabled={isDisabled} style={{ padding: "5px", margin: "5px", backgroundColor: "transparent" }}>
+                <Box style={{ display: "flex", flexDirection: "column" }}>
+                    <Input placeholder='Component name' value={labelName} onChange={(e) => {
+                        if (e.target.value !== "") {
+                            setIsDisabled(false)
+                        } else {
+                            setIsDisabled(true)
+                        }
+                        console.log(e.target.value)
+                        setLabelName(e.target.value)
+                    }} />
+                    <Text mb='8px'>Geben Sie bitte ein Hintinfo</Text>
+                    <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
+                        if (e.target.value !== "") {
+                            setIsDisabled(false)
+                        } else {
+                            setIsDisabled(true)
+                        }
+                        console.log(e.target.value)
+                        setLabelInfo(e.target.value)
+                    }} />
+                </Box>
+                <Button disabled={isDisabled} style={{ padding: "5px", margin: "5px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
-                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "text", position: index } })
+                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "text", position: index, hint: labelInfo, additional_info: [] } })
                     }} />
 
                     <CiCircleRemove color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
@@ -49,6 +63,7 @@ const TextComponent = ({id, index }: Props) => {
                     }} />
                 </Button>
             </Box>
+
         </FormControl>
     );
 }

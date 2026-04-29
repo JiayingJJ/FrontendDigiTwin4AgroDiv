@@ -1,9 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+// console.log(JSON.parse(JSON.stringify(state.userInputColumnValues)))
 export interface ColumnType {
     id: string;
     name: string;
     type: string;
     position: number;
+    hint: string;
+    additional_info: [];
 }
 interface DatasetTableState {
     selectedTableId: string | null;
@@ -17,6 +20,7 @@ interface DatasetTableState {
     userTableColumnIndex: number;
     addNewDataset: boolean;
     addingColumns: boolean;
+    userInputColumnValues: [];
 }
 
 const initialState: DatasetTableState = {
@@ -30,7 +34,8 @@ const initialState: DatasetTableState = {
     userTableColumns: [],
     userTableColumnIndex: 0,
     addNewDataset: false,
-    addingColumns: false
+    addingColumns: false,
+    userInputColumnValues: []
 }
 
 const datasetTableSlice = createSlice({
@@ -94,8 +99,20 @@ const datasetTableSlice = createSlice({
         },
         setAddingColumns: (state, action) => {
             state.addingColumns = action.payload;
+        },
+        setUserInputColumnValues: (state, action) => {
+            JSON.parse(JSON.stringify(action.payload)).map((p: ColumnType) => {
+                const data = { id: p.id, name: p.name, value: null }
+                state.userInputColumnValues.push(data)
+            })
+        },
+        updateUserInputColumnValues: (state, action) => {
+            state.userInputColumnValues.filter((c: any) => {
+                if (c.id === action.payload.id) {
+                    c.value = action.payload.value
+                }
+            })
         }
-
     }
 });
 
@@ -113,7 +130,9 @@ export const {
     removeUserTableColumn,
     setAddNewDataset,
     setAddingColumns,
-    clearUserTableColumns
+    clearUserTableColumns,
+    setUserInputColumnValues,
+    updateUserInputColumnValues
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

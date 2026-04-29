@@ -47,3 +47,14 @@ export const fetchTableWithId = async (t: any) => {
         return [data[0], response.status]
     }
 }
+
+export const addValueInColumns = async (table_id: string, columns: any) => {
+    const time = getCurrentTime()
+    console.log(time)
+    const response = await fetch(`${apiUrl}/usertable/columns/addValue`, {
+        method: "POST",
+        body: JSON.stringify({ table_id: table_id, columns: columns }),
+    })
+    const data = await response.json();
+    console.log(data)
+}

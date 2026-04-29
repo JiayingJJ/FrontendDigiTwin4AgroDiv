@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
 import { fetchTableWithId } from '../../api/dataset';
+import DatasetColumns from './DatasetsInMaps/DatasetColumns';
 
 const AddDataInTable = () => {
     const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const getTableWithId = async (t: any) => {
         } else {
             dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
             dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
+            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].ColumnsInTable.RawMessage })
         }
     }
     return (
@@ -53,6 +55,7 @@ const getTableWithId = async (t: any) => {
                     })}
                 </Stack>
             </CardBody>
+            <DatasetColumns/>
         </Card>
     );
 }

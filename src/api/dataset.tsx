@@ -34,8 +34,7 @@ export const createTable = async (userInfo: any, tableName: string) => {
 }
 
 export const fetchTableWithId = async (t: any) => {
-    const tableId = t.ID;
-    const response = await fetch(`${apiUrl}/usertable/${tableId}/columns`, {
+    const response = await fetch(`${apiUrl}/usertable/${t}/columns`, {
         method: "GET"
     })
     const data = await response.json();

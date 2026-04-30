@@ -13,7 +13,7 @@ const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
-        const data = await fetchTableWithId(t)
+        const data = await fetchTableWithId(t.ID)
         console.log(data)
         if (data[1] === 500) {
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

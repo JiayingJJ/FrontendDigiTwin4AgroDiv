@@ -17,13 +17,26 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { postColumns } from '../../api/dataset';
+import { fetchTableWithId, postColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
+    const handlePostColumns = async () => {
+        console.log("Post columns in Backend")
+        console.log(userTableColumns)
+        const postData = await postColumns(tableId, userTableColumns)
+        console.log(postData)
+        dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
+        const data = await fetchTableWithId(tableId)
+        console.log(data)
+        if (data[1] !== 500) {
+            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
+            dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
+        }
+    }
     const renderForm = (column: ColumnType, index: number) => {
         switch (column.type) {
             case 'radio':
@@ -41,12 +54,12 @@ const ColumnsComponent = ({ }: Props) => {
             case 'select':
                 return (
                     <Box key={column.id} draggable onDrag={() => console.log(index)}>
-                        <SelectComponent id={column.id} index={index}/></Box>
+                        <SelectComponent id={column.id} index={index} /></Box>
                 );
             case 'text':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index}/>
+                        <TextComponent id={column.id} index={index} />
                     </Box>
                 );
             default:
@@ -58,11 +71,7 @@ const ColumnsComponent = ({ }: Props) => {
         <>
             <Box>
                 {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
-                    console.log("Post columns in Backend")
-                    console.log(userTableColumns)
-                    postColumns(tableId, userTableColumns)
-                }}>Submit</Button>
+                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => handlePostColumns()}>Submit</Button>
 
             </Box>
         </>

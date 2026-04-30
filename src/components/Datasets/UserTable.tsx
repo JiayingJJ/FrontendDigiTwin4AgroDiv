@@ -37,9 +37,6 @@ const UserTable = () => {
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
             dispatch({ type: 'datasetTable/setUpdatedTables', payload: true })
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
-            dispatch({ type: 'datasetTable/setSelectedTableName', payload: data[0].TableName })
-            dispatch({ type: 'datasetTable/setUserId', payload: data[0].UserID })
             dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         }
     }

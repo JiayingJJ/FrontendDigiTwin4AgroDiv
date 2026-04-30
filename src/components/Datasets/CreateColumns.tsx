@@ -30,25 +30,25 @@ const CreateColumns = () => {
     }
     return (
         <>
-            <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" 
-            onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
+            <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30"
+                onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
             {addingColumns && <CiCircleRemove color="green" size="40" onClick={() => {
                 console.log(userTableColumns.length)
-                if(userTableColumns.length !== 0){
-                dispatch({ type: 'modalInfo/setShowModal', payload: true })
-                dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
-                dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
-                dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+                if (userTableColumns.length !== 0) {
+                    dispatch({ type: 'modalInfo/setShowModal', payload: true })
+                    dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
+                    dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
+                    dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
                 }
                 console.log("modalResult: ", modalResult)
-                
-                }}/>}
+
+            }} />}
             {addingColumns && <Box>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Select</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Input</Button>
             </Box>}
-            {userTableColumns.length !== 0 ? <ColumnsComponent /> : null}
-            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn}/>
+            {addingColumns && userTableColumns.length !== 0 ? <ColumnsComponent /> : null}
+            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
         </>
     );
 }

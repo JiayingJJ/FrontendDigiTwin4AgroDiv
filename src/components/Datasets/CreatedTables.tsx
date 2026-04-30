@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
-import { fetchTableWithId } from '../../api/dataset';
+import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/dataset';
+import { MdDeleteForever } from "react-icons/md";
 const CreatedTables = () => {
     const dispatch = useDispatch()
     const tables = useSelector((state: any) => state.datasetTable.tables)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
+    const userInfo = useSelector((state: any) => state.user)
 
     const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
@@ -29,6 +31,19 @@ const CreatedTables = () => {
             dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
         }
     }
+    const handleDeleteTable = async (t: any) => {
+        const dataDelete = await deleteTableWithId(t.ID);
+        console.log(dataDelete)
+        const data = await getTablesWithUserId(userInfo)
+        const filterData = data.filter((d) => {
+            if (!d.DeletedAt.Valid) {
+                return d;
+            }
+        });
+        console.log(filterData)
+        dispatch({ type: 'datasetTable/setTables', payload: filterData })
+        console.log(data)
+    }
     return (
         <Card>
             <CardHeader>
@@ -39,17 +54,22 @@ const CreatedTables = () => {
                 <Stack divider={<StackDivider />} spacing='4'>
                     {tables?.map((t: any) => {
                         return (
-                            <Button
-                                disabled={addingColumns}
-                                backgroundColor={selectedTableId === t.ID ? "red" : "white"}
-                                onClick={() => {
-                                    getTableWithId(t)
-                                }} cursor={"pointer"}
-                                key={`${t.ID}-table-box`}>
-                                <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                    {t.TableName}
-                                </Heading>
-                            </Button>
+                            <Box style={{ display: "flex", flexDirection: "row" }} >
+                                <Button
+                                    disabled={addingColumns}
+                                    backgroundColor={selectedTableId === t.ID ? "red" : "white"}
+                                    onClick={() => {
+                                        getTableWithId(t)
+                                    }} cursor={"pointer"}
+                                    key={`${t.ID}-table-box`}>
+                                    <Heading size='xs' textTransform='uppercase' padding={"10px"}>
+                                        {t.TableName}
+                                    </Heading>
+                                </Button>
+                                <Box style={{ display: "flex", alignItems: "center" }}>
+                                    <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
+                                </Box>
+                            </Box>
                         )
                     })}
                 </Stack>

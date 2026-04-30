@@ -48,12 +48,20 @@ export const fetchTableWithId = async (t: any) => {
 }
 
 export const addValueInColumns = async (table_id: string, columns: any) => {
-    const time = getCurrentTime()
-    console.log(time)
     const response = await fetch(`${apiUrl}/usertable/columns/addValue`, {
         method: "POST",
         body: JSON.stringify({ table_id: table_id, columns: columns }),
     })
     const data = await response.json();
     console.log(data)
+}
+
+export const deleteTableWithId = async (table_id: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/delete/${table_id}`, {
+        method: "POST",
+        body: JSON.stringify({ deleted_at: time, table_id: table_id }),
+    })
+    const data = await response.json();
+    return data
 }

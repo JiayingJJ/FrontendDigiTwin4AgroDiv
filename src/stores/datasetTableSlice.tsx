@@ -112,7 +112,11 @@ const datasetTableSlice = createSlice({
                     c.value = action.payload.value
                 }
             })
-        }
+        },
+        clearUserInputColumnValues: (state, action) => {
+            console.log(action.payload)
+            state.userInputColumnValues = [];
+        },
     }
 });
 
@@ -132,7 +136,8 @@ export const {
     setAddingColumns,
     clearUserTableColumns,
     setUserInputColumnValues,
-    updateUserInputColumnValues
+    updateUserInputColumnValues,
+    clearUserInputColumnValues
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

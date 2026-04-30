@@ -9,7 +9,8 @@ const AddDataInTable = () => {
 
     const tables = useSelector((state: any) => state.datasetTable.tables)
     console.log(tables)
-const getTableWithId = async (t: any) => {
+    const getTableWithId = async (t: any) => {
+        dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: [] })
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
@@ -43,8 +44,8 @@ const getTableWithId = async (t: any) => {
                         return (
                             <Button
                                 onClick={() => {
-                                console.log(t)
-                                getTableWithId(t)
+                                    console.log(t)
+                                    getTableWithId(t)
                                 }} cursor={"pointer"}
                                 key={`${t.ID}-table-box`}>
                                 <Heading size='xs' textTransform='uppercase' padding={"10px"}>
@@ -55,7 +56,7 @@ const getTableWithId = async (t: any) => {
                     })}
                 </Stack>
             </CardBody>
-            <DatasetColumns/>
+            <DatasetColumns />
         </Card>
     );
 }

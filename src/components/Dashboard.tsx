@@ -36,7 +36,12 @@ const Dashboard = () => {
     useEffect(() => {
         async function fechtData() {
             const data = await getTablesWithUserId(userInfo)
-            dispatch({ type: 'datasetTable/setTables', payload: data })
+            const filterData = data.filter((d:any) => {
+                if (!d.DeletedAt.Valid) {
+                    return d;
+                }
+            });
+            dispatch({ type: 'datasetTable/setTables', payload: filterData })
         }
         fechtData()
     }, [])

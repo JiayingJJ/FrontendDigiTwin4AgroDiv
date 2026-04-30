@@ -17,14 +17,24 @@ const Datasets = () => {
     useEffect(() => {
         async function fechtData() {
             const data = await getTablesWithUserId(userInfo)
-            dispatch({ type: 'datasetTable/setTables', payload: data })
+            const filterData = data.filter((d: any) => {
+                if (!d.DeletedAt.Valid) {
+                    return d;
+                }
+            });
+            dispatch({ type: 'datasetTable/setTables', payload: filterData })
         }
         fechtData()
     }, [])
     useEffect(() => {
         async function fechtData() {
             const data = await getTablesWithUserId(userInfo)
-            dispatch({ type: 'datasetTable/setTables', payload: data })
+            const filterData = data.filter((d: any) => {
+                if (!d.DeletedAt.Valid) {
+                    return d;
+                }
+            });
+            dispatch({ type: 'datasetTable/setTables', payload: filterData })
         }
         fechtData()
         dispatch({ type: 'datasetTable/setUpdatedTables', payload: false })

@@ -17,6 +17,8 @@ import {
     Text
 } from '@chakra-ui/react'
 import { addValueInColumns } from "../../../api/dataset";
+import SelectComponent from "./SelectComponent";
+import { getCurrentTime } from "../../../helpers";
 const DatasetColumns = () => {
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
@@ -25,8 +27,12 @@ const DatasetColumns = () => {
     const getColumnValues = () => {
         let columns = [];
         userInputColumnValues.map((v: any) => {
-            columns.push({ name: v.name, value: v.value })
+            let string = v.name.replace(/[^a-zA-Z0-9]/g, '_');
+            columns.push({ name: string, value: v.value })
         })
+        const time = getCurrentTime()
+        columns.push({ name: "created_at", value: time })
+        columns.push({ name: "updated_at", value: time })
         console.log(columns)
         return columns;
     }
@@ -47,14 +53,7 @@ const DatasetColumns = () => {
                 );
             case 'select':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
-                        <FormLabel>{column.name}</FormLabel>
-                        <Select placeholder='auswählen'>
-                            {column.additional_info.options.map((o:string) => {
-                                return (<option>{o}</option>)
-                            })}
-                        </Select>
-                    </FormControl>
+                    <SelectComponent name={column.name} hint={column.hint} id={column.id} additionalInfo={column.additional_info} />
                 );
             case 'text':
                 return (

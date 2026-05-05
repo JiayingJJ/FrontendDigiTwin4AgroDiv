@@ -50,10 +50,9 @@ const DatasetColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Select placeholder='auswählen'>
-                            <option>Winter</option>
-                            <option>Frühling</option>
-                            <option>Sommer</option>
-                            <option>Herbst</option>
+                            {column.additional_info.options.map((o:string) => {
+                                return (<option>{o}</option>)
+                            })}
                         </Select>
                     </FormControl>
                 );

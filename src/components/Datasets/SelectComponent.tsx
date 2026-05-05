@@ -14,25 +14,82 @@ import {
     Radio,
     Select
 } from '@chakra-ui/react'
+import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
+import { MdOutlineAdd } from "react-icons/md";
 type Props = {
     id: string,
     index: number
 }
 const SelectComponent = ({ id, index }: Props) => {
     const [labelName, setLabelName] = useState<string>("");
+    const [optionName, setOptionName] = useState<string>("");
+    const [labelInfo, setLabelInfo] = useState<string>("");
 
+    const [optionsState, setOptionsState] = useState([])
+    const dispatch = useDispatch()
+    const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [isDisabledAddBtn, setIsDisabledAddBtn] = useState<boolean>(true);
+    useEffect(() => {
+        if (labelName !== "" && optionsState.length !== 0) {
+            setIsDisabled(false)
+        } else {
+            setIsDisabled(true)
+        }
+    }, [labelName, optionsState])
     return (
-        <FormControl onMouseOver={() => {console.log(index)}}>
-            <FormLabel>{labelName}</FormLabel>
-            <Input placeholder='Component name' value={labelName} onChange={(e) => {
-                setLabelName(e.target.value)
-            }} />
-            <Select placeholder='auswählen'>
-                <option>Winter</option>
-                <option>Frühling</option>
-                <option>Sommer</option>
-                <option>Herbst</option>
-            </Select>
+        <FormControl backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
+            <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <Box style={{ display: "flex", flexDirection: "column" }}>
+                    <FormLabel>Geben Sie bitte ein Name für das Select</FormLabel>
+                    <Input placeholder='Component name' value={labelName} onChange={(e) => {
+                        setLabelName(e.target.value)
+                    }} />
+                    <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
+                    <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
+                        console.log(e.target.value)
+                        setLabelInfo(e.target.value)
+                    }} />
+                    <FormLabel>Geben Sie bitte die Value für das Select</FormLabel>
+                    <Box style={{ display: "flex", flexDirection: "row" }}>
+                        <Input placeholder='Select Values' value={optionName} onChange={(e) => {
+                            if (e.target.value !== "") {
+                                setIsDisabledAddBtn(false)
+                            } else {
+                                setIsDisabledAddBtn(true)
+                            }
+                            setOptionName(e.target.value)
+                        }} />
+                        <MdOutlineAdd color="green" cursor={isDisabledAddBtn ? "not-allowed" : "pointer"} size="40" onClick={() => {
+                            const exist = optionsState.filter((o) => o === optionName)
+                            if (exist.length === 0) {
+                                setOptionsState([...optionsState, optionName])
+                            } else {
+                                dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+                                dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+                                dispatch({ type: 'alertInfo/setAlertMessage', payload: "Value wurde schon erstellt" })
+                                dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+                            }
+                            setOptionName("")
+                        }} />
+                    </Box>
+                    <Select placeholder='auswählen'>
+                        {optionsState.map((e) => {
+                            return (
+                                <option>{e}</option>
+                            )
+                        })}
+                    </Select>
+                </Box>
+                <Button disabled={isDisabled} style={{ padding: "5px", margin: "5px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
+                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "select", position: index, hint: labelInfo, additional_info: { "options": optionsState, "default": optionsState[0] } } })
+                    }} />
+
+                    <CiCircleRemove color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
+                        dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })
+                    }} />
+                </Button>
+            </Box>
         </FormControl>
     );
 }

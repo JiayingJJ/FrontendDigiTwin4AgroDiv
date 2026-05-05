@@ -48,11 +48,18 @@ const TableWithColumns = () => {
                 return (
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
-                        <Select placeholder='auswählen'>
-                            {column.additional_info.options.map((o:string) => {
-                                return (<option>{o}</option>)
-                            })}
-                        </Select>
+                        <Box style={{ display: "flex", flexDirection: "row" }}>
+                            <Select placeholder='auswählen'>
+                                {column.additional_info.options.map((o: string) => {
+                                    return (<option>{o}</option>)
+                                })}
+                            </Select>
+                            <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
+                                <Box>
+                                    <CiCircleInfo color="green" cursor={"pointer"} size="40" />
+                                </Box>
+                            </Tooltip>
+                        </Box>
                     </FormControl>
                 );
             case 'text':

@@ -29,8 +29,8 @@ const TextComponent = ({ id, index }: Props) => {
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
     return (
-        <FormControl onMouseOver={() => { console.log(index) }}>
-            <Text mb='8px'>Geben Sie bitte ein Name für das Input</Text>
+        <FormControl onMouseOver={() => { console.log(index) }} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
+            <FormLabel>Geben Sie bitte ein Name für das Input</FormLabel>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
                     <Input placeholder='Component name' value={labelName} onChange={(e) => {
@@ -42,7 +42,7 @@ const TextComponent = ({ id, index }: Props) => {
                         console.log(e.target.value)
                         setLabelName(e.target.value)
                     }} />
-                    <Text mb='8px'>Geben Sie bitte ein Hintinfo</Text>
+                    <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
                     <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
                         if (e.target.value !== "") {
                             setIsDisabled(false)

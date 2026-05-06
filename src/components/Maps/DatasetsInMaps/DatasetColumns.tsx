@@ -16,7 +16,7 @@ import {
     Select,
     Text
 } from '@chakra-ui/react'
-import { addValueInColumns } from "../../../api/dataset";
+import { addValueInColumns, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 const DatasetColumns = () => {
@@ -67,13 +67,18 @@ const DatasetColumns = () => {
                 return <div>Unbekannter Feldtyp: {column.type}</div>;
         }
     }
+    const handleSubmit = async () => {
+        const data = await addValueInColumns(selectedTableId, getColumnValues())
+        if (data[0] === 200) {
+            const status = 'merged'
+            const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
+            console.log(dataStatus)
+        }
+    }
     return (
         <VStack>
             {tableColumns.map((column: any) => renderDataset(column))}
-            <Button onClick={() => {
-                console.log("submit value in columns")
-                addValueInColumns(selectedTableId, getColumnValues())
-            }}>Submit</Button>
+            <Button onClick={() => handleSubmit()}>Submit</Button>
         </VStack>
     );
 }

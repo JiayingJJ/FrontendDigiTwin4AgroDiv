@@ -54,6 +54,8 @@ export const addValueInColumns = async (table_id: string, columns: any) => {
     })
     const data = await response.json();
     console.log(data)
+    console.log(response.status)
+    return [response.status, data]
 }
 
 export const deleteTableWithId = async (table_id: any) => {
@@ -64,4 +66,13 @@ export const deleteTableWithId = async (table_id: any) => {
     })
     const data = await response.json();
     return data
+}
+
+export const setUserTableColumnDataStatus = async (id: string, tableId: string, dataStatus: string) => {
+    const response = await fetch(`${apiUrl}/usertable/setDataStatus`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, table_id: tableId, data_status: dataStatus }),
+    })
+    const data = await response.json();
+    return data;
 }

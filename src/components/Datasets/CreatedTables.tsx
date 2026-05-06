@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
 import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/dataset';
 import { MdDeleteForever } from "react-icons/md";
+import ModalComponent from '../ModalComponent';
 const CreatedTables = () => {
     const dispatch = useDispatch()
     const tables = useSelector((state: any) => state.datasetTable.tables)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
     const userInfo = useSelector((state: any) => state.user)
-
+    const [tableId, setTableId] = useState<string|null>(null);
     const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
@@ -32,7 +33,14 @@ const CreatedTables = () => {
         }
     }
     const handleDeleteTable = async (t: any) => {
-        const dataDelete = await deleteTableWithId(t.ID);
+        setTableId(t.ID)
+        dispatch({ type: 'modalInfo/setShowModal', payload: true })
+        dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
+        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.TableName} löschen?` })
+        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+    }
+    const clickOnSaveBtn = async() => {
+       const dataDelete = await deleteTableWithId(tableId);
         console.log(dataDelete)
         const data = await getTablesWithUserId(userInfo)
         const filterData = data.filter((d) => {
@@ -43,6 +51,8 @@ const CreatedTables = () => {
         console.log(filterData)
         dispatch({ type: 'datasetTable/setTables', payload: filterData })
         console.log(data)
+    }
+    const clickOnCancelBtn = () => {
     }
     return (
         <Card>
@@ -74,6 +84,7 @@ const CreatedTables = () => {
                     })}
                 </Stack>
             </CardBody>
+            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
         </Card>
     );
 }

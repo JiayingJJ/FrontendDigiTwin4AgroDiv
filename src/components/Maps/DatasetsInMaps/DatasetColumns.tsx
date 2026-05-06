@@ -23,6 +23,7 @@ const DatasetColumns = () => {
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const userInputColumnValues = useSelector((state: any) => state.datasetTable.userInputColumnValues)
+    const userInfo = useSelector((state: any) => state.user)
 
     const getColumnValues = () => {
         let columns = [];
@@ -31,6 +32,7 @@ const DatasetColumns = () => {
             columns.push({ name: string, value: v.value })
         })
         const time = getCurrentTime()
+        columns.push({ name: "user_id", value: userInfo.id })
         columns.push({ name: "created_at", value: time })
         columns.push({ name: "updated_at", value: time })
         console.log(columns)

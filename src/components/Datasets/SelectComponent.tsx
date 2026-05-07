@@ -46,7 +46,6 @@ const SelectComponent = ({ id, index }: Props) => {
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
                     <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
-                        console.log(e.target.value)
                         setLabelInfo(e.target.value)
                     }} />
                     <FormLabel>Geben Sie bitte die Value für das Select</FormLabel>

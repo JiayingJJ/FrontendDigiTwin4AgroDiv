@@ -4,13 +4,14 @@ interface OpenLayersState {
     layerType: string | null;
     drawingInteraction: boolean;
     addDrawedInteractionInfo: boolean;
+    geometry: any;
 }
 
 const initialState: OpenLayersState = {
     layerType: 'standard',
     drawingInteraction: false,
-    addDrawedInteractionInfo: false
-
+    addDrawedInteractionInfo: false,
+    geometry: []
 }
 
 const openLayersSlice = createSlice({
@@ -25,6 +26,9 @@ const openLayersSlice = createSlice({
         },
         setAddDrawedInteractionInfo: (state, action) => {
             state.addDrawedInteractionInfo = action.payload;
+        },
+        setGeometry: (state, action) => {
+            state.geometry = action.payload;
         }
     }
 });
@@ -32,7 +36,8 @@ const openLayersSlice = createSlice({
 export const {
     setLayerType,
     setDrawingInteraction,
-    setAddDrawedInteractionInfo
+    setAddDrawedInteractionInfo,
+    setGeometry
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

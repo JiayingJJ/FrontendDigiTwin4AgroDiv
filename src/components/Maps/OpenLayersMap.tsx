@@ -12,7 +12,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Icon from 'ol/style/Icon';
-import { Card, CardHeader, CardBody, VStack, HStack } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, VStack, HStack, Button } from '@chakra-ui/react'
 import { Tooltip } from '@chakra-ui/react'
 import { Input, Box } from '@chakra-ui/react'
 // Rest
@@ -24,6 +24,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
 import AddDataInTable from './AddDataInTable';
+import { getGeoData } from '../../api/dataset';
+import CircleStyle from 'ol/style/Circle';
+
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
     const geoJSONSource = '/data/deutschland.geojson';
@@ -47,9 +50,87 @@ const OpenLayersMap = () => {
         })
         setOlMap(map)
         getUserGeo(map, ortCentroid)
-        map.addLayer(vectorLayer)
+        // map.addLayer(vectorLayer)
         return () => map.setTarget(undefined);
     }, [])
+
+    const vectorSourceUserData = useRef(new VectorSource());
+    const vectorLayerUserData = useRef(new VectorLayer({
+        source: vectorSourceUserData.current,
+        visible: true,
+        style: (feature) => {
+            const geometryType = feature.getGeometry()?.getType();
+
+            if (geometryType === 'Point' || geometryType === 'MultiPoint') {
+                return new Style({
+                    image: new CircleStyle({
+                        radius: 12,
+                        fill: new Fill({
+                            color: '#3399CC'
+                        }),
+                        stroke: new Stroke({
+                            color: '#fff',
+                            width: 2,
+                        })
+                    })
+                });
+            }
+            if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
+                return new Style({
+                    stroke: new Stroke({ color: 'blue', width: 1, lineDash: [30, 10] }),
+                });
+            }
+            if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
+                return new Style({
+                    stroke: new Stroke({ color: 'blue', width: 1, lineDash: [30, 10] }),
+                    fill: new Fill({ color: 'rgba(0, 255, 0, 0.3)' }),
+                });
+            }
+        }
+    }));
+
+    const backendToGeoJSON = (data: any[]) => {
+        const features = data
+            .filter(item => item.GeometryData.Valid)
+            .map(item => ({
+                type: "Feature",
+                geometry: item.GeometryData.RawMessage,
+                properties: { id: item.Properties }
+            }));
+
+        return {
+            type: "FeatureCollection",
+            features: features
+        };
+    };
+
+    useEffect(() => {
+        const fetchUserGeoData = async () => {
+            const data = await getGeoData();
+            const geoJsonData = backendToGeoJSON(data);
+            console.log('GeoJSON:', geoJsonData);
+
+            const format = new GeoJSON();
+            const features = format.readFeatures(geoJsonData, {
+                dataProjection: 'EPSG:3857',
+                featureProjection: 'EPSG:3857'
+            });
+
+            vectorSourceUserData.current.clear();
+            vectorSourceUserData.current.addFeatures(features);
+        };
+
+        fetchUserGeoData();
+    }, []);
+
+    const showGeoJSON = () => {
+        if (!olMap) return;
+        const layers = olMap.getLayers().getArray();
+        const exists = layers.includes(vectorLayerUserData.current);
+        if (!exists) {
+            olMap.addLayer(vectorLayerUserData.current);
+        }
+    };
 
     const newStyle = [new Style({
         stroke: new Stroke({
@@ -96,51 +177,6 @@ const OpenLayersMap = () => {
         olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
     });
 
-    const vectorLayer = new VectorLayer({
-        source: new VectorSource({
-            url: "./data/test.geojson",
-            format: new GeoJSON()
-        }),
-        visible: true,
-        style: (feature) => {
-            const geometryType = feature.getGeometry().getType();
-            console.log(geometryType)
-            if (geometryType === 'Point' || geometryType === 'MultiPoint') {
-                return new Style({
-                    image: new Icon({
-                        src: TulpePic,
-                        scale: 0.1,
-                        size: [512, 512],
-                        anchor: [0.5, 1],
-                        width: 32,
-                        height: 32,
-                    }),
-                });
-            }
-            if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
-                return new Style({
-                    stroke: new Stroke({
-                        color: 'blue',
-                        width: 1,
-                        lineDash: [30, 10],
-                    }),
-                });
-            }
-            if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
-                return [new Style({
-                    stroke: new Stroke({
-                        color: 'blue',
-                        width: 1,
-                        lineDash: [30, 10],
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(0, 255, 0, 0.3)',
-                    }),
-                }),
-                ]
-            }
-        }
-    });
 
     const getOrtCentroid = (map: Map, feature: Feature) => {
         const coordinates = feature.getGeometry().getCoordinates();
@@ -153,7 +189,6 @@ const OpenLayersMap = () => {
         };
         const centroid = turf.centroid(turfPolygon);
         positionFeature?.setGeometry(new Point(centroid.geometry.coordinates))
-        console.log(positionFeature.getGeometry())
         map?.getView().fit(positionFeature.getGeometry(), { padding: [170, 50, 30, 150], minResolution: 50 })
         map?.getView().setZoom(13)
     }
@@ -176,13 +211,11 @@ const OpenLayersMap = () => {
                     )
                     .map((feature) => feature
                     );
-                console.log("stadt: ", stadt)
                 const point = stadt[0].getGeometry();
-                console.log(point)
                 getOrtCentroid(map, stadt[0])
             })
             .catch((err) => {
-                console.error('❌ Fehler:', err.message);
+                console.error('Fehler:', err.message);
             });
     }
 
@@ -217,6 +250,7 @@ const OpenLayersMap = () => {
             <MapActions olMap={olMap} />
             {addDrawedInteractionInfo && <AddDataInTable />}
         </VStack>
+        <Button onClick={showGeoJSON}>Click</Button>
     </HStack>
 };
 

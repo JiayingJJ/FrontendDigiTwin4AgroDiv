@@ -108,12 +108,7 @@ const MapActions = ({ olMap }: Props) => {
       const type = geometry?.getType();
       const coordinates = geometry?.getCoordinates();
       dispatch({ type: 'openLayers/setGeometryType', payload: type })
-      if (type === "Polygon") {
-        dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
-      } else {
-        dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
-
-      }
+      dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
 
       // removeDrawInteraction();
       // dispatch({ type: 'openLayers/setDrawingInteraction', payload: false });

@@ -109,7 +109,7 @@ const MapActions = ({ olMap }: Props) => {
       const coordinates = geometry?.getCoordinates();
       dispatch({ type: 'openLayers/setGeometryType', payload: type })
       if (type === "Polygon") {
-        dispatch({ type: 'openLayers/setGeometry', payload: coordinates[0] })
+        dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
       } else {
         dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
 

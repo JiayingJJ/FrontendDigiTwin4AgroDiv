@@ -89,7 +89,7 @@ export const getGeoData = async () => {
         method: "GET",
     })
     const data = await response.json();
-    console.log(data)
+    return data;
 }
 export const insertGeoData = async (properties: string, geometry_data: any) => {
     const time = getCurrentTime()

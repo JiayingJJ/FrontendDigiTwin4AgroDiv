@@ -16,7 +16,7 @@ import {
     Select,
     Text
 } from '@chakra-ui/react'
-import { addValueInColumns, setUserTableColumnDataStatus } from "../../../api/dataset";
+import { addValueInColumns, getColumnWithId, getGeoData, insertGeoData, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 const DatasetColumns = () => {
@@ -24,6 +24,8 @@ const DatasetColumns = () => {
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const userInputColumnValues = useSelector((state: any) => state.datasetTable.userInputColumnValues)
     const userInfo = useSelector((state: any) => state.user)
+    const geometry = useSelector((state: any) => state.openLayers.geometry)
+    const geometryType = useSelector((state: any) => state.openLayers.geometryType)
 
     const getColumnValues = () => {
         let columns = [];
@@ -73,6 +75,13 @@ const DatasetColumns = () => {
             const status = 'merged'
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
             console.log(dataStatus)
+            const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
+            console.log(dataColumn)
+            const geoData = {"coordinates": geometry, "type": geometryType}
+            const dataInserGeoData = await insertGeoData(data[1].id, geoData)
+            console.log(dataInserGeoData)
+            const getAllGeoData = await getGeoData();
+            console.log(getAllGeoData)
         }
     }
     return (

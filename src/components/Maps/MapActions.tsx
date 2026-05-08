@@ -103,7 +103,18 @@ const MapActions = ({ olMap }: Props) => {
     });
 
     newDraw.on('drawend', (event) => {
-      console.log('Gezeichnet:', event.feature.getGeometry()?.getCoordinates());
+      const feature = event.feature;
+      const geometry = feature.getGeometry();
+      const type = geometry?.getType();
+      const coordinates = geometry?.getCoordinates();
+      dispatch({ type: 'openLayers/setGeometryType', payload: type })
+      if (type === "Polygon") {
+        dispatch({ type: 'openLayers/setGeometry', payload: coordinates[0] })
+      } else {
+        dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
+
+      }
+
       // removeDrawInteraction();
       // dispatch({ type: 'openLayers/setDrawingInteraction', payload: false });
     });

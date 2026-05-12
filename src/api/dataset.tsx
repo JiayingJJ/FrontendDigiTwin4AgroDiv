@@ -82,7 +82,7 @@ export const getColumnWithId = async (table_id: string, id: string) => {
     })
     const data = await response.json();
     console.log(data)
-    console.log(data[0])
+    return data;
 }
 export const getGeoData = async () => {
     const response = await fetch(`${apiUrl}/geodata`, {

@@ -24,7 +24,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
 import AddDataInTable from './AddDataInTable';
-import { getGeoData } from '../../api/dataset';
+import { getColumnWithId, getGeoData } from '../../api/dataset';
 import CircleStyle from 'ol/style/Circle';
 
 const OpenLayersMap = () => {
@@ -155,18 +155,21 @@ const OpenLayersMap = () => {
     ]
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
+    const fetchDataForDrawed = async(table_id: string, id: string) => {
+        const data = await getColumnWithId(table_id, id)
+        console.log(data)
+    }
     useEffect(() => {
         isDrawingRef.current = isDrawing;
     }, [isDrawing]);
     olMap?.on('click', (e) => {
-        console.log(isDrawingRef.current)
         if (isDrawingRef.current === true) {
             return
         } else {
-            console.log(e)
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
-                console.log(feature)
+                const dataId = feature.values_.id;
+                fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
                 dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                 // feature.setStyle(newStyle)
             }

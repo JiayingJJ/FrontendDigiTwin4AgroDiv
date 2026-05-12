@@ -78,7 +78,7 @@ const DatasetColumns = () => {
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             console.log(dataColumn)
             const geoData = {"coordinates": geometry, "type": geometryType}
-            const dataInserGeoData = await insertGeoData(data[1].id, geoData)
+            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, geoData)
             console.log(dataInserGeoData)
             const getAllGeoData = await getGeoData();
             console.log(getAllGeoData)

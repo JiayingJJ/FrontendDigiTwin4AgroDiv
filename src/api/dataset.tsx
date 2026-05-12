@@ -91,12 +91,26 @@ export const getGeoData = async () => {
     const data = await response.json();
     return data;
 }
-export const insertGeoData = async (properties: string, geometry_data: any) => {
+export const insertGeoData = async (tableId: string, properties: string, geometry_data: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/geodata`, {
         method: "POST",
-        body: JSON.stringify({properties: properties, geometry_data: geometry_data, created_at: time, updated_at: time, data_status: "pending"})
+        body: JSON.stringify({ table_id: tableId, properties: properties, geometry_data: geometry_data, created_at: time, updated_at: time, data_status: "pending" })
     })
     const data = await response.json();
     console.log(data)
+}
+export const getGeoDataWithUserColumnId = async (id: string) => {
+    const response = await fetch(`${apiUrl}/geodata/column/${id}`, {
+        method: "GET",
+    })
+    const data = await response.json();
+    return data;
+}
+export const getAllGeoDataWithTableId = async (table_id: string) => {
+    const response = await fetch(`${apiUrl}/geodata/tables/${table_id}`, {
+        method: "GET",
+    })
+    const data = await response.json();
+    return data;
 }

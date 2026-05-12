@@ -71,6 +71,7 @@ const DatasetColumns = () => {
     }
     const handleSubmit = async () => {
         const data = await addValueInColumns(selectedTableId, getColumnValues())
+        console.log(data)
         if (data[0] === 200) {
             const status = 'merged'
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
@@ -78,7 +79,8 @@ const DatasetColumns = () => {
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             console.log(dataColumn)
             const geoData = {"coordinates": geometry, "type": geometryType}
-            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, geoData)
+            const properties = {"column_id": data[1].id,"table_id": selectedTableId}
+            const dataInserGeoData = await insertGeoData(selectedTableId,data[1].id, properties, geoData)
             console.log(dataInserGeoData)
             const getAllGeoData = await getGeoData();
             console.log(getAllGeoData)

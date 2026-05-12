@@ -24,8 +24,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
 import AddDataInTable from './AddDataInTable';
-import { getColumnWithId, getGeoData } from '../../api/dataset';
+import { fetchTableWithId, getColumnWithId, getGeoData } from '../../api/dataset';
 import CircleStyle from 'ol/style/Circle';
+import RendernInfo from './DatasetsInMaps/RendernInfo';
 
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
@@ -36,6 +37,7 @@ const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
+    const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
 
     useEffect(() => {
         const map = new Map({
@@ -155,9 +157,12 @@ const OpenLayersMap = () => {
     ]
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
-    const fetchDataForDrawed = async(table_id: string, id: string) => {
-        const data = await getColumnWithId(table_id, id)
-        console.log(data)
+    const fetchDataForDrawed = async (tableId: string, id: string) => {
+        const dataColumn = await getColumnWithId(tableId, id)
+        const dataTable = await fetchTableWithId(tableId)
+        dispatch({ type: 'openLayers/setColumnInfo', payload: dataColumn })
+        dispatch({ type: 'openLayers/setTableInfo', payload: dataTable[0] })
+        dispatch({ type: 'openLayers/setRendernDataInfo', payload: true })
     }
     useEffect(() => {
         isDrawingRef.current = isDrawing;
@@ -169,8 +174,13 @@ const OpenLayersMap = () => {
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.id;
-                fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
-                dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+                if (dataId !== undefined) {
+                    fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
+                    dispatch({ type: 'openLayers/setTableIdForDrawed', payload: dataId.RawMessage.table_id })
+                    dispatch({ type: 'openLayers/setColumnIdForDrawed', payload: dataId.RawMessage.column_id })
+                } else {
+                    dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+                }
                 // feature.setStyle(newStyle)
             }
         }
@@ -252,6 +262,7 @@ const OpenLayersMap = () => {
         <VStack>
             <MapActions olMap={olMap} />
             {addDrawedInteractionInfo && <AddDataInTable />}
+            {rendernDataInfo && <RendernInfo />}
         </VStack>
         <Button onClick={showGeoJSON}>Click</Button>
     </HStack>

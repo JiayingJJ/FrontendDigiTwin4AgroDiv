@@ -6,6 +6,12 @@ interface OpenLayersState {
     addDrawedInteractionInfo: boolean;
     geometry: [] | null;
     geometryType: string | null;
+    tableIdForDrawed: string | null;
+    columnIdForDrawed: string | null;
+    rendernDataInfo: boolean;
+    columnInfo: any | null;
+    tableInfo: any | null;
+
 }
 
 const initialState: OpenLayersState = {
@@ -13,7 +19,12 @@ const initialState: OpenLayersState = {
     drawingInteraction: false,
     addDrawedInteractionInfo: false,
     geometry: null,
-    geometryType: null
+    geometryType: null,
+    tableIdForDrawed: null,
+    columnIdForDrawed: null,
+    rendernDataInfo: false,
+    columnInfo: null,
+    tableInfo: null,
 }
 
 const openLayersSlice = createSlice({
@@ -37,6 +48,29 @@ const openLayersSlice = createSlice({
         },
         setGeometryType: (state, action) => {
             state.geometryType = action.payload;
+        },
+        setTableIdForDrawed: (state, action) => {
+            state.tableIdForDrawed = action.payload;
+        },
+        clearTableIdForDrawed: (state, action) => {
+            state.tableIdForDrawed = null;
+        },
+        setColumnIdForDrawed: (state, action) => {
+            state.columnIdForDrawed = action.payload;
+        },
+        clearColumnIdForDrawed: (state, action) => {
+            state.columnIdForDrawed = null;
+        },
+        setRendernDataInfo: (state, action) => {
+            state.rendernDataInfo = action.payload;
+        },
+        setColumnInfo: (state, action) => {
+            state.columnInfo = action.payload;
+
+        },
+        setTableInfo: (state, action) => {
+            state.tableInfo = action.payload;
+
         }
     }
 });
@@ -46,7 +80,14 @@ export const {
     setDrawingInteraction,
     setAddDrawedInteractionInfo,
     setGeometry,
-    setGeometryType
+    setGeometryType,
+    setTableIdForDrawed,
+    clearTableIdForDrawed,
+    setColumnIdForDrawed,
+    clearColumnIdForDrawed,
+    setRendernDataInfo,
+    setColumnInfo,
+    setTableInfo
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

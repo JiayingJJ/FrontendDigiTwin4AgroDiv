@@ -16,7 +16,7 @@ import {
 import { FaCheck } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { createTable } from '../../api/dataset';
-
+import { MdCancel } from "react-icons/md";
 const UserTable = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector((state: any) => state.user)
@@ -58,7 +58,14 @@ const UserTable = () => {
                     <FormLabel>Tabelle Name</FormLabel>
                     <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
                 </FormControl>
-
+                <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                    dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
+                    dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
+                    dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
+                    dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
+                }}>
+                    Abbrechen
+                </Button>
                 <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
                     clickForCreateTable(userInfo, tableName)
                 }}>

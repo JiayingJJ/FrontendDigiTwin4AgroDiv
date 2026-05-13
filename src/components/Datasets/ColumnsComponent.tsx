@@ -72,7 +72,6 @@ const ColumnsComponent = ({ }: Props) => {
             <Box>
                 {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => handlePostColumns()}>Submit</Button>
-
             </Box>
         </>
     );

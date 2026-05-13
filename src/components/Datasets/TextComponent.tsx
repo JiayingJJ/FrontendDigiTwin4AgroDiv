@@ -18,16 +18,22 @@ import {
 import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 type Props = {
     id: string,
-    index: number
+    index: number,
+    data: any
 }
-const TextComponent = ({ id, index }: Props) => {
-    console.log(index)
+const TextComponent = ({ id, index, data }: Props) => {
+    console.log(id)
     const dispatch = useDispatch()
     const [labelName, setLabelName] = useState<string>("");
     const [labelInfo, setLabelInfo] = useState<string>("");
-
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
+    useEffect(() => {
+        if (data.name !== '') {
+            setLabelName(data.name)
+            setLabelInfo(data.hint)
+        }
+    }, [])
     return (
         <FormControl onMouseOver={() => { console.log(index) }} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
             <FormLabel>Geben Sie bitte ein Name für das Input</FormLabel>
@@ -43,7 +49,7 @@ const TextComponent = ({ id, index }: Props) => {
                         setLabelName(e.target.value)
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
-                    <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
+                    <Input placeholder='Component hint' value={labelInfo} onChange={(e) => {
                         if (e.target.value !== "") {
                             setIsDisabled(false)
                         } else {

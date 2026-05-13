@@ -38,6 +38,10 @@ const ColumnsComponent = ({ }: Props) => {
         }
     }
     const renderForm = (column: ColumnType, index: number) => {
+        const data = userTableColumns.filter((m) =>
+            m.id === column.id
+        )
+        console.log(data[0])
         switch (column.type) {
             case 'radio':
                 return (
@@ -54,12 +58,12 @@ const ColumnsComponent = ({ }: Props) => {
             case 'select':
                 return (
                     <Box key={column.id} draggable onDrag={() => console.log(index)}>
-                        <SelectComponent id={column.id} index={index} /></Box>
+                        <SelectComponent id={column.id} index={index} data={data[0]} /></Box>
                 );
             case 'text':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} />
+                        <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             default:

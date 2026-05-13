@@ -21,6 +21,7 @@ interface DatasetTableState {
     addNewDataset: boolean;
     addingColumns: boolean;
     userInputColumnValues: [];
+    editTable: boolean;
 }
 
 const initialState: DatasetTableState = {
@@ -35,7 +36,8 @@ const initialState: DatasetTableState = {
     userTableColumnIndex: 0,
     addNewDataset: false,
     addingColumns: false,
-    userInputColumnValues: []
+    userInputColumnValues: [],
+    editTable: false,
 }
 
 const datasetTableSlice = createSlice({
@@ -63,12 +65,13 @@ const datasetTableSlice = createSlice({
         setUpdatedTables: (state, action) => {
             state.updatedTables = action.payload;
         },
+        setUserTableColumns: (state, action) => {
+            state.userTableColumns = action.payload;
+        },
         clearUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
-            console.log(action.payload)
             state.userTableColumns = [];
         },
         addUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
-            console.log(action.payload)
             state.userTableColumns.push(action.payload);
         },
         updateUserTableColumns: (state, action: PayloadAction<ColumnType>) => {
@@ -117,6 +120,9 @@ const datasetTableSlice = createSlice({
             console.log(action.payload)
             state.userInputColumnValues = [];
         },
+        setEditTable: (state, action) => {
+            state.editTable = action.payload;
+        }
     }
 });
 
@@ -137,7 +143,9 @@ export const {
     clearUserTableColumns,
     setUserInputColumnValues,
     updateUserInputColumnValues,
-    clearUserInputColumnValues
+    clearUserInputColumnValues,
+    setEditTable,
+    setUserTableColumns
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

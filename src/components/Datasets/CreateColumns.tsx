@@ -12,6 +12,7 @@ const CreateColumns = () => {
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
+    const editTable = useSelector((state: any) => state.datasetTable.editTable)
     const modalResult = useSelector((state: any) => state.modalInfo.modalResult)
 
 
@@ -30,8 +31,8 @@ const CreateColumns = () => {
     }
     return (
         <>
-            <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30"
-                onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
+            {!editTable && <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30"
+                onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />}
             {addingColumns && <CiCircleRemove color="green" size="40" onClick={() => {
                 console.log(userTableColumns.length)
                 if (userTableColumns.length !== 0) {
@@ -43,11 +44,11 @@ const CreateColumns = () => {
                 console.log("modalResult: ", modalResult)
 
             }} />}
-            {addingColumns && <Box>
+            {(addingColumns || editTable) && <Box>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Select</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Input</Button>
             </Box>}
-            {addingColumns && userTableColumns.length !== 0 ? <ColumnsComponent /> : null}
+            {((addingColumns && !editTable && userTableColumns.length !== 0) || (!addingColumns && editTable && userTableColumns.length !== 0)) ? <ColumnsComponent /> : null}
             <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
         </>
     );

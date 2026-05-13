@@ -18,9 +18,11 @@ import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 import { MdOutlineAdd } from "react-icons/md";
 type Props = {
     id: string,
-    index: number
+    index: number,
+    data: any,
 }
-const SelectComponent = ({ id, index }: Props) => {
+const SelectComponent = ({ id, index, data }: Props) => {
+    console.log(data)
     const [labelName, setLabelName] = useState<string>("");
     const [optionName, setOptionName] = useState<string>("");
     const [labelInfo, setLabelInfo] = useState<string>("");
@@ -29,19 +31,25 @@ const SelectComponent = ({ id, index }: Props) => {
     const dispatch = useDispatch()
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isDisabledAddBtn, setIsDisabledAddBtn] = useState<boolean>(true);
+
     useEffect(() => {
-        if (labelName !== "" && optionsState.length !== 0) {
-            setIsDisabled(false)
-        } else {
-            setIsDisabled(true)
+        if (data.name !== '') {
+            setLabelName(data.name)
+            setLabelInfo(data.hint)
+            setOptionsState(data.additional_info.options)
         }
-    }, [labelName, optionsState])
+    }, [])
     return (
         <FormControl backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
                     <FormLabel>Geben Sie bitte ein Name für das Select</FormLabel>
                     <Input placeholder='Component name' value={labelName} onChange={(e) => {
+                        if (e.target.value !== "" && optionsState.length !== 0) {
+                            setIsDisabled(false)
+                        } else {
+                            setIsDisabled(true)
+                        }
                         setLabelName(e.target.value)
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
@@ -62,6 +70,7 @@ const SelectComponent = ({ id, index }: Props) => {
                             const exist = optionsState.filter((o) => o === optionName)
                             if (exist.length === 0) {
                                 setOptionsState([...optionsState, optionName])
+                                setIsDisabled(false)
                             } else {
                                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })

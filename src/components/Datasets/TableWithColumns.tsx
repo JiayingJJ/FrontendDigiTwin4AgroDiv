@@ -15,8 +15,15 @@ import {
     Select,
     Tooltip
 } from '@chakra-ui/react'
+import { MdModeEdit } from "react-icons/md";
 import { CiCircleInfo } from "react-icons/ci";
+import CreateColumns from './CreateColumns';
 const TableWithColumns = () => {
+    const dispatch = useDispatch()
+    const editTable = useSelector((state: any) => state.datasetTable.editTable)
+    const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
+
+    const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const [sortedTableColumns, setSortedTableColumns] = useState<any>();
     useEffect(() => {
@@ -83,6 +90,13 @@ const TableWithColumns = () => {
     return (
         <>
             <Box>{sortedTableColumns?.map(column => renderFormControl(column))}</Box>
+            {tableColumns.length !== 0 && <MdModeEdit color="green" cursor={"pointer"} size="25" onClick={() => {
+                dispatch({ type: 'datasetTable/setEditTable', payload: true })
+                console.log(tableColumns)
+                dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
+            }} />}
+            {!addingColumns && editTable && userTableColumns.length !== 0 ? <CreateColumns /> : null}
+
         </>
     );
 }

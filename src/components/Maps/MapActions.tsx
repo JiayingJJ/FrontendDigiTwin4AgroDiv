@@ -4,7 +4,7 @@ import { BsWater } from "react-icons/bs";
 import { FaLayerGroup } from "react-icons/fa";
 import { MdCameraOutdoor } from "react-icons/md";
 import { MdTerrain } from "react-icons/md";
-import { Tooltip, Box } from '@chakra-ui/react'
+import { Tooltip, Box, HStack } from '@chakra-ui/react'
 import { Map } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import StadiaMaps from 'ol/source/StadiaMaps.js';
@@ -18,6 +18,8 @@ import Snap from 'ol/interaction/Snap.js';
 import { useRef, useState } from 'react';
 import { BiShapePolygon } from "react-icons/bi";
 import { TbPoint } from "react-icons/tb";
+import AddDataInTable from './AddDataInTable';
+import RendernInfo from './DatasetsInMaps/RendernInfo';
 type Props = {
   olMap: Map
 };
@@ -33,7 +35,8 @@ const layerButtons = [
 ];
 const MapActions = ({ olMap }: Props) => {
   const dispatch = useDispatch()
-
+  const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
+  const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
   const layers = {
     standard: new TileLayer({
       source: new OSM(),
@@ -129,7 +132,7 @@ const MapActions = ({ olMap }: Props) => {
   };
   const [selectType, setSelectType] = useState<boolean>(false);
   return (
-    <div style={{ display: 'flex', justifyContent: "center" }}>
+    <HStack style={{ display: 'flex', justifyContent: "center" }}>
       <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
         <Box>
           <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
@@ -178,7 +181,9 @@ const MapActions = ({ olMap }: Props) => {
           </Box>
         </Tooltip>
       ))}
-    </div>
+      {addDrawedInteractionInfo && <AddDataInTable />}
+      {rendernDataInfo && <RendernInfo />}
+    </HStack>
   );
 };
 

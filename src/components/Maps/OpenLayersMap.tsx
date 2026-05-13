@@ -36,10 +36,9 @@ const OpenLayersMap = () => {
     let positionFeature = new Feature();
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
-    const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
-    const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
 
     useEffect(() => {
+        dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
             target: mapDivRef.current as HTMLDivElement,
             layers: [new TileLayer({
@@ -107,6 +106,7 @@ const OpenLayersMap = () => {
     };
 
     useEffect(() => {
+        dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const fetchUserGeoData = async () => {
             const data = await getGeoData();
             const geoJsonData = backendToGeoJSON(data);
@@ -174,6 +174,7 @@ const OpenLayersMap = () => {
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.id;
+                console.log(feature.values_)
                 if (dataId !== undefined) {
                     fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
                     dispatch({ type: 'openLayers/setTableIdForDrawed', payload: dataId.RawMessage.table_id })
@@ -233,7 +234,7 @@ const OpenLayersMap = () => {
     }
 
     return <HStack>
-        <Card style={{ height: "80vh", width: "70vw", color: "#f2f7f5", backgroundColor: "#60935D" }}>
+        <Card style={{ height: "90vh", width: "80vw", color: "#f2f7f5", backgroundColor: "#60935D" }}>
             <CardHeader>
                 <div style={{
                     display: "flex",
@@ -248,7 +249,6 @@ const OpenLayersMap = () => {
                     </Tooltip>
 
                     <Tooltip label="User Location" placement='top' hasArrow>
-
                         <Box>
                             <GetUserLocation olMap={olMap} positionFeature={positionFeature} />
                         </Box>
@@ -256,15 +256,15 @@ const OpenLayersMap = () => {
                 </div>
             </CardHeader>
             <CardBody ref={mapDivRef}
-                style={{ height: "80vh", width: "70vw" }}>
+                style={{ height: "90vh", width: "80vw" }}>
             </CardBody>
         </Card>
         <VStack>
-            <MapActions olMap={olMap} />
-            {addDrawedInteractionInfo && <AddDataInTable />}
-            {rendernDataInfo && <RendernInfo />}
+            <Box style={{ display: "flex", flexDirection:"column"}}>
+                <MapActions olMap={olMap} />
+                <Button onClick={showGeoJSON}>Click</Button>
+            </Box>
         </VStack>
-        <Button onClick={showGeoJSON}>Click</Button>
     </HStack>
 };
 

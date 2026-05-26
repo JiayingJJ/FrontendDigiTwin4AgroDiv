@@ -6,6 +6,7 @@ import UserReducer from '../stores/userSlice';
 import PageReducer from '../stores/pageSlice';
 import DatasetTableReducer from '../stores/datasetTableSlice';
 import ModalInfoReducer from '../stores/modalInfoSlice';
+import DatasetTableViewReducer from '../stores/datasetTableViewSlice';
 const store = configureStore({
     reducer: {
         user: UserReducer,
@@ -15,6 +16,7 @@ const store = configureStore({
         alertInfo: AlertInfoReducer,
         modalInfo: ModalInfoReducer,
         datasetTable: DatasetTableReducer,
+        datasetTableView: DatasetTableViewReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

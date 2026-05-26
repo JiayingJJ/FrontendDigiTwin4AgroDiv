@@ -48,6 +48,17 @@ const Dashboard = () => {
         }
         fechtData()
     }, [])
+    useEffect(() => {
+        console.log(alertInfo.showAlert)
+        if (alertInfo.showAlert === true) {
+            const intervalId = setInterval(() => {
+                dispatch({ type: 'alertInfo/setShowAlert', payload: false })
+                dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
+                dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
+            }, 3000);
+            return () => clearInterval(intervalId);
+        }
+    }, [alertInfo]);
     return (
         <VStack
             minH={"100vh"}

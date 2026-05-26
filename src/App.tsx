@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Login from "./components/Login"
 import store from "./stores/stores"
 /* 
@@ -23,6 +24,17 @@ function App() {
   const dispatch = useDispatch()
   console.log(store.getState())
   const alertInfo = useSelector((state: any) => state.alertInfo);
+  useEffect(() => {
+    console.log(alertInfo.showAlert)
+    if (alertInfo.showAlert === true) {
+      const intervalId = setInterval(() => {
+        dispatch({ type: 'alertInfo/setShowAlert', payload: false })
+        dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
+        dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
+      }, 3000);
+      return () => clearInterval(intervalId);
+    }
+  }, [alertInfo]);
   return (
     <VStack style={{ backgroundColor: "#f8f1e3", width: "100vw", height: "100vh" }}>
       <Login />

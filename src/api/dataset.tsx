@@ -14,8 +14,28 @@ export const getTablesWithUserId = async (userInfo: any) => {
 export const postColumns = async (tableId: string, userTableColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify({ columns_in_table: userTableColumns, updated_at: time }),
+    })
+    const data = await response.json();
+    return data;
+}
+
+export const putNewColumns = async (tableId: string, newColumns: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {
+        method: "PUT",
+        body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
+    })
+    const data = await response.json();
+    return data;
+}
+
+export const patchColumns = async (tableId: string, newColumns: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
     })
     const data = await response.json();
     return data;

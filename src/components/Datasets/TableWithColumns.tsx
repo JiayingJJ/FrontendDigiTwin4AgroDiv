@@ -35,7 +35,6 @@ const TableWithColumns = () => {
 
     }, [tableColumns])
     const renderFormControl = (column: any) => {
-        console.log(column)
         const key = column.name;
 
         switch (column.type) {

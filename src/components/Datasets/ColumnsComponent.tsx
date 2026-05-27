@@ -17,7 +17,7 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { fetchTableWithId, postColumns, putNewColumns } from '../../api/dataset';
+import { fetchTableWithId, patchColumns, postColumns, putNewColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -25,21 +25,23 @@ const ColumnsComponent = ({ }: Props) => {
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
+    const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
 
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const checkColumns = () => {
-
         console.log(userTableColumns)
         console.log(tableColumns)
-        if (userTableColumns.length === tableColumns.length) {
-            console.log("ändern")
-            
-        } else {
+        const diffWithName = tableColumns.filter(
+            (utc: any) => !userTableColumns.some((tc: any) => tc['name'] === utc['name'])
+        );
+        console.log("Unterschied diffWithName: ", diffWithName)
+        dispatch({ type: 'datasetTable/setEditedColumns', payload: diffWithName })
+
+        if (userTableColumns.length !== tableColumns.length) {
             console.log("hinzufügen oder delete")
             const diffForDeleteColumn = tableColumns.filter(
                 (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
             );
-            // 
             const diffForAddColumn = userTableColumns.filter(
                 (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
             );
@@ -56,12 +58,30 @@ const ColumnsComponent = ({ }: Props) => {
         console.log("Post columns in Backend")
 
         const postData = await postColumns(tableId, userTableColumns)
-        if (tableColumns.length !== 0) {
+        if (tableColumns.length !== 0 && newColumns.length !== 0) {
             console.log(newColumns)
+
             const putData = await putNewColumns(tableId, newColumns)
             console.log(putData)
         }
+        if (tableColumns.length !== 0 && editedColumns.length !== 0) {
+            console.log("patch")
+            const getNewInfo = userTableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
+            console.log(editedColumns)
+            console.log(getNewInfo)
+            const result = editedColumns.map((editedC: any) => {
+                const newInfo = getNewInfo.find((old: any) => old.id === editedC.id);
+                return {
+                    id: editedC.id,
+                    old_name: editedC?.name,
+                    new_name: newInfo.name ?? null
+                };
+            });
 
+            console.log(result);
+            const patchData = await patchColumns(tableId, result)
+            console.log(patchData)
+        }
         console.log(postData)
 
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
@@ -76,7 +96,6 @@ const ColumnsComponent = ({ }: Props) => {
         const data = userTableColumns.filter((m) =>
             m.id === column.id
         )
-        console.log(data[0])
         switch (column.type) {
             case 'radio':
                 return (

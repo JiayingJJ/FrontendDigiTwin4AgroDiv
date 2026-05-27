@@ -33,8 +33,8 @@ export const putNewColumns = async (tableId: string, newColumns: any) => {
 
 export const patchColumns = async (tableId: string, newColumns: any) => {
     const time = getCurrentTime()
-    const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {
-        method: "PATCH",
+    const response = await fetch(`${apiUrl}/usertable/updateColumn/${tableId}`, {
+        method: "PUT",
         body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
     })
     const data = await response.json();

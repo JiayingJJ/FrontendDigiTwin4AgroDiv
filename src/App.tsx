@@ -19,7 +19,12 @@ import {
   AlertIcon,
   CloseButton
 } from '@chakra-ui/react'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
+import { Navigate } from "react-router-dom";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
   const dispatch = useDispatch()
   console.log(store.getState())
@@ -37,7 +42,18 @@ function App() {
   }, [alertInfo]);
   return (
     <VStack style={{ backgroundColor: "#f8f1e3", width: "100vw", height: "100vh" }}>
-      <Login />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </BrowserRouter>
       {alertInfo.showAlert &&
         <Alert status={alertInfo.alertStatus} width="auto"
           position="fixed"

@@ -19,7 +19,6 @@ import DatasetsTable from './TableView/DatasetsTable';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
-    const alertInfo = useSelector((state: any) => state.alertInfo);
     const userInfo = useSelector((state: any) => state.user)
     const rendernPage = () => {
         switch (activePage) {
@@ -48,57 +47,9 @@ const Dashboard = () => {
         }
         fechtData()
     }, [])
-    useEffect(() => {
-        console.log(alertInfo.showAlert)
-        if (alertInfo.showAlert === true) {
-            const intervalId = setInterval(() => {
-                dispatch({ type: 'alertInfo/setShowAlert', payload: false })
-                dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
-                dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
-            }, 3000);
-            return () => clearInterval(intervalId);
-        }
-    }, [alertInfo]);
-    return (
-        <VStack
-            minH={"100vh"}
-            width={"100%"}
-            flex={1}
-            display="flex"
-            justifyContent="flex-start"
-            data-tour="dashboard-whole-page"
-            backgroundColor={"#f8f1e3"}
-        >
-            {alertInfo.showAlert &&
-                <Alert status={alertInfo.alertStatus} width="auto"
-                    position="fixed"
-                    top="10px"
-                    shadow={"lg"}
-                    zIndex="banner"
-                    pointerEvents="auto"
-                    borderRadius={"5px"}
-                >
-                    <AlertIcon />
-                    <Box>
-                        <AlertTitle>{alertInfo.alertTitle}</AlertTitle>
-                        <AlertDescription>
-                            {alertInfo.alertMessage}
-                        </AlertDescription>
-                    </Box>
-                    <CloseButton
-                        alignSelf='flex-start'
-                        position='relative'
-                        right={-3}
-                        top={-2}
-                        onClick={() => {
-                            dispatch({ type: 'alertInfo/setShowAlert', payload: false })
-                            dispatch({ type: 'alertInfo/setAlertTitle', payload: null })
-                            dispatch({ type: 'alertInfo/setAlertMessage', payload: null })
-                        }
-                        }
-                    />
-                </Alert>}
 
+    return (
+        <VStack>
             <HStack
                 justifyContent={"space-between"}
                 width={"100vw"}

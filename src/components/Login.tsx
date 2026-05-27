@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { VStack, Input, Button, Box, } from '@chakra-ui/react'
 import { IoIosLogIn } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { fetchUserWithEmail } from '../api/user';
+import Register from './Register';
 
 const Login = () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const dispatch = useDispatch()
     const navigate = useNavigate();
 
@@ -20,42 +21,19 @@ const Login = () => {
             setValueName(event.target.value)
         }
     }
-    const createUser = async () => {
-        const response = await fetch(`${apiUrl}/user`, {
-            method: "POST",
-            body: JSON.stringify({ name: valueName, email: valueEmail }),
-        })
-        dispatch({ type: 'user.setName', valueName })
-        const data = await response.json();
-        if (response.status === 500) {
-            console.log("Alert Message")
-            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
-            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
-            dispatch({ type: 'alertInfo/setAlertMessage', payload: data.error })
-            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
-        } else {
-            dispatch({ type: 'user/setUserId', payload: data.ID })
-            dispatch({ type: 'user/setName', payload: data.Name })
-            dispatch({ type: 'user/setEmail', payload: data.Email })
-            navigate("/")
-        }
-    }
     const getUserWithEmail = async () => {
-        const response = await fetch(`${apiUrl}/user/${valueEmail}`, {
-            method: "GET"
-        })
-        const data = await response.json();
+        const data = await fetchUserWithEmail(valueEmail);
         console.log(data)
-        if (response.status === 500) {
+        if (data[1] === 500) {
             console.log("Alert Message")
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
             dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
             dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte valide Informationen geben." })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
-            dispatch({ type: 'user/setUserId', payload: data.ID })
-            dispatch({ type: 'user/setName', payload: data.Name })
-            dispatch({ type: 'user/setEmail', payload: data.Email })
+            dispatch({ type: 'user/setUserId', payload: data[0].ID })
+            dispatch({ type: 'user/setName', payload: data[0].Name })
+            dispatch({ type: 'user/setEmail', payload: data[0].Email })
             navigate("/dashboard")
         }
     }
@@ -65,11 +43,12 @@ const Login = () => {
                 onChange={(e) => handleChange(e, "name")} />
             <Input width="400px" borderColor="#60935D" placeholder='Email' outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
-            <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={createUser}>
-                Register
-            </Button>
             <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={getUserWithEmail}>
                 Log in
+            </Button>
+            <Button colorScheme='teal' variant='ghost' onClick={() => navigate("/register")
+            }>
+                Registieren ein neue Account
             </Button>
         </VStack>
 

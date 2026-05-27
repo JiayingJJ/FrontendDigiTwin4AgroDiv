@@ -22,6 +22,9 @@ interface DatasetTableState {
     addingColumns: boolean;
     userInputColumnValues: [];
     editTable: boolean;
+    editedColumns: [];
+    newColumns: [];
+    removedColumns: [];
 }
 
 const initialState: DatasetTableState = {
@@ -38,6 +41,9 @@ const initialState: DatasetTableState = {
     addingColumns: false,
     userInputColumnValues: [],
     editTable: false,
+    editedColumns: [],
+    newColumns: [],
+    removedColumns: [],
 }
 
 const datasetTableSlice = createSlice({
@@ -122,6 +128,15 @@ const datasetTableSlice = createSlice({
         },
         setEditTable: (state, action) => {
             state.editTable = action.payload;
+        },
+        setEditedColumns: (state, action) => {
+            state.editedColumns = action.payload;
+        },
+        setNewColumns: (state, action) => {
+            state.newColumns = action.payload;
+        },
+        setRemovedColumns: (state, action) => {
+            state.removedColumns = action.payload;
         }
     }
 });
@@ -145,7 +160,10 @@ export const {
     updateUserInputColumnValues,
     clearUserInputColumnValues,
     setEditTable,
-    setUserTableColumns
+    setUserTableColumns,
+    setEditedColumns,
+    setNewColumns,
+    setRemovedColumns
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

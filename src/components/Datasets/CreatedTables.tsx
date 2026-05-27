@@ -16,6 +16,8 @@ const CreatedTables = () => {
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
+       dispatch({ type: 'datasetTable/setNewColumns', payload: [] })
+
         const data = await fetchTableWithId(t.ID)
         console.log(data)
         if (data[1] === 500) {

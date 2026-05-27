@@ -17,18 +17,53 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { fetchTableWithId, postColumns } from '../../api/dataset';
+import { fetchTableWithId, postColumns, putNewColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
+    const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
+    const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
+
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
+    const checkColumns = () => {
+
+        console.log(userTableColumns)
+        console.log(tableColumns)
+        if (userTableColumns.length === tableColumns.length) {
+            console.log("ändern")
+            
+        } else {
+            console.log("hinzufügen oder delete")
+            const diffForDeleteColumn = tableColumns.filter(
+                (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
+            );
+            // 
+            const diffForAddColumn = userTableColumns.filter(
+                (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
+            );
+            console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
+            console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
+            dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
+        }
+    }
+
+    useEffect(() => {
+        checkColumns()
+    }, [userTableColumns])
     const handlePostColumns = async () => {
         console.log("Post columns in Backend")
-        console.log(userTableColumns)
+
         const postData = await postColumns(tableId, userTableColumns)
+        if (tableColumns.length !== 0) {
+            console.log(newColumns)
+            const putData = await putNewColumns(tableId, newColumns)
+            console.log(putData)
+        }
+
         console.log(postData)
+
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
         const data = await fetchTableWithId(tableId)
         console.log(data)

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    Card, CardHeader, CardBody, CardFooter, Heading, Text, Button, SimpleGrid, VStack
+    Card, CardHeader, CardBody, CardFooter, Heading, Text, Button, SimpleGrid, VStack, HStack
 } from '@chakra-ui/react'
 import { fetchTableWithId, getAllColumnsWithTableId, getColumnWithId, getTablesWithUserId } from '../../api/dataset';
 import Tables from './Tables';
@@ -37,12 +37,13 @@ const DatasetsTable = () => {
         dispatch({ type: 'datasetTableView/setTableName', payload: null })
         dispatch({ type: 'datasetTableView/setRenderTable', payload: false })
         const dataColumns = await fetchTableWithId(t.ID)
-        if (dataColumns[1] !== 500) {
-            const dataValues = await getAllColumnsWithTableId(t.ID);
-            console.log(dataColumns)
-            console.log(dataValues)
+        const dataValues = await getAllColumnsWithTableId(t.ID);
+        console.log(dataColumns)
+        console.log(dataValues)
+        console.log(dataValues[0])
+        if (dataColumns[1] === 200 && dataValues[1] === 200) {
             dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].ColumnsInTable.RawMessage })
-            dispatch({ type: 'datasetTableView/setData', payload: dataValues })
+            dispatch({ type: 'datasetTableView/setData', payload: dataValues[0] })
             dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].TableName })
             dispatch({ type: 'datasetTableView/setRenderTable', payload: true })
         } else {

@@ -15,10 +15,9 @@ function Tables() {
     const columns = useSelector((state: any) => state.datasetTableView.columns)
     const data = useSelector((state: any) => state.datasetTableView.data)
     const tableName = useSelector((state: any) => state.datasetTableView.tableName)
-
     return (
         <TableContainer>
-            <Table variant='striped' colorScheme='teal'>
+            <Table variant='striped' colorScheme='gray'>
                 <TableCaption>{tableName}</TableCaption>
                 <Thead>
                     <Tr>

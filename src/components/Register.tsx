@@ -13,6 +13,14 @@ const Register = () => {
 
     const [valueName, setValueName] = useState<string>('')
     const [valueEmail, setValueEmail] = useState<string>('')
+    const [disabledRegister, setDisabledRegister] = useState<boolean>(true);
+    useEffect(() => {
+        if (valueEmail !== "" && valueName !== "") {
+            setDisabledRegister(false)
+        } else {
+            setDisabledRegister(true)
+        }
+    }, [valueEmail, valueName])
     const createUser = async () => {
         const data = await PostUser(valueName, valueEmail);
         dispatch({ type: 'user.setName', valueName })
@@ -42,7 +50,7 @@ const Register = () => {
                 onChange={(e) => handleChange(e, "name")} />
             <Input width="400px" borderColor="#60935D" placeholder='Email' outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
-            <Button width="400px" rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={createUser}>
+            <Button width="400px" disabled={disabledRegister} rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={createUser}>
                 Register
             </Button>
         </VStack>

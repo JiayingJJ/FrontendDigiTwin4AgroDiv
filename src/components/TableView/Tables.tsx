@@ -33,8 +33,9 @@ function Tables() {
                     {data.map((d: any, rowIndex: number) => (
                         <Tr key={rowIndex}>
                             {columns.map((c: any, colIndex: number) => {
-                                const name = c.name.replaceAll(" ", "_");
-                                const value = d[name];
+                                const lowerCaseName = c.name.toLowerCase();
+                                const varName = lowerCaseName.replaceAll(" ", "_");
+                                const value = d[varName];
                                 return (
                                     <Td key={colIndex}>{value}</Td>
                                 );

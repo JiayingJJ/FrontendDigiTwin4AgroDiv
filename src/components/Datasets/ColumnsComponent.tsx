@@ -33,32 +33,29 @@ const ColumnsComponent = ({ }: Props) => {
     const checkColumns = () => {
         console.log(userTableColumns)
         console.log(tableColumns)
-        if (tableColumns.length !== userTableColumns.length) {
-            console.log("hinzufügen oder delete")
-            if (tableColumns.length < userTableColumns.length) {
-                // Add column
-                const diffForAddColumn = userTableColumns.filter(
-                    (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
-                );
-                console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
-                dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
-            } else {
-                // Delete column
-                const diffForDeleteColumn = tableColumns.filter(
-                    (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
-                );
-
-                console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
-                dispatch({ type: 'datasetTable/setRemovedColumns', payload: diffForDeleteColumn })
-            }
-        } else {
-            // tc.length === utc.length => Edit => get Different between tc and utc
-            const diffWithName = tableColumns.filter(
-                (utc: any) => !userTableColumns.some((tc: any) => tc['name'] === utc['name'])
+        console.log("hinzufügen oder delete")
+        if (tableColumns.length < userTableColumns.length) {
+            // Add column
+            const diffForAddColumn = userTableColumns.filter(
+                (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
             );
-            console.log("Unterschied diffWithName: ", diffWithName)
-            dispatch({ type: 'datasetTable/setEditedColumns', payload: diffWithName })
+            console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
+            dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
+        } else {
+            // Delete column
+            const diffForDeleteColumn = tableColumns.filter(
+                (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
+            );
+
+            console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
+            dispatch({ type: 'datasetTable/setRemovedColumns', payload: diffForDeleteColumn })
         }
+        // Edit Column
+        const diffWithName = userTableColumns.filter(
+            (utc: any) => tableColumns.some((tc: any) => tc['id'] === utc['id'] && tc['name'] !== utc['name'])
+        );
+        console.log("Unterschied diffWithName: ", diffWithName)
+        dispatch({ type: 'datasetTable/setEditedColumns', payload: diffWithName })
     }
 
     useEffect(() => {
@@ -76,15 +73,15 @@ const ColumnsComponent = ({ }: Props) => {
         }
         if (tableColumns.length !== 0 && editedColumns.length !== 0) {
             console.log("patch")
-            const getNewInfo = userTableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
+            const getOldInfo = tableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
             console.log(editedColumns)
-            console.log(getNewInfo)
+            console.log(getOldInfo)
             const result = editedColumns.map((editedC: any) => {
-                const newInfo = getNewInfo.find((old: any) => old.id === editedC.id);
+                const newInfo = getOldInfo.find((old: any) => old.id === editedC.id);
                 return {
                     id: editedC.id,
-                    old_name: editedC?.name,
-                    new_name: newInfo.name ?? null
+                    old_name: newInfo?.name,
+                    new_name: editedC.name ?? null
                 };
             });
 
@@ -98,6 +95,7 @@ const ColumnsComponent = ({ }: Props) => {
             console.log(result)
         }
         console.log(postData)
+        dispatch({ type: 'datasetTable/setEditTable', payload: false })
 
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
         const data = await fetchTableWithId(tableId)
@@ -145,6 +143,8 @@ const ColumnsComponent = ({ }: Props) => {
             <Box>
                 {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => handlePostColumns()}>Submit</Button>
+                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'datasetTable/setEditTable', payload: false })}>Cancel</Button>
+
             </Box>
         </>
     );

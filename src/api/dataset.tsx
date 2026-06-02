@@ -40,6 +40,16 @@ export const patchColumns = async (tableId: string, newColumns: any) => {
     const data = await response.json();
     return data;
 }
+
+export const removeColumns = async (tableId: string, newColumns: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/removeColumn/${tableId}`, {
+        method: "PUT",
+        body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
+    })
+    const data = await response.json();
+    return data;
+}
 export const createTable = async (userInfo: any, tableName: string) => {
     const time = getCurrentTime()
     console.log(time)

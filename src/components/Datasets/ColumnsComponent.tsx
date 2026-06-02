@@ -17,7 +17,7 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { fetchTableWithId, patchColumns, postColumns, putNewColumns } from '../../api/dataset';
+import { fetchTableWithId, patchColumns, postColumns, putNewColumns, removeColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -26,28 +26,38 @@ const ColumnsComponent = ({ }: Props) => {
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
     const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
+    const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
+
 
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const checkColumns = () => {
         console.log(userTableColumns)
         console.log(tableColumns)
-        const diffWithName = tableColumns.filter(
-            (utc: any) => !userTableColumns.some((tc: any) => tc['name'] === utc['name'])
-        );
-        console.log("Unterschied diffWithName: ", diffWithName)
-        dispatch({ type: 'datasetTable/setEditedColumns', payload: diffWithName })
-
-        if (userTableColumns.length !== tableColumns.length) {
+        if (tableColumns.length !== userTableColumns.length) {
             console.log("hinzufügen oder delete")
-            const diffForDeleteColumn = tableColumns.filter(
-                (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
+            if (tableColumns.length < userTableColumns.length) {
+                // Add column
+                const diffForAddColumn = userTableColumns.filter(
+                    (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
+                );
+                console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
+                dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
+            } else {
+                // Delete column
+                const diffForDeleteColumn = tableColumns.filter(
+                    (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
+                );
+
+                console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
+                dispatch({ type: 'datasetTable/setRemovedColumns', payload: diffForDeleteColumn })
+            }
+        } else {
+            // tc.length === utc.length => Edit => get Different between tc and utc
+            const diffWithName = tableColumns.filter(
+                (utc: any) => !userTableColumns.some((tc: any) => tc['name'] === utc['name'])
             );
-            const diffForAddColumn = userTableColumns.filter(
-                (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
-            );
-            console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
-            console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
-            dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
+            console.log("Unterschied diffWithName: ", diffWithName)
+            dispatch({ type: 'datasetTable/setEditedColumns', payload: diffWithName })
         }
     }
 
@@ -81,6 +91,11 @@ const ColumnsComponent = ({ }: Props) => {
             console.log(result);
             const patchData = await patchColumns(tableId, result)
             console.log(patchData)
+        }
+
+        if (tableColumns.length !== 0 && removedColumns.length !== 0) {
+            const result = await removeColumns(tableId, removedColumns)
+            console.log(result)
         }
         console.log(postData)
 

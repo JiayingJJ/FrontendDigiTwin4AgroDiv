@@ -88,12 +88,13 @@ const SelectComponent = ({ id, index, data }: Props) => {
                         })}
                     </Select>
                 </Box>
-                <Button disabled={isDisabled} style={{ padding: "5px", margin: "5px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "select", position: index, hint: labelInfo, additional_info: { "options": optionsState, "default": optionsState[0] } } })
                     }} />
-
-                    <CiCircleRemove color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
+                </Button>
+                <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <CiCircleRemove color="green" cursor={"pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })
                     }} />
                 </Button>

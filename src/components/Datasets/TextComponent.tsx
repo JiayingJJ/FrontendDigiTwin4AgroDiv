@@ -34,7 +34,7 @@ const TextComponent = ({ id, index, data }: Props) => {
         }
     }, [])
     return (
-        <FormControl onMouseOver={() => {}} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
+        <FormControl onMouseOver={() => { }} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
             <FormLabel>Geben Sie bitte ein Name für das Input</FormLabel>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
@@ -58,12 +58,15 @@ const TextComponent = ({ id, index, data }: Props) => {
                         setLabelInfo(e.target.value)
                     }} />
                 </Box>
-                <Button disabled={isDisabled} style={{ padding: "5px", margin: "5px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "text", position: index, hint: labelInfo, additional_info: [] } })
                     }} />
+                </Button>
 
-                    <CiCircleRemove color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
+                <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
+
+                    <CiCircleRemove color="green" cursor={"pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })
                     }} />
                 </Button>

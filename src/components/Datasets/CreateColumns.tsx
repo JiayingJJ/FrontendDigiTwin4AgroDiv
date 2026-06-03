@@ -24,7 +24,7 @@ const CreateColumns = () => {
         } else {
             dispatch({ type: 'datasetTable/setHasChanged', payload: false })
         }
-    }, [userTableColumns])
+    }, [isChangingColumns])
     const addColumns = (type: string) => {
         const newId = uuidv4()
         dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: newId, name: "", type: type, position: userTableColumns.length } })

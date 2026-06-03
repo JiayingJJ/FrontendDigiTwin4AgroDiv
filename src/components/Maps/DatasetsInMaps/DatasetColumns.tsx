@@ -62,7 +62,25 @@ const DatasetColumns = () => {
             case 'text':
                 return (
                     <Box key={column.id}>
-                        <InputComponent name={column.name} hint={column.hint} id={column.id} />
+                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                    </Box>
+                );
+            case 'timestamp':
+                return (
+                    <Box key={column.id} draggable>
+                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                    </Box>
+                );
+            case 'real':
+                return (
+                    <Box key={column.id} draggable>
+                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                    </Box>
+                );
+            case 'integer':
+                return (
+                    <Box key={column.id} draggable>
+                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             default:
@@ -78,9 +96,9 @@ const DatasetColumns = () => {
             console.log(dataStatus)
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             console.log(dataColumn)
-            const geoData = {"coordinates": geometry, "type": geometryType}
-            const properties = {"column_id": data[1].id,"table_id": selectedTableId}
-            const dataInserGeoData = await insertGeoData(selectedTableId,data[1].id, properties, geoData)
+            const geoData = { "coordinates": geometry, "type": geometryType }
+            const properties = { "column_id": data[1].id, "table_id": selectedTableId }
+            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, properties, geoData)
             console.log(dataInserGeoData)
             const getAllGeoData = await getGeoData();
             console.log(getAllGeoData)

@@ -28,6 +28,8 @@ const TextComponent = ({ id, index, data }: Props) => {
     const [labelInfo, setLabelInfo] = useState<string>("");
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [value, setValue] = React.useState('text')
+    const [valueNumber, setValueNumber] = React.useState('text')
+
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
 
     useEffect(() => {
@@ -77,15 +79,28 @@ const TextComponent = ({ id, index, data }: Props) => {
                             <Radio value='number'>Number</Radio>
                         </Stack>
                     </RadioGroup>}
+                    {value === 'number' && <RadioGroup onChange={(e) => {
+                        if (e) {
+                            setIsDisabled(false)
+                        } else {
+                            setIsDisabled(true)
+                        }
+                        setValueNumber(e)
+                        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
+                    }} value={valueNumber}>
+                        <Stack direction='row'>
+                            <Radio value='integer'>Ganzzahl</Radio>
+                            <Radio value='real'>Dezimalzahl</Radio>
+                        </Stack>
+                    </RadioGroup>}
                 </Box>
                 <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
-                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: value, position: index, hint: labelInfo, additional_info: [] } })
+                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: `${value === 'number' ? valueNumber : value}`, position: index, hint: labelInfo, additional_info: [] } })
                         dispatch({ type: 'datasetTable/removeIsChangingColumns', payload: id })
                         setIsDisabled(true)
                     }} />
                 </Button>
-
                 <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleRemove color="green" cursor={"pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })

@@ -134,6 +134,24 @@ const ColumnsComponent = ({ }: Props) => {
                         <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
+            case 'timestamp':
+                return (
+                    <Box key={column.id} draggable>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
+                    </Box>
+                );
+            case 'real':
+                return (
+                    <Box key={column.id} draggable>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
+                    </Box>
+                );
+            case 'integer':
+                return (
+                    <Box key={column.id} draggable>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
+                    </Box>
+                );
             default:
                 return <div >Unbekannter Feldtyp: {column.type}</div>;
         }

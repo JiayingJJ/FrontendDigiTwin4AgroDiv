@@ -20,15 +20,15 @@ import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 type Props = {
     id: string,
     index: number,
-    data: any
+    data: any,
 }
 const TextComponent = ({ id, index, data }: Props) => {
     const dispatch = useDispatch()
     const [labelName, setLabelName] = useState<string>("");
     const [labelInfo, setLabelInfo] = useState<string>("");
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const [value, setValue] = React.useState('text')
-    const [valueNumber, setValueNumber] = React.useState('text')
+    const [value, setValue] = useState(data.type)
+    const [valueNumber, setValueNumber] = useState(data.type)
 
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
 

@@ -66,7 +66,7 @@ const ColumnsComponent = ({ }: Props) => {
         switch (column.type) {
             case 'radio':
                 return (
-                    <FormControl>
+                    <FormControl key={column.id}>
                         <FormLabel as='legend'>{column.type}</FormLabel>
                         <RadioGroup defaultValue='Ja'>
                             <HStack spacing='24px'>
@@ -84,25 +84,25 @@ const ColumnsComponent = ({ }: Props) => {
             case 'text':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]} />
+                        <TextComponent id={column.id} index={index} data={data[0]}/>
                     </Box>
                 );
             case 'timestamp':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]} />
+                        <TextComponent id={column.id} index={index} data={data[0]}/>
                     </Box>
                 );
             case 'real':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]} />
+                        <TextComponent id={column.id} index={index} data={data[0]}/>
                     </Box>
                 );
             case 'integer':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]} />
+                        <TextComponent id={column.id} index={index} data={data[0]}/>
                     </Box>
                 );
             default:

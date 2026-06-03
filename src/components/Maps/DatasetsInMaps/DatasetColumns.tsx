@@ -20,6 +20,7 @@ import { addValueInColumns, getColumnWithId, getGeoData, insertGeoData, setUserT
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 const DatasetColumns = () => {
+    const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const userInputColumnValues = useSelector((state: any) => state.datasetTable.userInputColumnValues)
@@ -103,6 +104,7 @@ const DatasetColumns = () => {
             const getAllGeoData = await getGeoData();
             console.log(getAllGeoData)
         }
+        dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
     }
     return (
         <VStack>

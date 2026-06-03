@@ -13,7 +13,8 @@ import {
     RadioGroup,
     Radio,
     Select,
-    Text
+    Text,
+    Stack
 } from '@chakra-ui/react'
 import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 type Props = {
@@ -26,6 +27,8 @@ const TextComponent = ({ id, index, data }: Props) => {
     const [labelName, setLabelName] = useState<string>("");
     const [labelInfo, setLabelInfo] = useState<string>("");
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [value, setValue] = React.useState('text')
+    const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
 
     useEffect(() => {
         if (data.name !== '') {
@@ -33,6 +36,7 @@ const TextComponent = ({ id, index, data }: Props) => {
             setLabelInfo(data.hint)
         }
     }, [])
+
     return (
         <FormControl onMouseOver={() => { }} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
             <FormLabel>Geben Sie bitte ein Name für das Input</FormLabel>
@@ -45,7 +49,7 @@ const TextComponent = ({ id, index, data }: Props) => {
                             setIsDisabled(true)
                         }
                         setLabelName(e.target.value)
-                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
+                        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
                     <Input placeholder='Component hint' value={labelInfo} onChange={(e) => {
@@ -55,13 +59,29 @@ const TextComponent = ({ id, index, data }: Props) => {
                             setIsDisabled(true)
                         }
                         setLabelInfo(e.target.value)
-                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
+                        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
                     }} />
+                    {!tableColumns.some((tc: any) => tc.id === id) && <FormLabel>Wählen Sie ein Datentyp aus</FormLabel>}
+                    {!tableColumns.some((tc: any) => tc.id === id) && <RadioGroup onChange={(e) => {
+                        if (e) {
+                            setIsDisabled(false)
+                        } else {
+                            setIsDisabled(true)
+                        }
+                        setValue(e)
+                        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
+                    }} value={value}>
+                        <Stack direction='row'>
+                            <Radio value='text'>Text</Radio>
+                            <Radio value='timestamp'>Datum</Radio>
+                            <Radio value='number'>Number</Radio>
+                        </Stack>
+                    </RadioGroup>}
                 </Box>
                 <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
-                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "text", position: index, hint: labelInfo, additional_info: [] } })
-                        dispatch({type: 'datasetTable/removeIsChangingColumns', payload: id})
+                        dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: value, position: index, hint: labelInfo, additional_info: [] } })
+                        dispatch({ type: 'datasetTable/removeIsChangingColumns', payload: id })
                         setIsDisabled(true)
                     }} />
                 </Button>

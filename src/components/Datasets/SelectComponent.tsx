@@ -95,6 +95,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "select", position: index, hint: labelInfo, additional_info: { "options": optionsState, "default": optionsState[0] } } })
                         dispatch({ type: 'datasetTable/removeIsChangingColumns', payload: id })
+                        setIsDisabled(true)
                     }} />
                 </Button>
                 <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>

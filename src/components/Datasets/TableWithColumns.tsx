@@ -28,6 +28,11 @@ const TableWithColumns = () => {
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const [sortedTableColumns, setSortedTableColumns] = useState<any>();
+    const isChangingColumns = useSelector((state: any) => state.datasetTable.isChangingColumns)
+    const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
+    const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
+
+    const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
     useEffect(() => {
         if (tableColumns === undefined || tableColumns === null) return;
         const sortedColumns = [...tableColumns].sort(
@@ -36,6 +41,13 @@ const TableWithColumns = () => {
         setSortedTableColumns(sortedColumns)
 
     }, [tableColumns])
+    useEffect(() => {
+        if (isChangingColumns.length === 0 && (newColumns.length !== 0 || editedColumns.length !== 0 || removedColumns.length !== 0)) {
+            dispatch({ type: 'datasetTable/setHasChanged', payload: true })
+        } else {
+            dispatch({ type: 'datasetTable/setHasChanged', payload: false })
+        }
+    }, [isChangingColumns, newColumns, editedColumns, removedColumns])
     const renderFormControl = (column: any) => {
         const key = column.name;
 
@@ -131,7 +143,7 @@ const TableWithColumns = () => {
         }
     }
     return (
-        <HStack height={"100%"} alignItems={"start"}>
+        <HStack alignItems={"start"}>
             {!addingColumns && editTable && userTableColumns.length !== 0 &&
                 <Card width={"200%"}>
                     <CardBody>

@@ -25,11 +25,6 @@ const ColumnsComponent = ({ }: Props) => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
-    const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
-    const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
-    const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
-    const hasChanged = useSelector((state: any) => state.datasetTable.hasChanged)
-
 
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const checkColumns = () => {
@@ -63,50 +58,7 @@ const ColumnsComponent = ({ }: Props) => {
     useEffect(() => {
         checkColumns()
     }, [userTableColumns])
-    const handlePostColumns = async () => {
-        console.log("Post columns in Backend")
 
-        const postData = await postColumns(tableId, userTableColumns)
-        if (tableColumns.length !== 0 && newColumns.length !== 0) {
-            console.log(newColumns)
-
-            const putData = await putNewColumns(tableId, newColumns)
-            console.log(putData)
-        }
-        if (tableColumns.length !== 0 && editedColumns.length !== 0) {
-            console.log("patch")
-            const getOldInfo = tableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
-            console.log(editedColumns)
-            console.log(getOldInfo)
-            const result = editedColumns.map((editedC: any) => {
-                const newInfo = getOldInfo.find((old: any) => old.id === editedC.id);
-                return {
-                    id: editedC.id,
-                    old_name: newInfo?.name,
-                    new_name: editedC.name ?? null
-                };
-            });
-
-            console.log(result);
-            const patchData = await patchColumns(tableId, result)
-            console.log(patchData)
-        }
-
-        if (tableColumns.length !== 0 && removedColumns.length !== 0) {
-            const result = await removeColumns(tableId, removedColumns)
-            console.log(result)
-        }
-        console.log(postData)
-        dispatch({ type: 'datasetTable/setEditTable', payload: false })
-
-        dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
-        const data = await fetchTableWithId(tableId)
-        console.log(data)
-        if (data[1] !== 500) {
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
-            dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
-        }
-    }
     const renderForm = (column: ColumnType, index: number) => {
         const data = userTableColumns.filter((m) =>
             m.id === column.id
@@ -169,9 +121,6 @@ const ColumnsComponent = ({ }: Props) => {
                         </VStack>
                     )
                 })}
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} disabled={!hasChanged} onClick={() => handlePostColumns()}>Submit</Button>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'datasetTable/setEditTable', payload: false })}>Cancel</Button>
-
             </Box>
         </>
     );

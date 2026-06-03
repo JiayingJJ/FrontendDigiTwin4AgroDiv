@@ -49,7 +49,7 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <VStack>
+        <VStack width={"100vw"} height={"100vh"}>
             <HStack
                 justifyContent={"space-between"}
                 width={"100vw"}

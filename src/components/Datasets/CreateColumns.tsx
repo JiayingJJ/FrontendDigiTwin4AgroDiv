@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack } from '@chakra-ui/react'
 import { FiPlusCircle } from "react-icons/fi";
 import { CiCircleRemove } from "react-icons/ci";
 
@@ -40,24 +40,29 @@ const CreateColumns = () => {
     }
     return (
         <>
-            {!editTable && <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30"
+            {!editTable && <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" cursor={"pointer"}
                 onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />}
-            {addingColumns && <CiCircleRemove color="green" size="40" onClick={() => {
-                console.log(userTableColumns.length)
-                if (userTableColumns.length !== 0) {
-                    dispatch({ type: 'modalInfo/setShowModal', payload: true })
-                    dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
-                    dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
-                    dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
-                }
-                console.log("modalResult: ", modalResult)
-
-            }} />}
-            {(addingColumns || editTable) && <Box>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Select</Button>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Input</Button>
-            </Box>}
+            {addingColumns &&
+                <Button colorScheme='red' onClick={() => {
+                    console.log(userTableColumns.length)
+                    if (userTableColumns.length !== 0) {
+                        dispatch({ type: 'modalInfo/setShowModal', payload: true })
+                        dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
+                        dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
+                        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+                    }
+                    console.log("modalResult: ", modalResult)
+                }}>
+                    Discard all changes to the table
+                    <Box marginLeft=".5rem">
+                        <CiCircleRemove color="white" size="2rem" />
+                    </Box>
+                </Button>}
             {((addingColumns && !editTable && userTableColumns.length !== 0) || (!addingColumns && editTable && userTableColumns.length !== 0)) ? <ColumnsComponent /> : null}
+            {(addingColumns || editTable) && <HStack spacing={".5rem"}>
+                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Add a Select column</Button>
+                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Add an Input column</Button>
+            </HStack>}
             <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
         </>
     );

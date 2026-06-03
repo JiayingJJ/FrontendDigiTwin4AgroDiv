@@ -40,7 +40,7 @@ const TextComponent = ({ id, index, data }: Props) => {
     }, [])
 
     return (
-        <FormControl onMouseOver={() => { }} backgroundColor={"red.200"} padding={"8px"} marginTop={"5px"}>
+        <FormControl onMouseOver={() => { }} padding={"8px"} marginTop={"5px"}>
             <FormLabel>Geben Sie bitte ein Name für das Input</FormLabel>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>

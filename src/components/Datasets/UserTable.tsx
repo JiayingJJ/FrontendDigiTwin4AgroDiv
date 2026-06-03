@@ -55,7 +55,7 @@ const UserTable = () => {
                 </FormControl>
 
                 <FormControl isRequired>
-                    <FormLabel>Tabelle Name</FormLabel>
+                    <FormLabel>Tabellenname</FormLabel>
                     <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
                 </FormControl>
                 <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {

@@ -12,7 +12,8 @@ import {
     Input,
     RadioGroup,
     Radio,
-    Select
+    Select,
+    Divider
 } from '@chakra-ui/react'
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
@@ -160,7 +161,14 @@ const ColumnsComponent = ({ }: Props) => {
     return (
         <>
             <Box>
-                {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
+                {userTableColumns?.map((column: ColumnType, index: number) => {
+                    return (
+                        <VStack alignItems={"left"}>
+                            {index !== 0 && <Divider orientation='horizontal' borderColor={"red"} borderRadius={10} borderWidth={2} />}
+                            {renderForm(column, index)}
+                        </VStack>
+                    )
+                })}
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} disabled={!hasChanged} onClick={() => handlePostColumns()}>Submit</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'datasetTable/setEditTable', payload: false })}>Cancel</Button>
 

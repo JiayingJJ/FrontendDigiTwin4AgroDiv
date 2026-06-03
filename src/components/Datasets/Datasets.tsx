@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
     Button,
+    Grid,
+    GridItem,
+    VStack,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import UserTable from './UserTable';
@@ -41,16 +44,24 @@ const Datasets = () => {
     }, [updatedTables])
     return (
         <>
-            <Button backgroundColor='#EDB458' onClick={() => {
-                dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
-                dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-            }}>
-                Füge ein neue Datenbankformat hinzu
-            </Button>
-            {addNewDataset && <UserTable />}
-            <CreatedTables />
-            <TableWithColumns />
-            {createColumnsButton && <CreateColumns />}
+            <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"90vw"} height={"100%"} padding={"0 0 2vh 0"}>
+                <GridItem h='100%' w="100%">
+                    <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
+                        <CreatedTables />
+                        <Button backgroundColor='#EDB458' onClick={() => {
+                            dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
+                            dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
+                        }}>
+                            Füge ein neue Datenbankformat hinzu
+                        </Button>
+                        {addNewDataset && <UserTable />}
+                    </VStack>
+                </GridItem>
+                <GridItem colSpan={5} h='100%'>
+                    <TableWithColumns />
+                    {createColumnsButton && <CreateColumns />}
+                </GridItem>
+            </Grid>
         </>
     );
 }

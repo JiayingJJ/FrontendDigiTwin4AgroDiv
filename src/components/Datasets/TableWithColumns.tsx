@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    Button,
     Box,
     HStack,
-    VStack,
     FormControl,
     FormLabel,
-    FormErrorMessage,
-    FormHelperText,
     Input,
     RadioGroup,
     Radio,
     Select,
-    Tooltip
+    Tooltip,
+    Button,
+    Heading,
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter
 } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { CiCircleInfo } from "react-icons/ci";
@@ -129,16 +131,35 @@ const TableWithColumns = () => {
         }
     }
     return (
-        <>
-            <Box>{sortedTableColumns?.map(column => renderFormControl(column))}</Box>
-            {tableColumns.length !== 0 && <MdModeEdit color="green" cursor={"pointer"} size="25" onClick={() => {
-                dispatch({ type: 'datasetTable/setEditTable', payload: true })
-                console.log(tableColumns)
-                dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
-            }} />}
-            {!addingColumns && editTable && userTableColumns.length !== 0 ? <CreateColumns /> : null}
-
-        </>
+        <HStack height={"100%"} alignItems={"start"}>
+            {!addingColumns && editTable && userTableColumns.length !== 0 &&
+                <Card width={"200%"}>
+                    <CardBody>
+                        <CreateColumns />
+                    </CardBody>
+                </Card>
+            }
+            <Card width={"100%"}>
+                <CardHeader>
+                    <Heading size={"md"}>Input preview</Heading>
+                </CardHeader>
+                <CardBody>
+                    {sortedTableColumns?.map(column => renderFormControl(column))}
+                </CardBody>
+                <CardFooter>
+                    {tableColumns.length !== 0 &&
+                        <Button colorScheme="green" onClick={() => {
+                            dispatch({ type: 'datasetTable/setEditTable', payload: true })
+                            console.log(tableColumns)
+                            dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
+                        }} >
+                            <Box marginRight={".5rem"}>Edit Columns</Box>
+                            <MdModeEdit color="white" cursor={"pointer"} size="25" />
+                        </Button>
+                    }
+                </CardFooter>
+            </Card>
+        </HStack>
     );
 }
 

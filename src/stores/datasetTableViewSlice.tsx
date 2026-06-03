@@ -7,6 +7,7 @@ interface DatasetTableViewState {
     columns: [],
     data: any,
     tableName: string | null,
+    tableID: string | null,
 }
 
 const initialState: DatasetTableViewState = {
@@ -14,7 +15,8 @@ const initialState: DatasetTableViewState = {
     renderTable: false,
     columns: [],
     data: null,
-    tableName: null
+    tableName: null,
+    tableID: null,
 }
 
 const datasetTableViewSlice = createSlice({
@@ -39,6 +41,9 @@ const datasetTableViewSlice = createSlice({
             state.tableName = action.payload;
 
         },
+        setTableID: (state, action) => {
+            state.tableID = action.payload;
+        },
     }
 });
 
@@ -47,7 +52,8 @@ export const {
     setRenderTable,
     setColumns,
     setData,
-    setTableName
+    setTableName,
+    setTableID
 } = datasetTableViewSlice.actions;
 
 export default datasetTableViewSlice.reducer;

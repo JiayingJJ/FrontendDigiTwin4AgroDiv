@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
 import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/dataset';
 import { MdDeleteForever } from "react-icons/md";
 import ModalComponent from '../ModalComponent';
@@ -54,38 +54,42 @@ const CreatedTables = () => {
     }
     const clickOnCancelBtn = () => {
     }
-    return (
-        <Card>
-            <CardHeader>
-                <Heading size='md'>Erstellte Datenbank</Heading>
-            </CardHeader>
 
-            <CardBody>
-                <Stack divider={<StackDivider />} spacing='4'>
-                    {tables?.map((t: any) => {
-                        return (
-                            <Box style={{ display: "flex", flexDirection: "row" }} >
-                                <Button
-                                    disabled={addingColumns}
-                                    backgroundColor={selectedTableId === t.ID ? "red" : "white"}
-                                    onClick={() => {
-                                        getTableWithId(t)
-                                    }} cursor={"pointer"}
-                                    key={`${t.ID}-table-box`}>
-                                    <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                        {t.TableName}
-                                    </Heading>
-                                </Button>
-                                <Box style={{ display: "flex", alignItems: "center" }}>
-                                    <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
-                                </Box>
-                            </Box>
-                        )
-                    })}
-                </Stack>
-            </CardBody>
-            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
-        </Card>
+    return (
+        <>
+            <Card width={"100%"} textAlign={"center"}>
+                <CardHeader>
+                    <Heading size='md'>Angelegte Datenbanken</Heading>
+                </CardHeader>
+                <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
+            </Card>
+
+            <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
+                {tables?.map((t: any) => {
+                    return (
+                        <Card minWidth={"200px"} width={"100%"}>
+                            <CardBody padding={"1rem"}>
+                                <HStack spacing={".5rem"} justifyContent={"space-between"}>
+                                    <Button
+                                        disabled={addingColumns}
+                                        backgroundColor={selectedTableId === t.ID ? "red" : "white"}
+                                        onClick={() => {
+                                            getTableWithId(t)
+                                        }} cursor={"pointer"}
+                                        key={`${t.ID}-table-box`}>
+                                        <Heading size='xs' textTransform='uppercase' padding={"10px"}>
+                                            {t.TableName}
+                                        </Heading>
+                                    </Button>
+                                    <Box style={{ display: "flex", alignItems: "center" }}>
+                                        <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
+                                    </Box>
+                                </HStack>
+                            </CardBody>
+                        </Card>)
+                })}
+            </VStack>
+        </>
     );
 }
 

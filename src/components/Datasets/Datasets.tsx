@@ -43,7 +43,7 @@ const Datasets = () => {
         <>
             <Button backgroundColor='#EDB458' onClick={() => {
                 dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
-                dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
+                dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
             }}>
                 Füge ein neue Datenbankformat hinzu
             </Button>

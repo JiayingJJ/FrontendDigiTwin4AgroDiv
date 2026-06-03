@@ -61,8 +61,7 @@ const UserTable = () => {
                 <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
                     dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
                     dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
-                    dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
-                    dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
+                    dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
                 }}>
                     Abbrechen
                 </Button>

@@ -10,13 +10,11 @@ const CreatedTables = () => {
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
     const userInfo = useSelector((state: any) => state.user)
-    const [tableId, setTableId] = useState<string|null>(null);
+    const [tableId, setTableId] = useState<string | null>(null);
     const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
-        dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
-        dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
-       dispatch({ type: 'datasetTable/setNewColumns', payload: [] })
+        dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
 
         const data = await fetchTableWithId(t.ID)
         console.log(data)
@@ -41,8 +39,8 @@ const CreatedTables = () => {
         dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.TableName} löschen?` })
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
     }
-    const clickOnSaveBtn = async() => {
-       const dataDelete = await deleteTableWithId(tableId);
+    const clickOnSaveBtn = async () => {
+        const dataDelete = await deleteTableWithId(tableId);
         console.log(dataDelete)
         const data = await getTablesWithUserId(userInfo)
         const filterData = data.filter((d) => {

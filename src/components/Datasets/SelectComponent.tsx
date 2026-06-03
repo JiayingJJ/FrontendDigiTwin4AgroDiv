@@ -51,6 +51,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
                             setIsDisabled(true)
                         }
                         setLabelName(e.target.value)
+                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
                     <Input placeholder='Component name' value={labelInfo} onChange={(e) => {
@@ -65,6 +66,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
                                 setIsDisabledAddBtn(true)
                             }
                             setOptionName(e.target.value)
+                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
                         }} />
                         <MdOutlineAdd color="green" cursor={isDisabledAddBtn ? "not-allowed" : "pointer"} size="40" onClick={() => {
                             const exist = optionsState.filter((o) => o === optionName)
@@ -78,6 +80,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
                                 dispatch({ type: 'alertInfo/setShowAlert', payload: true })
                             }
                             setOptionName("")
+                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
                         }} />
                     </Box>
                     <Select placeholder='auswählen'>
@@ -91,6 +94,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
                 <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "select", position: index, hint: labelInfo, additional_info: { "options": optionsState, "default": optionsState[0] } } })
+                        dispatch({type: 'datasetTable/removeIsChangingColumns', payload: id})
                     }} />
                 </Button>
                 <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>

@@ -25,6 +25,8 @@ interface DatasetTableState {
     editedColumns: [];
     newColumns: [];
     removedColumns: [];
+    hasChanged: boolean;
+    isChangingColumns: [];
 }
 
 const initialState: DatasetTableState = {
@@ -44,6 +46,8 @@ const initialState: DatasetTableState = {
     editedColumns: [],
     newColumns: [],
     removedColumns: [],
+    hasChanged: false,
+    isChangingColumns: [],
 }
 
 const datasetTableSlice = createSlice({
@@ -137,7 +141,26 @@ const datasetTableSlice = createSlice({
         },
         setRemovedColumns: (state, action) => {
             state.removedColumns = action.payload;
-        }
+        },
+        setHasChanged: (state, action) => {
+            state.hasChanged = action.payload;
+        },
+        addIsChangingColumns: (state, action) => {
+            console.log(state.isChangingColumns.includes(action.payload))
+            if (!state.isChangingColumns.includes(action.payload)) {
+                state.isChangingColumns.push(action.payload);
+            }
+        },
+        removeIsChangingColumns: (state, action) => {
+            state.isChangingColumns = state.isChangingColumns.filter(
+                col => {
+                    if (col !== action.payload) {
+                        console.log(JSON.parse(JSON.stringify(col)))
+                    }
+                    return col !== action.payload
+                }
+            );
+        },
     }
 });
 
@@ -163,7 +186,10 @@ export const {
     setUserTableColumns,
     setEditedColumns,
     setNewColumns,
-    setRemovedColumns
+    setRemovedColumns,
+    setHasChanged,
+    addIsChangingColumns,
+    removeIsChangingColumns
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

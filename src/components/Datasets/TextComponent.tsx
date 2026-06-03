@@ -44,8 +44,8 @@ const TextComponent = ({ id, index, data }: Props) => {
                         } else {
                             setIsDisabled(true)
                         }
-                        console.log(e.target.value)
                         setLabelName(e.target.value)
+                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
                     }} />
                     <FormLabel>Geben Sie bitte ein Hintinfo</FormLabel>
                     <Input placeholder='Component hint' value={labelInfo} onChange={(e) => {
@@ -54,18 +54,19 @@ const TextComponent = ({ id, index, data }: Props) => {
                         } else {
                             setIsDisabled(true)
                         }
-                        console.log(e.target.value)
                         setLabelInfo(e.target.value)
+                        dispatch({type: 'datasetTable/addIsChangingColumns', payload: id})
                     }} />
                 </Box>
                 <Button disabled={isDisabled} style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleCheck color="green" cursor={isDisabled ? "not-allowed" : "pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/updateUserTableColumns', payload: { id: id, name: labelName, type: "text", position: index, hint: labelInfo, additional_info: [] } })
+                        dispatch({type: 'datasetTable/removeIsChangingColumns', payload: id})
+                        setIsDisabled(true)
                     }} />
                 </Button>
 
                 <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
-
                     <CiCircleRemove color="green" cursor={"pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })
                     }} />

@@ -27,6 +27,7 @@ const ColumnsComponent = ({ }: Props) => {
     const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
     const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
     const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
+    const hasChanged = useSelector((state: any) => state.datasetTable.hasChanged)
 
 
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
@@ -142,7 +143,7 @@ const ColumnsComponent = ({ }: Props) => {
         <>
             <Box>
                 {userTableColumns?.map((column: ColumnType, index: number) => renderForm(column, index))}
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => handlePostColumns()}>Submit</Button>
+                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} disabled={!hasChanged} onClick={() => handlePostColumns()}>Submit</Button>
                 <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'datasetTable/setEditTable', payload: false })}>Cancel</Button>
 
             </Box>

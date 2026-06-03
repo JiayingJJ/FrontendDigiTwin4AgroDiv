@@ -14,13 +14,22 @@ const CreateColumns = () => {
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
     const editTable = useSelector((state: any) => state.datasetTable.editTable)
     const modalResult = useSelector((state: any) => state.modalInfo.modalResult)
-
-
+    const isChangingColumns = useSelector((state: any) => state.datasetTable.isChangingColumns)
+    const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
+    const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
+    const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
+    useEffect(() => {
+        if (isChangingColumns.length === 0 && (newColumns.length !== 0 || editedColumns.length !== 0 || removedColumns.length !== 0)) {
+            dispatch({ type: 'datasetTable/setHasChanged', payload: true })
+        } else {
+            dispatch({ type: 'datasetTable/setHasChanged', payload: false })
+        }
+    }, [userTableColumns])
     const addColumns = (type: string) => {
-        console.log(type)
-        dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: uuidv4(), name: "", type: type, position: userTableColumns.length } })
+        const newId = uuidv4()
+        dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: newId, name: "", type: type, position: userTableColumns.length } })
         dispatch({ type: 'datasetTable/setUserTableColumnIndex', payload: 1 })
-
+        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: newId })
     }
 
     const clickOnSaveBtn = () => {

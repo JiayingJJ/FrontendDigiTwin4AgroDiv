@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Login from "./components/Login"
 import store from "./stores/stores"
 /* 
@@ -25,7 +25,21 @@ import { Navigate } from "react-router-dom";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function App() {
+  useEffect(() => {
+    console.log(alertInfo.showAlert)
+    const intervalId = setInterval(() => {
+      if (navigator.onLine) {
+        dispatch({ type: 'internet/setIsOnLine', payload: true })
+      } else {
+        dispatch({ type: 'internet/setIsOnLine', payload: false })
+      }
+    }, 60000);
+    return () => clearInterval(intervalId);
+  });
+
   const dispatch = useDispatch()
   console.log(store.getState())
   const alertInfo = useSelector((state: any) => state.alertInfo);

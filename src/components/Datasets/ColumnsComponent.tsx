@@ -18,7 +18,6 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import { fetchTableWithId, patchColumns, postColumns, putNewColumns, removeColumns } from '../../api/dataset';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -31,22 +30,20 @@ const ColumnsComponent = ({ }: Props) => {
         console.log(userTableColumns)
         console.log(tableColumns)
         console.log("hinzufügen oder delete")
-        if (tableColumns.length < userTableColumns.length) {
-            // Add column
-            const diffForAddColumn = userTableColumns.filter(
-                (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
-            );
-            console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
-            dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
-        } else {
-            // Delete column
-            const diffForDeleteColumn = tableColumns.filter(
-                (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
-            );
+        // Add column
+        const diffForAddColumn = userTableColumns.filter(
+            (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)
+        );
+        console.log("Unterschied diffForAddColumn: ", diffForAddColumn)
+        dispatch({ type: 'datasetTable/setNewColumns', payload: diffForAddColumn })
+        // Delete column
+        const diffForDeleteColumn = tableColumns.filter(
+            (tc: any) => !userTableColumns.some((utc: any) => utc.id === tc.id)
+        );
 
-            console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
-            dispatch({ type: 'datasetTable/setRemovedColumns', payload: diffForDeleteColumn })
-        }
+        console.log("Unterschied diffForDeleteColumn: ", diffForDeleteColumn)
+        dispatch({ type: 'datasetTable/setRemovedColumns', payload: diffForDeleteColumn })
+
         // Edit Column
         const diffWithName = userTableColumns.filter(
             (utc: any) => tableColumns.some((tc: any) => tc['id'] === utc['id'] && tc['name'] !== utc['name'])
@@ -84,25 +81,25 @@ const ColumnsComponent = ({ }: Props) => {
             case 'text':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]}/>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'timestamp':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]}/>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'real':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]}/>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'integer':
                 return (
                     <Box key={column.id} draggable>
-                        <TextComponent id={column.id} index={index} data={data[0]}/>
+                        <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             default:

@@ -31,21 +31,21 @@ export const putNewColumns = async (tableId: string, newColumns: any) => {
     return data;
 }
 
-export const patchColumns = async (tableId: string, newColumns: any) => {
+export const patchColumns = async (tableId: string, updatedColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/updateColumn/${tableId}`, {
         method: "PUT",
-        body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
+        body: JSON.stringify({ columns_in_table: updatedColumns, updated_at: time }),
     })
     const data = await response.json();
     return data;
 }
 
-export const removeColumns = async (tableId: string, newColumns: any) => {
+export const removeColumns = async (tableId: string, deletedColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/removeColumn/${tableId}`, {
         method: "PUT",
-        body: JSON.stringify({ columns_in_table: newColumns, updated_at: time }),
+        body: JSON.stringify({ columns_in_table: deletedColumns, updated_at: time }),
     })
     const data = await response.json();
     return data;

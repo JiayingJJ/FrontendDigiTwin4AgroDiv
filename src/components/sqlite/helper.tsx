@@ -21,3 +21,18 @@ export const clearAllOPFS = async () => {
 
     console.log('OPFS komplett geleert!');
 }
+
+// OPFS herunterladen
+export const downloadFromOPFS = async(filename:string) => {
+    const root = await navigator.storage.getDirectory();
+    const fileHandle = await root.getFileHandle(filename);
+    const file = await fileHandle.getFile();
+
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }

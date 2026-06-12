@@ -30,14 +30,16 @@ import { databaseSqlite } from "./components/sqlite/db"
 import { deleteFileFromOPFS, deleteFolderFromOPFS } from "./components/sqlite/helper";
 function App() {
   const userInfo = useSelector((state: any) => state.user)
+  const isOnLine = useSelector((state: any) => state.internet.isOnLine)
   useEffect(() => {
+    console.log(navigator.onLine)
     const intervalId = setInterval(() => {
       if (navigator.onLine) {
         dispatch({ type: 'internet/setIsOnLine', payload: true })
       } else {
         dispatch({ type: 'internet/setIsOnLine', payload: false })
       }
-    }, 10000);
+    }, 3000);
     return () => clearInterval(intervalId);
   });
 
@@ -93,7 +95,7 @@ function App() {
         console.error("Init failed:", err);
       }
     }
-    if (userInfo.id !== null) {
+    if (userInfo.id !== null && isOnLine) {
       init();
     }
   }, [userInfo])

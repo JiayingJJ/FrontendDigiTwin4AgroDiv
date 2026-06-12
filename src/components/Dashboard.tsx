@@ -17,6 +17,7 @@ import Datasets from './Datasets/Datasets';
 import { getTablesWithUserId } from '../api/dataset';
 import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
+import { isZeroTimeString } from '../helpers';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -38,9 +39,7 @@ const Dashboard = () => {
         }
     }
 
-    const isZeroTimeString = (s: string) => {
-        return s === "0001-01-01T00:00:00Z";
-    }
+    
     useEffect(() => {
         async function fechtData() {
             console.log(isOnLine)

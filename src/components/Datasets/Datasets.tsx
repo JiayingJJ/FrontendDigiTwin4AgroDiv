@@ -11,33 +11,69 @@ import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import CreateColumns from './CreateColumns';
 import { getTablesWithUserId } from '../../api/dataset';
+import { databaseSqlite } from '../sqlite/db';
+import { isZeroTimeString } from '../../helpers';
 const Datasets = () => {
     const dispatch = useDispatch()
     const createColumnsButton = useSelector((state: any) => state.datasetTable.createColumnsButton)
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
     const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
     const userInfo = useSelector((state: any) => state.user)
+    const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+
     useEffect(() => {
         async function fechtData() {
-            const data = await getTablesWithUserId(userInfo)
-            const filterData = data.filter((d: any) => {
-                if (!d.DeletedAt.Valid) {
-                    return d;
-                }
-            });
-            dispatch({ type: 'datasetTable/setTables', payload: filterData })
+            if (isOnLine) {
+                const data = await getTablesWithUserId(userInfo)
+                console.log(data)
+                const filterData = data.filter((d: any) => {
+                    if (!d.DeletedAt.Valid) {
+                        return d;
+                    }
+                });
+                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+            } else {
+                await databaseSqlite.initDb();
+                const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
+                const filterData = data?.filter((d: any) => {
+                    const notDelete = isZeroTimeString(d.deleted_at)
+                    console.log(notDelete)
+                    if (notDelete) {
+                        return d;
+                    }
+                })
+                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+                console.log(data)
+            }
         }
         fechtData()
     }, [])
     useEffect(() => {
         async function fechtData() {
-            const data = await getTablesWithUserId(userInfo)
-            const filterData = data.filter((d: any) => {
-                if (!d.DeletedAt.Valid) {
-                    return d;
-                }
-            });
-            dispatch({ type: 'datasetTable/setTables', payload: filterData })
+            console.log(isOnLine)
+            if (isOnLine) {
+                const data = await getTablesWithUserId(userInfo)
+                console.log(data)
+                const filterData = data.filter((d: any) => {
+                    if (!d.DeletedAt.Valid) {
+                        return d;
+                    }
+                });
+                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+            } else {
+                await databaseSqlite.initDb();
+                const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
+                const filterData = data?.filter((d: any) => {
+                    const notDelete = isZeroTimeString(d.deleted_at)
+                    console.log(notDelete)
+                    if (notDelete) {
+                        return d;
+                    }
+                })
+                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+                console.log(data)
+            }
+
         }
         fechtData()
         dispatch({ type: 'datasetTable/setUpdatedTables', payload: false })

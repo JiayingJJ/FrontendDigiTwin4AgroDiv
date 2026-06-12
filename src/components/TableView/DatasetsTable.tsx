@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { fetchTableWithId, getAllColumnsWithTableId, getColumnWithId, getTablesWithUserId } from '../../api/dataset';
 import Tables from './Tables';
+import { databaseSqlite } from '../sqlite/db';
 // @flow
 type Props = {
 
@@ -21,13 +22,22 @@ const DatasetsTable = () => {
     const tables = useSelector((state: any) => state.datasetTableView.tables)
     const renderTable = useSelector((state: any) => state.datasetTableView.renderTable)
     const selected = useSelector((state: any) => state.datasetTableView.tableID)
+    const isOnLine = useSelector((state: any) => state.internet.isOnLine)
 
     const userInfo = useSelector((state: any) => state.user)
 
     const getAllDataSets = async () => {
-        const data = await getTablesWithUserId(userInfo)
-        console.log(data)
-        dispatch({ type: 'datasetTableView/setTables', payload: data })
+        let data;
+        if (isOnLine) {
+            data = await getTablesWithUserId(userInfo)
+            console.log(data)
+            dispatch({ type: 'datasetTableView/setTables', payload: data })
+        } else {
+            await databaseSqlite.initDb();
+            data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
+            console.log(data)
+        }
+
         return data;
     }
     useEffect(() => {

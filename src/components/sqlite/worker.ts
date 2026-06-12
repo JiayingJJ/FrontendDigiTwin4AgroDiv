@@ -8,8 +8,20 @@ export interface Task {
 export interface User {
     id: string;
     name: string;
-    email:string;
+    email: string;
 }
+
+export interface UserTable {
+    ID: string;
+    UserID: string;
+    TableName: string;
+    ColumnsInTable: string;
+    CreatedAt: string;
+    UpdatedAt: string;
+    DeletedAt: string;
+    DataStatus: string;
+}
+
 export class Database {
     private db: any = null;
 
@@ -93,7 +105,6 @@ export class Database {
 
     getUserWithEmail(email: string): User | null {
         const rows = this.query("SELECT * FROM users WHERE email = ?", [email]) as User[];
-        console.log(rows[0])
         return rows[0] ?? null;
     }
 
@@ -110,7 +121,7 @@ export class Database {
                 data.ID,
                 data.UserID,
                 data.TableName,
-                JSON.stringify(data.ColumnsInTable.RawMessage),        
+                JSON.stringify(data.ColumnsInTable.RawMessage),
                 data.CreatedAt,
                 data.UpdatedAt,
                 data.DeletedAt.Time,
@@ -119,29 +130,33 @@ export class Database {
         });
     }
 
-    insertGeoData(data: any): void{
+    getUserTablesWithUserId(userId: string): UserTable[] | null {
+        const rows = this.query("SELECT * FROM user_tables WHERE user_id = ?", [userId]) as UserTable[];
+        return rows ?? null;
+    }
+    insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         console.log(data)
 
         data.forEach(e => {
             this.db.exec({
-            sql: `INSERT OR IGNORE INTO geo_data
+                sql: `INSERT OR IGNORE INTO geo_data
         (id, table_id, column_id, properties, geometry_data, created_at, updated_at, deleted_at, data_status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            bind: [
-                e.ID,
-                e.TableID,
-                e.ColumnID,
-                JSON.stringify(e.Properties.RawMessage),        
-                JSON.stringify(e.GeometryData.RawMessage),        
-                e.CreatedAt,
-                e.UpdatedAt,
-                e.DeletedAt.Time,
-                e.DataStatus.String
-            ]
+                bind: [
+                    e.ID,
+                    e.TableID,
+                    e.ColumnID,
+                    JSON.stringify(e.Properties.RawMessage),
+                    JSON.stringify(e.GeometryData.RawMessage),
+                    e.CreatedAt,
+                    e.UpdatedAt,
+                    e.DeletedAt.Time,
+                    e.DataStatus.String
+                ]
+            });
         });
-        }); 
-        
+
     }
 
 

@@ -20,7 +20,7 @@ const CreatedTables = () => {
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
 
         if (isOnLine) {
-            const data = await fetchTableWithId(t.ID)
+            const data = await fetchTableWithId(t.id)
             console.log(data)
             if (data[1] === 500) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
@@ -28,12 +28,12 @@ const CreatedTables = () => {
                 dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte hinzufügen" })
                 dispatch({ type: 'alertInfo/setShowAlert', payload: true })
                 dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: true })
-                dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.ID })
-                dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.Name })
-                dispatch({ type: 'datasetTable/setUserId', payload: t.UserID })
+                dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.id })
+                dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.name })
+                dispatch({ type: 'datasetTable/setUserId', payload: t.user_id })
             } else {
-                dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
-                dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
+                dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].id })
+                dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
             }
         } else {
             await databaseSqlite.initDb()
@@ -45,7 +45,7 @@ const CreatedTables = () => {
         setTableId(t.ID)
         dispatch({ type: 'modalInfo/setShowModal', payload: true })
         dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
-        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.TableName} löschen?` })
+        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
     }
     const clickOnSaveBtn = async () => {
@@ -53,7 +53,7 @@ const CreatedTables = () => {
         console.log(dataDelete)
         const data = await getTablesWithUserId(userInfo)
         const filterData = data.filter((d) => {
-            if (!d.DeletedAt.Valid) {
+            if (!d.deleted_at.Valid) {
                 return d;
             }
         });
@@ -81,13 +81,13 @@ const CreatedTables = () => {
                                 <HStack spacing={".5rem"} justifyContent={"space-between"}>
                                     <Button
                                         disabled={addingColumns}
-                                        backgroundColor={selectedTableId === t.ID ? "red" : "white"}
+                                        backgroundColor={selectedTableId === t.id ? "red" : "white"}
                                         onClick={() => {
                                             getTableWithId(t)
                                         }} cursor={"pointer"}
-                                        key={`${t.ID}-table-box`}>
+                                        key={`${t.id}-table-box`}>
                                         <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                            {t.TableName}
+                                            {t.table_name}
                                         </Heading>
                                     </Button>
                                     <Box style={{ display: "flex", alignItems: "center" }}>

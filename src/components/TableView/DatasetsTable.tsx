@@ -47,17 +47,17 @@ const DatasetsTable = () => {
     console.log(tables)
     const handleRenderView = async (t: any) => {
         close()
-        const dataColumns = await fetchTableWithId(t.ID)
-        const dataValues = await getAllColumnsWithTableId(t.ID);
+        const dataColumns = await fetchTableWithId(t.id)
+        const dataValues = await getAllColumnsWithTableId(t.id);
         console.log(dataColumns)
         console.log(dataValues)
         console.log(dataValues[0])
         if (dataColumns[1] === 200 && dataValues[1] === 200) {
-            dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].ColumnsInTable.RawMessage })
+            dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTableView/setData', payload: dataValues[0] })
-            dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].TableName })
+            dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].table_name })
             dispatch({ type: 'datasetTableView/setRenderTable', payload: true })
-            dispatch({ type: 'datasetTableView/setTableID', payload: t.ID })
+            dispatch({ type: 'datasetTableView/setTableID', payload: t.id })
         } else {
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
             dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })

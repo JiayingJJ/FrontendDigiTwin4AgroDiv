@@ -9,7 +9,7 @@ const RendernInfo = () => {
     return (
         <Card>
             <CardHeader style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline"}}>
-                <Heading size='md'>{tableInfo.TableName}</Heading>
+                <Heading size='md'>{tableInfo.table_name}</Heading>
                 <CloseButton onClick={() => {
                 dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
                 dispatch({ type: 'openLayers/clearTableIdForDrawed', payload: null })

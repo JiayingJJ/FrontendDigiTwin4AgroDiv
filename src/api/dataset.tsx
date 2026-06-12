@@ -44,7 +44,7 @@ export const patchColumns = async (tableId: string, updatedColumns: any) => {
 export const removeColumns = async (tableId: string, deletedColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/removeColumn/${tableId}`, {
-        method: "PUT",
+        method: "DELETE",
         body: JSON.stringify({ columns_in_table: deletedColumns, updated_at: time }),
     })
     const data = await response.json();
@@ -69,7 +69,7 @@ export const fetchTableWithId = async (t: any) => {
     })
     const data = await response.json();
     console.log(data[0])
-    if (data[0].ColumnsInTable.RawMessage === null) {
+    if (data[0].columns_in_table.RawMessage === null) {
         return [data[0], 500]
     }
     else {

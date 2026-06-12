@@ -14,7 +14,7 @@ const AddDataInTable = () => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-        const data = await fetchTableWithId(t.ID)
+        const data = await fetchTableWithId(t.id)
         console.log(data)
         if (data[1] === 500) {
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
@@ -22,13 +22,13 @@ const AddDataInTable = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte in Datenbank Seite Columns hinzufügen " })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
             dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: true })
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.ID })
-            dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.Name })
-            dispatch({ type: 'datasetTable/setUserId', payload: t.UserID })
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.id })
+            dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.table_name })
+            dispatch({ type: 'datasetTable/setUserId', payload: t.user_id })
         } else {
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].ID })
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
-            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].ColumnsInTable.RawMessage })
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].id })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
+            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].columns_in_table.RawMessage })
         }
     }
     return (
@@ -49,7 +49,7 @@ const AddDataInTable = () => {
                                 }} cursor={"pointer"}
                                 key={`${t.ID}-table-box`}>
                                 <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                    {t.TableName}
+                                    {t.table_name}
                                 </Heading>
                             </Button>
                         )

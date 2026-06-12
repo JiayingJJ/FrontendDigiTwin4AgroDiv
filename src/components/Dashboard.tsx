@@ -47,7 +47,7 @@ const Dashboard = () => {
                 const data = await getTablesWithUserId(userInfo)
                 console.log(data)
                 const filterData = data.filter((d: any) => {
-                    if (!d.DeletedAt.Valid) {
+                    if (!d.deleted_at.Valid) {
                         return d;
                     }
                 });

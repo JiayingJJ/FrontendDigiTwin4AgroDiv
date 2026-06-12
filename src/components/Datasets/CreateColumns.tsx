@@ -73,7 +73,7 @@ const CreateColumns = () => {
         const data = await fetchTableWithId(tableId)
         console.log(data)
         if (data[1] !== 500) {
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].ColumnsInTable.RawMessage })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         }
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Login from "./components/Login"
 import store from "./stores/stores"
 /* 
@@ -26,17 +26,18 @@ import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 const apiUrl = import.meta.env.VITE_API_URL;
-
+import { databaseSqlite } from "./components/sqlite/db"
+import { deleteFileFromOPFS, deleteFolderFromOPFS } from "./components/sqlite/helper";
 function App() {
+  const userInfo = useSelector((state: any) => state.user)
   useEffect(() => {
-    console.log(alertInfo.showAlert)
     const intervalId = setInterval(() => {
       if (navigator.onLine) {
         dispatch({ type: 'internet/setIsOnLine', payload: true })
       } else {
         dispatch({ type: 'internet/setIsOnLine', payload: false })
       }
-    }, 60000);
+    }, 10000);
     return () => clearInterval(intervalId);
   });
 
@@ -54,6 +55,52 @@ function App() {
       return () => clearInterval(intervalId);
     }
   }, [alertInfo]);
+
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        const list = Object.entries(data).map(([key, value]) => ({ key, value }));
+
+        await databaseSqlite.initDb();
+        list.forEach(l => {
+          console.log(l.key)
+          console.log(l.value)
+          if (l.key === "user") {
+            l.value.forEach(v => {
+              console.log(v)
+              databaseSqlite.insertUser(v)
+            });
+          } else if (l.key === "user_tables") {
+            l.value.forEach(v => {
+              console.log(v)
+              databaseSqlite.insertUserTables(v)
+            });
+          } else if (l.key === "geo_data") {
+            l.value.forEach(v => {
+              console.log(v)
+              if (v.data_geo !== null) {
+                databaseSqlite.insertGeoData(v.data_geo)
+              }
+            });
+          }
+        });
+      } catch (err: any) {
+        console.error("Init failed:", err);
+      }
+    }
+    if (userInfo.id !== null) {
+      init();
+    }
+  }, [userInfo])
+
+  useEffect(() => {
+    // deleteFileFromOPFS('mydb.sqlite3')
+  }, [])
   return (
     <VStack style={{ backgroundColor: "#f8f1e3", width: "100vw", height: "100vh" }}>
       <BrowserRouter>

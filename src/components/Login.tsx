@@ -5,10 +5,11 @@ import { VStack, Input, Button, Box, } from '@chakra-ui/react'
 import { IoIosLogIn } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { fetchUserWithEmail } from '../api/user';
-
+import { databaseSqlite } from './sqlite/db';
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const isOnLine = useSelector((state: any) => state.internet.isOnLine)
 
     const [valueName, setValueName] = useState<string>('')
     const [valueEmail, setValueEmail] = useState<string>('')
@@ -27,23 +28,42 @@ const Login = () => {
             setDisabledLogin(false)
         }
     }, [valueEmail])
+    const validData = (id: string, name: string, email: string) => {
+        dispatch({ type: 'user/setIsAuthenticated', payload: true })
+        dispatch({ type: 'user/setUserId', payload: id })
+        dispatch({ type: 'user/setName', payload: name })
+        dispatch({ type: 'user/setEmail', payload: email })
+        navigate("/dashboard")
+    }
 
+    const setAlert = (status: string, title: string, msg: string, show: boolean) => {
+        dispatch({ type: 'alertInfo/setAlertStatus', payload: status })
+        dispatch({ type: 'alertInfo/setAlertTitle', payload: title })
+        dispatch({ type: 'alertInfo/setAlertMessage', payload: msg })
+        dispatch({ type: 'alertInfo/setShowAlert', payload: show })
+    }
     const getUserWithEmail = async () => {
-        const data = await fetchUserWithEmail(valueEmail);
-        console.log(data)
-        if (data[1] !== 200) {
-            console.log("Alert Message")
-            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
-            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
-            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte valide Informationen geben." })
-            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        console.log("is online: ", isOnLine)
+        if (isOnLine) {
+            const data = await fetchUserWithEmail(valueEmail);
+            console.log(data)
+            if (data[1] !== 200) {
+                setAlert('error', "Error Message", "Bitte valide Informationen geben.", true)
+            } else {
+                validData(data[0].ID, data[0].Name, data[0].Email)
+            }
         } else {
-            dispatch({ type: 'user/setIsAuthenticated', payload: true })
-            dispatch({ type: 'user/setUserId', payload: data[0].ID })
-            dispatch({ type: 'user/setName', payload: data[0].Name })
-            dispatch({ type: 'user/setEmail', payload: data[0].Email })
-            navigate("/dashboard")
+            await databaseSqlite.initDb();
+            const data = await databaseSqlite.getUserWithEmail(valueEmail);
+            console.log(data)
+            if (data !== null) {
+                console.log("not null")
+                validData(data.id, data.name, data.email)
+            } else {
+                setAlert('error', "Error Message", "Bitte valide Informationen geben.", true)
+            }
         }
+
     }
     return (
         <VStack display="flex" justifyContent="center" height={"100%"}>

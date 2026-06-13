@@ -55,7 +55,7 @@ export const createTable = async (userInfo: any, tableName: string) => {
     console.log(time)
     const response = await fetch(`${apiUrl}/usertable`, {
         method: "POST",
-        body: JSON.stringify({ user_id: userInfo.id, table_name: tableName, created_at: time, updated_at: time }),
+        body: JSON.stringify({ user_id: userInfo.id, table_name: tableName, created_at: time, updated_at: time, data_status: "pending" }),
     })
     const data = await response.json();
     console.log(data)
@@ -99,13 +99,24 @@ export const deleteTableWithId = async (table_id: any) => {
 }
 
 export const setUserTableColumnDataStatus = async (id: string, tableId: string, dataStatus: string) => {
-    const response = await fetch(`${apiUrl}/usertable/setDataStatus`, {
+    const response = await fetch(`${apiUrl}/usertable/column/setDataStatus`, {
         method: "PUT",
         body: JSON.stringify({ id: id, table_id: tableId, data_status: dataStatus }),
     })
     const data = await response.json();
     return data;
 }
+
+export const setUserTableDataStatus = async (id: string, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/table/setDataStatus`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time}),
+    })
+    const data = await response.json();
+    return data;
+}
+
 export const getColumnWithId = async (table_id: string, id: string) => {
     const response = await fetch(`${apiUrl}/usertable/${table_id}/column/${id}`, {
         method: "GET",

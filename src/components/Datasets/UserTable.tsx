@@ -16,7 +16,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { FaCheck } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
-import { createTable } from '../../api/dataset';
+import { createTable, setUserTableColumnDataStatus, setUserTableDataStatus } from '../../api/dataset';
 import { MdCancel } from "react-icons/md";
 import { databaseSqlite } from '../sqlite/db';
 import { getCurrentTime } from '../../helpers';
@@ -45,6 +45,7 @@ const UserTable = () => {
             } else {
                 dispatch({ type: 'datasetTable/setUpdatedTables', payload: true })
                 dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
+                const dataStatus = await setUserTableDataStatus(data[0].id, "merged")
             }
         } else {
             const newId = uuidv4()

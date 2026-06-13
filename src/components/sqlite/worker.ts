@@ -125,7 +125,7 @@ export class Database {
                 data.CreatedAt,
                 data.UpdatedAt,
                 data.DeletedAt.Time,
-                data.DataStatus.String
+                typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String
             ]
         });
     }

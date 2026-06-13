@@ -36,6 +36,7 @@ function App() {
     const intervalId = setInterval(() => {
       if (navigator.onLine) {
         dispatch({ type: 'internet/setIsOnLine', payload: true })
+        initDataInOPFS()
       } else {
         dispatch({ type: 'internet/setIsOnLine', payload: false })
       }
@@ -58,9 +59,7 @@ function App() {
     }
   }, [alertInfo]);
 
-
-  useEffect(() => {
-    async function init() {
+ const initDataInOPFS = async()=> {
       try {
         const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -95,8 +94,9 @@ function App() {
         console.error("Init failed:", err);
       }
     }
+  useEffect(() => {
     if (userInfo.id !== null && isOnLine) {
-      init();
+      initDataInOPFS();
     }
   }, [userInfo])
 

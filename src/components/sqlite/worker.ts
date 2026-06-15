@@ -1,6 +1,6 @@
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
 import * as Comlink from "comlink";
-
+import type { GeoData, UserTable } from "./types";
 export interface Task {
     id: number;
     text: string;
@@ -11,16 +11,6 @@ export interface User {
     email: string;
 }
 
-export interface UserTable {
-    ID: string;
-    UserID: string;
-    TableName: string;
-    ColumnsInTable: string;
-    CreatedAt: string;
-    UpdatedAt: string;
-    DeletedAt: string;
-    DataStatus: string;
-}
 
 export class Database {
     private db: any = null;
@@ -85,8 +75,8 @@ export class Database {
     }
 
     query(sql: string, params: any[] = []): any[] {
-        console.log(sql)
-        console.log(params)
+        // console.log(sql)
+        // console.log(params)
         if (!this.db) throw new Error("Database not initialized");
         const results: any[] = [];
         this.db.exec({
@@ -134,6 +124,12 @@ export class Database {
         const rows = this.query("SELECT * FROM user_tables WHERE user_id = ?", [userId]) as UserTable[];
         return rows ?? null;
     }
+
+    getUserTablesWithDataStatus(status: string): UserTable[] | null {
+        const rows = this.query("SELECT * FROM user_tables WHERE data_status = ?", [status]) as UserTable[];
+        console.log(rows)
+        return rows ?? null;
+    }
     insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         console.log(data)
@@ -158,7 +154,11 @@ export class Database {
         });
 
     }
-
+    getGeoDataWithDataStatus(status: string): GeoData[] | null {
+        const rows = this.query("SELECT * FROM geo_data WHERE data_status = ?", [status]) as GeoData[];
+        console.log(rows)
+        return rows ?? null;
+    }
 
     // ── Read ─────────────────────────────────────────────────────────────────
     getTasks(): Task[] {

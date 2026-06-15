@@ -2,6 +2,16 @@ import { getCurrentTime } from "../helpers";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+
+export const updatePendingDataFromOPFS = async (info: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/api/update/data`, {
+        method: "POST",
+        body: JSON.stringify({ opfs_info: info }),
+    })
+    const data = await response.json();
+    return data;
+}
 export const getTablesWithUserId = async (userInfo: any) => {
     const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
         method: "GET"
@@ -111,7 +121,7 @@ export const setUserTableDataStatus = async (id: string, dataStatus: string) => 
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/table/setDataStatus`, {
         method: "PUT",
-        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time}),
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time }),
     })
     const data = await response.json();
     return data;

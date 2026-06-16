@@ -20,7 +20,7 @@ import { setUserTableColumnDataStatus } from '../../api/dataset';
 import { MdCancel } from "react-icons/md";
 import { databaseSqlite } from '../sqlite/db';
 import { getCurrentTime } from '../../helpers';
-import type { UserTable } from '../sqlite/worker';
+import type { UserTable } from '../sqlite/types';
 import { createTable, setUserTableDataStatus } from '../../api/userTables';
 const UserCreateANewTable = () => {
     const dispatch = useDispatch()

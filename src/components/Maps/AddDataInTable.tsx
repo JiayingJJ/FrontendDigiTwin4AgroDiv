@@ -3,9 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
 import DatasetColumns from './DatasetsInMaps/DatasetColumns';
 import { fetchTableWithId } from '../../api/userTables';
+import { databaseSqlite } from '../sqlite/db';
 
 const AddDataInTable = () => {
     const dispatch = useDispatch()
+    const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+    const userInfo = useSelector((state: any) => state.user)
 
     const tables = useSelector((state: any) => state.datasetTable.tables)
     console.log(tables)
@@ -14,22 +17,33 @@ const AddDataInTable = () => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-        const data = await fetchTableWithId(t.id)
-        console.log(data)
-        if (data[1] === 500) {
-            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
-            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
-            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte in Datenbank Seite Columns hinzufügen " })
-            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
-            dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: true })
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.id })
-            dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.table_name })
-            dispatch({ type: 'datasetTable/setUserId', payload: t.user_id })
+        console.log(t.id)
+
+        if (isOnLine) {
+            const data = await fetchTableWithId(t.id)
+            if (data[1] === 500) {
+                dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+                dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
+                dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte in Datenbank Seite Columns hinzufügen " })
+                dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+                dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: true })
+                dispatch({ type: 'datasetTable/setSelectedTableId', payload: t.id })
+                dispatch({ type: 'datasetTable/setSelectedTableName', payload: t.table_name })
+                dispatch({ type: 'datasetTable/setUserId', payload: t.user_id })
+            } else {
+                dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].id })
+                dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
+                dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].columns_in_table.RawMessage })
+            }
         } else {
-            dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].id })
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
-            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].columns_in_table.RawMessage })
+            await databaseSqlite.initDb()
+            const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
+            const tableData = data.filter((i: any) => i.id === t.id)
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: tableData[0].id })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
+            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: JSON.parse(tableData[0].columns_in_table) })
         }
+
     }
     return (
         <Card>

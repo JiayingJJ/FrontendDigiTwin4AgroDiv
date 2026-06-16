@@ -82,12 +82,12 @@ const DatasetsTable = () => {
             <GridItem h='100%' w="100%">
                 <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
                     {tables !== null && tables.length != 0 && tables.map((t: any) => {
-                        const isSelected = t.ID === selected;
+                        const isSelected = t.id === selected;
                         return (
                             <Card minWidth={"200px"} width={"100%"}>
                                 <CardBody padding={"1rem"}>
                                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
-                                        <Heading size='sm'> {t.TableName}</Heading>
+                                        <Heading size='sm'> {t["table_name"]}</Heading>
                                         {!isSelected ? <Button size="sm" onClick={() => handleRenderView(t)}>View data</Button> : <Button size="sm" onClick={close}>Close</Button>}
                                     </HStack>
                                     {isSelected ? <VStack marginTop={".5rem"} spacing={".5rem"} justifyContent={"left"} width={"100%"}>

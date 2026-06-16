@@ -16,9 +16,10 @@ import {
     Select,
     Text
 } from '@chakra-ui/react'
-import { addValueInColumns, getColumnWithId, getGeoData, insertGeoData, setUserTableColumnDataStatus } from "../../../api/dataset";
+import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
+import { getGeoData, insertGeoData } from "../../../api/geoData";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)

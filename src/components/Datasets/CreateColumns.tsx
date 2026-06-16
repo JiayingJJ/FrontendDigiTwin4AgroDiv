@@ -7,7 +7,8 @@ import { CiCircleRemove } from "react-icons/ci";
 import ColumnsComponent from './ColumnsComponent';
 import { v4 as uuidv4 } from 'uuid';
 import ModalComponent from '../ModalComponent';
-import { fetchTableWithId, patchColumns, postColumns, putNewColumns } from '../../api/dataset';
+import { patchColumns, postColumns, putNewColumns } from '../../api/dataset';
+import { fetchTableWithId } from '../../api/userTables';
 const CreateColumns = () => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)

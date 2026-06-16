@@ -7,9 +7,10 @@ import {
     GridItem,
     useMediaQuery
 } from '@chakra-ui/react'
-import { fetchTableWithId, getAllColumnsWithTableId, getColumnWithId, getTablesWithUserId } from '../../api/dataset';
+import { getAllColumnsWithTableId, getColumnWithId } from '../../api/dataset';
 import Tables from './Tables';
 import { databaseSqlite } from '../sqlite/db';
+import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 // @flow
 type Props = {
 

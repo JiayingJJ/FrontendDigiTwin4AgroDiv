@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
-import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/dataset';
 import { MdDeleteForever } from "react-icons/md";
 import ModalComponent from '../ModalComponent';
 import { databaseSqlite } from '../sqlite/db';
+import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 const CreatedTables = () => {
     const dispatch = useDispatch()
     const tables = useSelector((state: any) => state.datasetTable.tables)

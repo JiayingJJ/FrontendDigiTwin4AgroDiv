@@ -10,9 +10,9 @@ import UserTable from './UserTable';
 import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import CreateColumns from './CreateColumns';
-import { getTablesWithUserId } from '../../api/dataset';
 import { databaseSqlite } from '../sqlite/db';
 import { isZeroTimeString } from '../../helpers';
+import { getTablesWithUserId } from '../../api/userTables';
 const Datasets = () => {
     const dispatch = useDispatch()
     const createColumnsButton = useSelector((state: any) => state.datasetTable.createColumnsButton)

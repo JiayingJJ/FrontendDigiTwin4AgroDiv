@@ -2,24 +2,18 @@ import { getCurrentTime } from "../helpers";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-
 export const updatePendingDataFromOPFS = async (info: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/api/update/data`, {
         method: "POST",
         body: JSON.stringify({ opfs_info: info }),
     })
-    const data = await response.json();
-    return data;
-}
-export const getTablesWithUserId = async (userInfo: any) => {
-    const response = await fetch(`${apiUrl}/usertables/${userInfo.id}`, {
-        method: "GET"
-    })
+    console.log(response)
     const data = await response.json();
     console.log(data)
     return data;
 }
+
 
 export const postColumns = async (tableId: string, userTableColumns: any) => {
     const time = getCurrentTime()
@@ -60,32 +54,7 @@ export const removeColumns = async (tableId: string, deletedColumns: any) => {
     const data = await response.json();
     return data;
 }
-export const createTable = async (userInfo: any, tableName: string) => {
-    const time = getCurrentTime()
-    console.log(time)
-    const response = await fetch(`${apiUrl}/usertable`, {
-        method: "POST",
-        body: JSON.stringify({ user_id: userInfo.id, table_name: tableName, created_at: time, updated_at: time, data_status: "pending" }),
-    })
-    const data = await response.json();
-    console.log(data)
 
-    return [data, response.status]
-}
-
-export const fetchTableWithId = async (t: any) => {
-    const response = await fetch(`${apiUrl}/usertable/${t}/columns`, {
-        method: "GET"
-    })
-    const data = await response.json();
-    console.log(data[0])
-    if (data[0].columns_in_table.RawMessage === null) {
-        return [data[0], 500]
-    }
-    else {
-        return [data[0], response.status]
-    }
-}
 
 export const addValueInColumns = async (table_id: string, columns: any) => {
     const response = await fetch(`${apiUrl}/usertable/columns/addValue`, {
@@ -98,30 +67,10 @@ export const addValueInColumns = async (table_id: string, columns: any) => {
     return [response.status, data]
 }
 
-export const deleteTableWithId = async (table_id: any) => {
-    const time = getCurrentTime()
-    const response = await fetch(`${apiUrl}/usertable/delete/${table_id}`, {
-        method: "POST",
-        body: JSON.stringify({ deleted_at: time, table_id: table_id }),
-    })
-    const data = await response.json();
-    return data
-}
-
 export const setUserTableColumnDataStatus = async (id: string, tableId: string, dataStatus: string) => {
     const response = await fetch(`${apiUrl}/usertable/column/setDataStatus`, {
         method: "PUT",
         body: JSON.stringify({ id: id, table_id: tableId, data_status: dataStatus }),
-    })
-    const data = await response.json();
-    return data;
-}
-
-export const setUserTableDataStatus = async (id: string, dataStatus: string) => {
-    const time = getCurrentTime()
-    const response = await fetch(`${apiUrl}/usertable/table/setDataStatus`, {
-        method: "PUT",
-        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time }),
     })
     const data = await response.json();
     return data;

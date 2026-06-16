@@ -24,9 +24,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
 import AddDataInTable from './AddDataInTable';
-import { fetchTableWithId, getColumnWithId, getGeoData } from '../../api/dataset';
+import { getColumnWithId, getGeoData } from '../../api/dataset';
 import CircleStyle from 'ol/style/Circle';
 import RendernInfo from './DatasetsInMaps/RendernInfo';
+import { fetchTableWithId } from '../../api/userTables';
 
 const OpenLayersMap = () => {
     const dispatch = useDispatch()

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
-import { fetchTableWithId } from '../../api/dataset';
 import DatasetColumns from './DatasetsInMaps/DatasetColumns';
+import { fetchTableWithId } from '../../api/userTables';
 
 const AddDataInTable = () => {
     const dispatch = useDispatch()

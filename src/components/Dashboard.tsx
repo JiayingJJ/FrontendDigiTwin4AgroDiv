@@ -14,10 +14,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import OpenLayersMap from "./Maps/OpenLayersMap";
 import InfoPage from './InfoPage';
 import Datasets from './Datasets/Datasets';
-import { getTablesWithUserId } from '../api/dataset';
 import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
 import { isZeroTimeString } from '../helpers';
+import { getTablesWithUserId } from '../api/userTables';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)

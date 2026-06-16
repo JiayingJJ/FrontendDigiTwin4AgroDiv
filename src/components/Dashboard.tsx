@@ -18,6 +18,7 @@ import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
 import { isZeroTimeString } from '../helpers';
 import { getTablesWithUserId } from '../api/userTables';
+import ProjectsComponent from './Projects/ProjectsComponent';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -34,6 +35,8 @@ const Dashboard = () => {
                 return <InfoPage />
             case "tableview":
                 return <DatasetsTable />
+                case "projects":
+                return <ProjectsComponent />
             default:
                 return <InfoPage />
         }
@@ -81,6 +84,7 @@ const Dashboard = () => {
             >
                 <Button width="100%" backgroundColor={activePage == "dashboard" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
                 <Button width="100%" backgroundColor={activePage == "maps" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
+                <Button width="100%" backgroundColor={activePage == "projects" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "projects" })}>Projects</Button>
                 <Button width="100%" backgroundColor={activePage == "datenbank" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "datenbank" })}>Datenbank</Button>
                 <Button width="100%" backgroundColor={activePage == "tableview" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
             </HStack>

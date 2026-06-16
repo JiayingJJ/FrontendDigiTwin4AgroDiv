@@ -39,6 +39,9 @@ const CreatedTables = () => {
             await databaseSqlite.initDb()
             const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
             console.log(data)
+            const tableData = data.filter((i: any) => i.id === t.id)
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: tableData[0].id })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
         }
     }
     const handleDeleteTable = async (t: any) => {

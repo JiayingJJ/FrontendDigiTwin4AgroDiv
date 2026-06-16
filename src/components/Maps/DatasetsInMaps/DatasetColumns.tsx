@@ -19,7 +19,7 @@ import {
 import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
-import { getGeoData, insertGeoData } from "../../../api/geoData";
+import { getGeoData, insertGeoData, setGeoDataStatus } from "../../../api/geoData";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -95,15 +95,20 @@ const DatasetColumns = () => {
         if (data[0] === 200) {
             const status = 'merged'
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
-            console.log(dataStatus)
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-            console.log(dataColumn)
             const geoData = { "coordinates": geometry, "type": geometryType }
             const properties = { "column_id": data[1].id, "table_id": selectedTableId }
             const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, properties, geoData)
-            console.log(dataInserGeoData)
-            const getAllGeoData = await getGeoData();
-            console.log(getAllGeoData)
+            if (dataInserGeoData[1] === 500) {
+                console.log("Alert Message")
+                dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+                dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+                dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+                dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+            } else {
+                const dataStatus = await setGeoDataStatus(dataInserGeoData[0].ID, "merged")
+            }
+
         }
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
     }

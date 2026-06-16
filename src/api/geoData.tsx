@@ -15,6 +15,7 @@ export const insertGeoData = async (tableId: string, columnId: string, propertie
     })
     const data = await response.json();
     console.log(data)
+    return [data, response.status]
 }
 export const getGeoDataWithUserColumnId = async (id: string) => {
     const response = await fetch(`${apiUrl}/geodata/column/${id}`, {

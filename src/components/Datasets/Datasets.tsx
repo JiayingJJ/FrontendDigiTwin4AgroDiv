@@ -6,7 +6,7 @@ import {
     VStack,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import UserTable from './UserTable';
+import UserCreateANewTable from './UserCreateANewTable';
 import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import CreateColumns from './CreateColumns';
@@ -90,7 +90,7 @@ const Datasets = () => {
                         }}>
                             Füge ein neue Datenbankformat hinzu
                         </Button>
-                        {addNewDataset && <UserTable />}
+                        {addNewDataset && <UserCreateANewTable />}
                     </VStack>
                 </GridItem>
                 <GridItem colSpan={5} h='100%'>

@@ -22,7 +22,7 @@ import { databaseSqlite } from '../sqlite/db';
 import { getCurrentTime } from '../../helpers';
 import type { UserTable } from '../sqlite/worker';
 import { createTable, setUserTableDataStatus } from '../../api/userTables';
-const UserTable = () => {
+const UserCreateANewTable = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector((state: any) => state.user)
     const [tableName, setTableName] = useState<string>("");
@@ -102,4 +102,4 @@ const UserTable = () => {
     );
 }
 
-export default UserTable;
+export default UserCreateANewTable;

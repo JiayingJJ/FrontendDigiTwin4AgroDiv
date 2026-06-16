@@ -84,7 +84,7 @@ const Datasets = () => {
                 <GridItem h='100%' w="100%">
                     <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
                         <CreatedTables />
-                        <Button backgroundColor='#EDB458' onClick={() => {
+                        <Button disabled={addNewDataset} backgroundColor='#EDB458' onClick={() => {
                             dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
                             dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
                         }}>

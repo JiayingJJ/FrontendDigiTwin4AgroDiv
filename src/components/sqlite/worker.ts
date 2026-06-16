@@ -104,9 +104,15 @@ export class Database {
         console.log(data.DataStatus.String)
 
         this.db.exec({
-            sql: `INSERT OR IGNORE INTO user_tables
-        (id, user_id, table_name, columns_in_table, created_at, updated_at, deleted_at, data_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            sql: `INSERT INTO user_tables
+    (id, user_id, table_name, columns_in_table, created_at, updated_at, deleted_at, data_status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+        table_name      = excluded.table_name,
+        columns_in_table = excluded.columns_in_table,
+        updated_at      = excluded.updated_at,
+        deleted_at      = excluded.deleted_at,
+        data_status     = excluded.data_status`,
             bind: [
                 data.ID,
                 data.UserID,

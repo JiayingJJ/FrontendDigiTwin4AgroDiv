@@ -28,6 +28,9 @@ import ProtectedRoute from "./ProtectedRoute";
 const apiUrl = import.meta.env.VITE_API_URL;
 import { databaseSqlite } from "./components/sqlite/db"
 import { deleteFileFromOPFS, deleteFolderFromOPFS } from "./components/sqlite/helper";
+import { updatePendingDataFromOPFS } from "./api/dataset";
+import type { DatabaseForm } from "./components/sqlite/types";
+
 function App() {
   const userInfo = useSelector((state: any) => state.user)
   const isOnLine = useSelector((state: any) => state.internet.isOnLine)
@@ -36,7 +39,9 @@ function App() {
     const intervalId = setInterval(() => {
       if (navigator.onLine) {
         dispatch({ type: 'internet/setIsOnLine', payload: true })
-        initDataInOPFS()
+        if (userInfo.id !== null) {
+          initDataInOPFS()
+        }
       } else {
         dispatch({ type: 'internet/setIsOnLine', payload: false })
       }
@@ -58,42 +63,51 @@ function App() {
       return () => clearInterval(intervalId);
     }
   }, [alertInfo]);
+  const checkStatus = async () => {
+    const userTablesWithPending = await databaseSqlite.getUserTablesWithDataStatus("pending");
+    const geoDataWithPending = await databaseSqlite.getGeoDataWithDataStatus("pending")
+    const data: DatabaseForm = { user_tables: [], geo_data: [] };
+    data['user_tables'] = userTablesWithPending;
+    data['geo_data'] = geoDataWithPending;
+    const response = await updatePendingDataFromOPFS(data);
+    console.log(response)
+    // dispatch({ type: 'internet/updateDataForUpdate', payload: data })
+    if (userTablesWithPending?.length !== 0) {
+    }
+  }
+  const initDataInOPFS = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
- const initDataInOPFS = async()=> {
-      try {
-        const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const list = Object.entries(data).map(([key, value]) => ({ key, value }));
 
-        const data = await response.json();
-        const list = Object.entries(data).map(([key, value]) => ({ key, value }));
-
-        await databaseSqlite.initDb();
-        list.forEach(l => {
-          console.log(l.key)
-          console.log(l.value)
+      await databaseSqlite.initDb();
+      list.forEach(l => {
+        if (l.value !== null) {
           if (l.key === "user") {
             l.value.forEach(v => {
-              console.log(v)
               databaseSqlite.insertUser(v)
             });
           } else if (l.key === "user_tables") {
             l.value.forEach(v => {
-              console.log(v)
               databaseSqlite.insertUserTables(v)
             });
           } else if (l.key === "geo_data") {
             l.value.forEach(v => {
-              console.log(v)
               if (v.data_geo !== null) {
                 databaseSqlite.insertGeoData(v.data_geo)
               }
             });
           }
-        });
-      } catch (err: any) {
-        console.error("Init failed:", err);
-      }
+        }
+      });
+      await checkStatus();
+    } catch (err: any) {
+      console.error("Init failed:", err);
     }
+  }
   useEffect(() => {
     if (userInfo.id !== null && isOnLine) {
       initDataInOPFS();

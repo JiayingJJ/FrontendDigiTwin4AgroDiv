@@ -39,7 +39,7 @@ const DatasetColumns = () => {
         columns.push({ name: "user_id", value: userInfo.id })
         columns.push({ name: "created_at", value: time })
         columns.push({ name: "updated_at", value: time })
-        console.log(columns)
+        columns.push({ name: "data_status", value: "pending" })
         return columns;
     }
     const renderDataset = (column: any) => {

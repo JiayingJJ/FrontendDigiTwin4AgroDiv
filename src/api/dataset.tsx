@@ -19,7 +19,7 @@ export const postColumns = async (tableId: string, userTableColumns: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/addColumn/${tableId}`, {
         method: "POST",
-        body: JSON.stringify({ columns_in_table: userTableColumns, updated_at: time }),
+        body: JSON.stringify({ columns_in_table: userTableColumns, updated_at: time, data_status: "pending" }),
     })
     const data = await response.json();
     return data;

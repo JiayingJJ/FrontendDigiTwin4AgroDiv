@@ -11,7 +11,9 @@ interface OpenLayersState {
     rendernDataInfo: boolean;
     columnInfo: any | null;
     tableInfo: any | null;
-
+    geoData: [] | null;
+    geoJsonData: [] | null;
+    selectedGeoData: string | null;
 }
 
 const initialState: OpenLayersState = {
@@ -25,6 +27,9 @@ const initialState: OpenLayersState = {
     rendernDataInfo: false,
     columnInfo: null,
     tableInfo: null,
+    geoData: null,
+    geoJsonData: null,
+    selectedGeoData: null,
 }
 
 const openLayersSlice = createSlice({
@@ -71,7 +76,20 @@ const openLayersSlice = createSlice({
         setTableInfo: (state, action) => {
             state.tableInfo = action.payload;
 
-        }
+        },
+        setGeodata: (state, action) => {
+            state.geoData = action.payload;
+
+        },
+        setGeoJsonData: (state, action) => {
+            state.geoJsonData = action.payload;
+
+        },
+        setSelectedGeoData: (state, action) => {
+            state.selectedGeoData = action.payload;
+
+        },
+
     }
 });
 
@@ -87,7 +105,10 @@ export const {
     clearColumnIdForDrawed,
     setRendernDataInfo,
     setColumnInfo,
-    setTableInfo
+    setTableInfo,
+    setGeodata,
+    setGeoJsonData,
+    setSelectedGeoData
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

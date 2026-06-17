@@ -38,6 +38,7 @@ const OpenLayersMap = () => {
     let positionFeature = new Feature();
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
+    const geoDataFromRedux = useSelector((state: any) => state.openLayers.geoData)
 
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
@@ -111,8 +112,14 @@ const OpenLayersMap = () => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const fetchUserGeoData = async () => {
             const data = await getGeoData();
-            const geoJsonData = backendToGeoJSON(data);
-            console.log('GeoJSON:', geoJsonData);
+            const validData = data.filter((d: any) => {
+                if (!d.DeletedAt.Valid) {
+                    return d;
+                }
+            })
+            dispatch({ type: 'openLayers/setGeodata', payload: validData })
+            const geoJsonData = backendToGeoJSON(validData);
+            dispatch({ type: 'openLayers/setGeoJsonData', payload: geoJsonData })
 
             const format = new GeoJSON();
             const features = format.readFeatures(geoJsonData, {
@@ -160,6 +167,8 @@ const OpenLayersMap = () => {
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     const fetchDataForDrawed = async (tableId: string, id: string) => {
+        const geoId = geoDataFromRedux.filter((i: any) => i.ColumnID === id)
+        dispatch({ type: 'openLayers/setSelectedGeoData', payload: geoId })
         const dataColumn = await getColumnWithId(tableId, id)
         const dataTable = await fetchTableWithId(tableId)
         dispatch({ type: 'openLayers/setColumnInfo', payload: dataColumn })
@@ -262,7 +271,7 @@ const OpenLayersMap = () => {
             </CardBody>
         </Card>
         <VStack>
-            <Box style={{ display: "flex", flexDirection:"column"}}>
+            <Box style={{ display: "flex", flexDirection: "column" }}>
                 <MapActions olMap={olMap} />
                 <Button onClick={showGeoJSON}>Click</Button>
             </Box>

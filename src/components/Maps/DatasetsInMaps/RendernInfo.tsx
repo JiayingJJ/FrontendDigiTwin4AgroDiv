@@ -7,11 +7,9 @@ const RendernInfo = () => {
     const dispatch = useDispatch()
     const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
-    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
-
     return (
-        <Card>
-            <CardHeader style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "baseline"}}>
+        <Card key={`${columnInfo.id}-geoData-box`}>
+            <CardHeader style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
                 <Heading size='md'>{tableInfo.table_name}</Heading>
                 <CloseButton onClick={() => {
                     dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
@@ -22,7 +20,7 @@ const RendernInfo = () => {
             <CardBody>
                 <Stack divider={<StackDivider />} spacing='4'>
                     {Object.entries(columnInfo).map(([key, value]) => (
-                        <Box>
+                        <Box >
                             <Heading size='xs' textTransform='uppercase'>
                                 {key}
                             </Heading>

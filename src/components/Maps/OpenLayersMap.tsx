@@ -40,7 +40,8 @@ const OpenLayersMap = () => {
     const [olMap, setOlMap] = useState<Map>();
     const geoDataFromRedux = useSelector((state: any) => state.openLayers.geoData)
     const userInfo = useSelector((state: any) => state.user)
-
+    const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
+    const geoData = useSelector((state: any) => state.openLayers.geoData)
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
@@ -137,7 +138,23 @@ const OpenLayersMap = () => {
         fetchUserGeoData();
     }, []);
 
+    useEffect(() => {
+        if (selectedGeometryDataFromDatabase !== null) {
+            geoData.forEach((gd: any) => {
+                const rawCoords = gd.geometry_data.RawMessage.coordinates;
+                const dbCoords = selectedGeometryDataFromDatabase.coordinates;
+                if (
+                    rawCoords[0] === dbCoords[0] &&
+                    rawCoords[1] === dbCoords[1]
+                ) {
+                    console.log(gd)
+                    dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
+                }
+            });
+        }
+    }, [selectedGeometryDataFromDatabase])
     const showGeoJSON = () => {
+        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         if (!olMap) return;
         const layers = olMap.getLayers().getArray();
         const exists = layers.includes(vectorLayerUserData.current);
@@ -169,14 +186,12 @@ const OpenLayersMap = () => {
     ]
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
-    const fetchDataForDrawed = async (tableId: string, id: string) => {
-        const geoId = geoDataFromRedux.filter((i: any) => i.ColumnID === id)
-        dispatch({ type: 'openLayers/setSelectedGeoData', payload: geoId })
-        const dataColumn = await getColumnWithId(tableId, id)
-        const dataTable = await fetchTableWithId(tableId)
-        dispatch({ type: 'openLayers/setColumnInfo', payload: dataColumn })
-        dispatch({ type: 'openLayers/setTableInfo', payload: dataTable[0] })
-        dispatch({ type: 'openLayers/setRendernDataInfo', payload: true })
+    const fetchDataForDrawed = async (id: string) => {
+        const geoId = geoDataFromRedux.filter((i: any) => i.column_id === id)
+        if (geoId.length !== 0) {
+            dispatch({ type: 'openLayers/setSelectedGeometryDataFromDatabase', payload: geoId[0].geometry_data.RawMessage })
+        }
+        dispatch({ type: 'openLayers/setRendernGeoDataList', payload: true })
     }
     useEffect(() => {
         isDrawingRef.current = isDrawing;
@@ -184,14 +199,14 @@ const OpenLayersMap = () => {
     olMap?.on('click', (e) => {
         if (isDrawingRef.current === true) {
             return
-        } else {
+        }
+        else {
+        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.id;
                 if (dataId !== undefined) {
-                    fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
-                    dispatch({ type: 'openLayers/setTableIdForDrawed', payload: dataId.RawMessage.table_id })
-                    dispatch({ type: 'openLayers/setColumnIdForDrawed', payload: dataId.RawMessage.column_id })
+                    fetchDataForDrawed(dataId.RawMessage.column_id)
                 } else {
                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                 }

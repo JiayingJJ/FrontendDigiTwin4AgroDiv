@@ -77,13 +77,14 @@ function App() {
   }
   const initDataInOPFS = async () => {
     try {
+      await databaseSqlite.initDb();
+      await checkStatus();
       const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const data = await response.json();
       const list = Object.entries(data).map(([key, value]) => ({ key, value }));
 
-      await databaseSqlite.initDb();
       list.forEach(l => {
         if (l.value !== null) {
           if (l.key === "user") {
@@ -103,7 +104,6 @@ function App() {
           }
         }
       });
-      await checkStatus();
     } catch (err: any) {
       console.error("Init failed:", err);
     }

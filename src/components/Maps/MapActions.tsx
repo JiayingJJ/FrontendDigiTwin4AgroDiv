@@ -20,6 +20,7 @@ import { BiShapePolygon } from "react-icons/bi";
 import { TbPoint } from "react-icons/tb";
 import AddDataInTable from './AddDataInTable';
 import RendernInfo from './DatasetsInMaps/RendernInfo';
+import AllInfoForDrawedInTable from './DatasetsInMaps/AllInfoForDrawedInTable';
 type Props = {
   olMap: Map
 };
@@ -37,6 +38,7 @@ const MapActions = ({ olMap }: Props) => {
   const dispatch = useDispatch()
   const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
   const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
+  const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
   const layers = {
     standard: new TileLayer({
       source: new OSM(),
@@ -181,6 +183,7 @@ const MapActions = ({ olMap }: Props) => {
       ))}
       {addDrawedInteractionInfo && <AddDataInTable />}
       {rendernDataInfo && <RendernInfo />}
+      {rendernGeoDataList && <AllInfoForDrawedInTable />}
     </HStack>
   );
 };

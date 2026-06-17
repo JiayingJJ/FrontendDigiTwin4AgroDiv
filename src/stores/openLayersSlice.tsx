@@ -11,9 +11,12 @@ interface OpenLayersState {
     rendernDataInfo: boolean;
     columnInfo: any | null;
     tableInfo: any | null;
-    geoData: [] | null;
-    geoJsonData: [] | null;
+    geoData: [];
+    geoJsonData: [];
     selectedGeoData: string | null;
+    selectedGeometryDataFromDatabase: null;
+    geoDataWithSameGeometry: [];
+    rendernGeoDataList: boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -27,9 +30,12 @@ const initialState: OpenLayersState = {
     rendernDataInfo: false,
     columnInfo: null,
     tableInfo: null,
-    geoData: null,
-    geoJsonData: null,
+    geoData: [],
+    geoJsonData: [],
     selectedGeoData: null,
+    selectedGeometryDataFromDatabase: null,
+    geoDataWithSameGeometry: [],
+    rendernGeoDataList: false,
 }
 
 const openLayersSlice = createSlice({
@@ -71,25 +77,31 @@ const openLayersSlice = createSlice({
         },
         setColumnInfo: (state, action) => {
             state.columnInfo = action.payload;
-
         },
         setTableInfo: (state, action) => {
             state.tableInfo = action.payload;
-
         },
         setGeodata: (state, action) => {
             state.geoData = action.payload;
-
         },
         setGeoJsonData: (state, action) => {
             state.geoJsonData = action.payload;
-
         },
         setSelectedGeoData: (state, action) => {
             state.selectedGeoData = action.payload;
-
         },
-
+        setSelectedGeometryDataFromDatabase: (state, action) => {
+            state.selectedGeometryDataFromDatabase = action.payload;
+        },
+        setGeoDataWithSameGeometry: (state, action) => {
+            state.geoDataWithSameGeometry = action.payload;
+        },
+        addGeoDataWithSameGeometry: (state, action) => {
+            state.geoDataWithSameGeometry.push(action.payload);
+        },
+        setRendernGeoDataList: (state, action) => {
+            state.rendernGeoDataList = action.payload;
+        },
     }
 });
 
@@ -108,7 +120,11 @@ export const {
     setTableInfo,
     setGeodata,
     setGeoJsonData,
-    setSelectedGeoData
+    setSelectedGeoData,
+    setSelectedGeometryDataFromDatabase,
+    setGeoDataWithSameGeometry,
+    addGeoDataWithSameGeometry,
+    setRendernGeoDataList
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

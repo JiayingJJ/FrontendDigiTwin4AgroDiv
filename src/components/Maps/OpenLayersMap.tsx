@@ -96,11 +96,11 @@ const OpenLayersMap = () => {
 
     const backendToGeoJSON = (data: any[]) => {
         const features = data
-            .filter(item => item.GeometryData.Valid)
+            .filter(item => item.geometry_data.Valid)
             .map(item => ({
                 type: "Feature",
-                geometry: item.GeometryData.RawMessage,
-                properties: { id: item.Properties }
+                geometry: item.geometry_data.RawMessage,
+                properties: { id: item.properties }
             }));
 
         return {
@@ -113,9 +113,10 @@ const OpenLayersMap = () => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const fetchUserGeoData = async () => {
             const data = await getGeoData();
+            // Get geo_data with UserId
             const geoDataUserId = await getGeoDataWithUserId(userInfo.id);
             const validData = data.filter((d: any) => {
-                if (!d.DeletedAt.Valid) {
+                if (!d.deleted_at.Valid) {
                     return d;
                 }
             })
@@ -187,7 +188,6 @@ const OpenLayersMap = () => {
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.id;
-                console.log(feature.values_)
                 if (dataId !== undefined) {
                     fetchDataForDrawed(dataId.RawMessage.table_id, dataId.RawMessage.column_id)
                     dispatch({ type: 'openLayers/setTableIdForDrawed', payload: dataId.RawMessage.table_id })

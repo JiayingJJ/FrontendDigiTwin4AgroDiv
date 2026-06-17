@@ -22,7 +22,7 @@ const CreateColumns = () => {
     const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
     const hasChanged = useSelector((state: any) => state.datasetTable.hasChanged)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
-  const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+    const isOnLine = useSelector((state: any) => state.internet.isOnLine)
     const addColumns = (type: string) => {
         const newId = uuidv4()
         dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: newId, name: "", type: type, position: userTableColumns.length } })
@@ -37,35 +37,35 @@ const CreateColumns = () => {
     const clickOnCancelBtn = () => {
     }
     const handlePostColumns = async () => {
-        if(isOnLine){
-        const postData = await postColumns(tableId, userTableColumns)
-        if (tableColumns.length !== 0 && newColumns.length !== 0) {
-            const putData = await putNewColumns(tableId, newColumns)
-        }
-        if (tableColumns.length !== 0 && editedColumns.length !== 0) {
-            const getOldInfo = tableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
-            const result = editedColumns.map((editedC: any) => {
-                const newInfo = getOldInfo.find((old: any) => old.id === editedC.id);
-                return {
-                    id: editedC.id,
-                    old_name: newInfo?.name,
-                    new_name: editedC.name ?? null
-                };
-            });
-            const patchData = await patchColumns(tableId, result)
-        }
+        if (isOnLine) {
+            const postData = await postColumns(tableId, userTableColumns)
+            if (tableColumns.length !== 0 && newColumns.length !== 0) {
+                const putData = await putNewColumns(tableId, newColumns)
+            }
+            if (tableColumns.length !== 0 && editedColumns.length !== 0) {
+                const getOldInfo = tableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
+                const result = editedColumns.map((editedC: any) => {
+                    const newInfo = getOldInfo.find((old: any) => old.id === editedC.id);
+                    return {
+                        id: editedC.id,
+                        old_name: newInfo?.name,
+                        new_name: editedC.name ?? null
+                    };
+                });
+                const patchData = await patchColumns(tableId, result)
+            }
 
-        if (tableColumns.length !== 0 && removedColumns.length !== 0) {
-            const result = await removedColumns(tableId, removedColumns)
-        }
-        dispatch({ type: 'datasetTable/setEditTable', payload: false })
-        dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
-        const data = await fetchTableWithId(tableId)
-        if (data[1] !== 500) {
-            dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
-            dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
-        }
-        }else{
+            if (tableColumns.length !== 0 && removedColumns.length !== 0) {
+                const result = await removedColumns(tableId, removedColumns)
+            }
+            dispatch({ type: 'datasetTable/setEditTable', payload: false })
+            dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
+            const data = await fetchTableWithId(tableId)
+            if (data[1] !== 500) {
+                dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
+                dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
+            }
+        } else {
             await databaseSqlite.initDb()
             await databaseSqlite.updateUserTableColumns(tableId, userTableColumns)
         }

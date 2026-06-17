@@ -16,10 +16,10 @@ const AddDataInTable = () => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-
         if (isOnLine) {
             const data = await fetchTableWithId(t.id)
-            if (data[1] === 500) {
+            console.log(data)
+            if (data[0] === undefined || data[1] === 500 || data[0].columns_in_table.RawMessage === null) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
                 dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte in Datenbank Seite Columns hinzufügen " })

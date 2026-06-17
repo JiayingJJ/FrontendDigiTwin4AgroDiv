@@ -159,7 +159,7 @@ const TableWithColumns = () => {
                     {sortedTableColumns?.map(column => renderFormControl(column))}
                 </CardBody>
                 <CardFooter>
-                    {tableColumns.length !== 0 &&
+                    {tableColumns!==null && tableColumns.length !== 0 &&
                         <Button colorScheme="green" onClick={() => {
                             dispatch({ type: 'datasetTable/setEditTable', payload: true })
                             console.log(tableColumns)

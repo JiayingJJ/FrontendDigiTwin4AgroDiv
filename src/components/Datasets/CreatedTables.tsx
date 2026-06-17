@@ -21,7 +21,7 @@ const CreatedTables = () => {
 
         if (isOnLine) {
             const data = await fetchTableWithId(t.id)
-            if (data[1] === 500) {
+            if (data[1] === 500 || data[0].columns_in_table.RawMessage === null) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
                 dispatch({ type: 'alertInfo/setAlertMessage', payload: "Bitte hinzufügen" })

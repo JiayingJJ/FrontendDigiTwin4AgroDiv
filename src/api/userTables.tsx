@@ -14,12 +14,12 @@ export const fetchTableWithId = async (t: any) => {
         method: "GET"
     })
     const data = await response.json();
-    if (data[0].columns_in_table.RawMessage === null) {
-        return [data[0], 500]
-    }
-    else {
+    // if (data[0].columns_in_table.RawMessage === null) {
+    //     return [data[0], 500]
+    // }
+    // else {
         return [data[0], response.status]
-    }
+    // }
 }
 
 export const createTable = async (userInfo: any, tableName: string) => {

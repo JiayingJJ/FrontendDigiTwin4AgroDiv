@@ -28,7 +28,7 @@ import { getColumnWithId } from '../../api/dataset';
 import CircleStyle from 'ol/style/Circle';
 import RendernInfo from './DatasetsInMaps/RendernInfo';
 import { fetchTableWithId } from '../../api/userTables';
-import { getGeoData } from '../../api/geoData';
+import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
 
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
@@ -39,6 +39,7 @@ const OpenLayersMap = () => {
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [olMap, setOlMap] = useState<Map>();
     const geoDataFromRedux = useSelector((state: any) => state.openLayers.geoData)
+    const userInfo = useSelector((state: any) => state.user)
 
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
@@ -112,6 +113,7 @@ const OpenLayersMap = () => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const fetchUserGeoData = async () => {
             const data = await getGeoData();
+            const geoDataUserId = await getGeoDataWithUserId(userInfo.id);
             const validData = data.filter((d: any) => {
                 if (!d.DeletedAt.Valid) {
                     return d;

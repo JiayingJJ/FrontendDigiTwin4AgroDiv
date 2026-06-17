@@ -98,7 +98,7 @@ const DatasetColumns = () => {
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
             const properties = { "column_id": data[1].id, "table_id": selectedTableId }
-            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, properties, geoData)
+            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, userInfo.id, properties, geoData)
             if (dataInserGeoData[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

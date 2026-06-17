@@ -52,3 +52,10 @@ export const deleteGeoDataWithId = async (id: any) => {
     const data = await response.json();
     return [data, response.status]
 }
+export const getGeoDataWithUserId = async (user_id: string) => {
+    const response = await fetch(`${apiUrl}/geodata/user/${user_id}`, {
+        method: "GET",
+    })
+    const data = await response.json();
+    return data;
+}

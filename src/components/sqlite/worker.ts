@@ -140,12 +140,13 @@ export class Database {
         data.forEach(e => {
             this.db.exec({
                 sql: `INSERT OR IGNORE INTO geo_data
-        (id, table_id, column_id, properties, geometry_data, created_at, updated_at, deleted_at, data_status)
+        (id, table_id, column_id, user_id, properties, geometry_data, created_at, updated_at, deleted_at, data_status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 bind: [
                     e.ID,
                     e.TableID,
                     e.ColumnID,
+                    e.UserID,
                     JSON.stringify(e.Properties.RawMessage),
                     JSON.stringify(e.GeometryData.RawMessage),
                     e.CreatedAt,

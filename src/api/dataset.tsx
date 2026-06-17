@@ -8,7 +8,6 @@ export const updatePendingDataFromOPFS = async (info: any) => {
         method: "POST",
         body: JSON.stringify({ opfs_info: info }),
     })
-    console.log(response)
     const data = await response.json();
     console.log(data)
     return data;

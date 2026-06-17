@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ModalComponent from '../ModalComponent';
 import { patchColumns, postColumns, putNewColumns } from '../../api/dataset';
 import { fetchTableWithId } from '../../api/userTables';
+import { databaseSqlite } from '../sqlite/db';
 const CreateColumns = () => {
     const dispatch = useDispatch()
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
@@ -21,6 +22,7 @@ const CreateColumns = () => {
     const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
     const hasChanged = useSelector((state: any) => state.datasetTable.hasChanged)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
+  const isOnLine = useSelector((state: any) => state.internet.isOnLine)
     const addColumns = (type: string) => {
         const newId = uuidv4()
         dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: newId, name: "", type: type, position: userTableColumns.length } })
@@ -35,8 +37,7 @@ const CreateColumns = () => {
     const clickOnCancelBtn = () => {
     }
     const handlePostColumns = async () => {
-        console.log("Post columns in Backend")
-
+        if(isOnLine){
         const postData = await postColumns(tableId, userTableColumns)
         if (tableColumns.length !== 0 && newColumns.length !== 0) {
             console.log(newColumns)
@@ -76,6 +77,11 @@ const CreateColumns = () => {
         if (data[1] !== 500) {
             dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
+        }
+        }else{
+            await databaseSqlite.initDb()
+            console.log(userTableColumns)
+            await databaseSqlite.updateUserTableColumns(tableId, userTableColumns)
         }
     }
     return (

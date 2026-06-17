@@ -1,6 +1,7 @@
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
 import * as Comlink from "comlink";
 import type { GeoData, UserTable } from "./types";
+import { getCurrentTime } from "../../helpers";
 export interface Task {
     id: number;
     text: string;
@@ -97,7 +98,7 @@ export class Database {
         const rows = this.query("SELECT * FROM users WHERE email = ?", [email]) as User[];
         return rows[0] ?? null;
     }
-
+// user_tables
     insertUserTables(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         console.log(data.TableName)
@@ -136,6 +137,15 @@ export class Database {
         console.log(rows)
         return rows ?? null;
     }
+    updateUserTableColumns(tableId: string, userTableColumns: any): void {
+        const time = getCurrentTime()
+        if (!this.db) throw new Error("Database not initialized");
+        this.db.exec({
+            sql: "UPDATE user_tables SET columns_in_table = ?, updated_at = ?, data_status= ? WHERE id = ?",
+            bind: [JSON.stringify(userTableColumns), time, "pending", tableId],
+        });
+    }
+    // geo_data
     insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         console.log(data)

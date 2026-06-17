@@ -1,20 +1,36 @@
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Text, Box, CloseButton } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
+import { MdDeleteForever } from "react-icons/md";
+import { deleteGeoDataWithId, setGeoDataStatus } from '../../../api/geoData';
 
 const RendernInfo = () => {
     const dispatch = useDispatch()
     const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
+    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
 
+    const handleDeleteGeoData = async () => {
+        const data = await deleteGeoDataWithId(selectedGeoData[0].ID)
+        if (data[1] === 500) {
+            console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        } else {
+            const dataStatus = await setGeoDataStatus(data[0].ID, "merged")
+        }
+    }
     return (
         <Card>
-            <CardHeader style={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems:"baseline"}}>
+            <CardHeader style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
                 <Heading size='md'>{tableInfo.table_name}</Heading>
+                <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteGeoData()} size="25" />
                 <CloseButton onClick={() => {
-                dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
-                dispatch({ type: 'openLayers/clearTableIdForDrawed', payload: null })
-                dispatch({ type: 'openLayers/clearColumnIdForDrawed', payload: null })
-            }} />
+                    dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
+                    dispatch({ type: 'openLayers/clearTableIdForDrawed', payload: null })
+                    dispatch({ type: 'openLayers/clearColumnIdForDrawed', payload: null })
+                }} />
             </CardHeader>
             <CardBody>
                 <Stack divider={<StackDivider />} spacing='4'>

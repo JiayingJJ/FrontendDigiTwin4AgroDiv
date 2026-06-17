@@ -43,3 +43,12 @@ export const setGeoDataStatus = async (id: string, dataStatus: string) => {
     const data = await response.json();
     return data;
 }
+export const deleteGeoDataWithId = async (id: any) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/geodata/remove/${id}`, {
+        method: "DELETE",
+        body: JSON.stringify({ deleted_at: time, id: id, data_status: "pending" }),
+    })
+    const data = await response.json();
+    return [data, response.status]
+}

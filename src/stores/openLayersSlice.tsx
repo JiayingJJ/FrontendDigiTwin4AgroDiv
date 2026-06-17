@@ -102,6 +102,13 @@ const openLayersSlice = createSlice({
         setRendernGeoDataList: (state, action) => {
             state.rendernGeoDataList = action.payload;
         },
+        clearReduxForGeoData: (state, action) => {
+            state.columnInfo = null;
+            state.geoDataWithSameGeometry = [];
+            state.rendernDataInfo = false;
+            state.selectedGeoData = null;
+            state.selectedGeometryDataFromDatabase = null;
+        },
     }
 });
 
@@ -124,7 +131,8 @@ export const {
     setSelectedGeometryDataFromDatabase,
     setGeoDataWithSameGeometry,
     addGeoDataWithSameGeometry,
-    setRendernGeoDataList
+    setRendernGeoDataList,
+    clearReduxForGeoData
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

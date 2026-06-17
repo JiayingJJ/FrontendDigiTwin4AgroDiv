@@ -43,10 +43,8 @@ const Login = () => {
         dispatch({ type: 'alertInfo/setShowAlert', payload: show })
     }
     const getUserWithEmail = async () => {
-        console.log("is online: ", isOnLine)
         if (isOnLine) {
             const data = await fetchUserWithEmail(valueEmail);
-            console.log(data)
             if (data[1] !== 200) {
                 setAlert('error', "Error Message", "Bitte valide Informationen geben.", true)
             } else {
@@ -55,9 +53,7 @@ const Login = () => {
         } else {
             await databaseSqlite.initDb();
             const data = await databaseSqlite.getUserWithEmail(valueEmail);
-            console.log(data)
             if (data !== null) {
-                console.log("not null")
                 validData(data.id, data.name, data.email)
             } else {
                 setAlert('error', "Error Message", "Bitte valide Informationen geben.", true)

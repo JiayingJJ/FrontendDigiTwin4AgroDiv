@@ -45,10 +45,8 @@ const Dashboard = () => {
     
     useEffect(() => {
         async function fechtData() {
-            console.log(isOnLine)
             if (isOnLine) {
                 const data = await getTablesWithUserId(userInfo)
-                console.log(data)
                 const filterData = data.filter((d: any) => {
                     if (!d.deleted_at.Valid) {
                         return d;
@@ -60,13 +58,11 @@ const Dashboard = () => {
                 const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
                 const filterData = data?.filter((d: any) => {
                     const notDelete = isZeroTimeString(d.deleted_at)
-                    console.log(notDelete)
                     if (notDelete) {
                         return d;
                     }
                 })
                 dispatch({ type: 'datasetTable/setTables', payload: filterData })
-                console.log(data)
             }
 
         }

@@ -6,7 +6,6 @@ export const getAllProjects = async () => {
         method: "GET",
     })
     const data = await response.json();
-    console.log(data)
     return [data, response.status];
 }
 export const createProject = async (name: string, creatorId: string, members:any) => {

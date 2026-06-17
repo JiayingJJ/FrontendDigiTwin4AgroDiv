@@ -22,7 +22,6 @@ type Props = {
     data: any,
 }
 const SelectComponent = ({ id, index, data }: Props) => {
-    console.log(data)
     const [labelName, setLabelName] = useState<string>("");
     const [optionName, setOptionName] = useState<string>("");
     const [labelInfo, setLabelInfo] = useState<string>("");

@@ -136,7 +136,6 @@ const MapActions = ({ olMap }: Props) => {
       <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
         <Box>
           <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-            console.log("click")
             dispatch({ type: 'openLayers/setDrawingInteraction', payload: true })
             setSelectType(true)
           }} />
@@ -159,7 +158,6 @@ const MapActions = ({ olMap }: Props) => {
           <Tooltip label={"Abbrechen"} hasArrow >
             <Box>
               <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-                console.log("click cancel")
                 dispatch({ type: 'openLayers/setDrawingInteraction', payload: false })
                 removeDrawInteraction()
                 setSelectType(false)

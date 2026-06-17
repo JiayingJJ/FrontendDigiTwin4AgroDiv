@@ -38,7 +38,6 @@ const UserCreateANewTable = () => {
         if (isOnLine) {
             const data = await createTable(userInfo, tableName)
             if (data[1] === 500) {
-                console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
                 dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
@@ -61,7 +60,6 @@ const UserCreateANewTable = () => {
                 DeletedAt: "",
                 DataStatus: "pending",
             }
-            console.log(data)
             await databaseSqlite.initDb()
             await databaseSqlite.insertUserTables(data)
         }

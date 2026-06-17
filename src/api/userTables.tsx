@@ -6,7 +6,6 @@ export const getTablesWithUserId = async (userInfo: any) => {
         method: "GET"
     })
     const data = await response.json();
-    console.log(data)
     return data;
 }
 
@@ -15,7 +14,6 @@ export const fetchTableWithId = async (t: any) => {
         method: "GET"
     })
     const data = await response.json();
-    console.log(data[0])
     if (data[0].columns_in_table.RawMessage === null) {
         return [data[0], 500]
     }
@@ -26,14 +24,11 @@ export const fetchTableWithId = async (t: any) => {
 
 export const createTable = async (userInfo: any, tableName: string) => {
     const time = getCurrentTime()
-    console.log(time)
     const response = await fetch(`${apiUrl}/usertable`, {
         method: "POST",
         body: JSON.stringify({ user_id: userInfo.id, table_name: tableName, created_at: time, updated_at: time, data_status: "pending" }),
     })
     const data = await response.json();
-    console.log(data)
-
     return [data, response.status]
 }
 

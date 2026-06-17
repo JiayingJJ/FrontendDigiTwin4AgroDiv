@@ -27,9 +27,6 @@ const ColumnsComponent = ({ }: Props) => {
 
     const tableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const checkColumns = () => {
-        console.log(userTableColumns)
-        console.log(tableColumns)
-        console.log("hinzufügen oder delete")
         // Add column
         const diffForAddColumn = userTableColumns.filter(
             (utc: any) => !tableColumns.some((tc: any) => utc.id === tc.id)

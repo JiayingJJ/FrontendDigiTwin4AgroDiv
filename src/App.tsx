@@ -35,7 +35,6 @@ function App() {
   const userInfo = useSelector((state: any) => state.user)
   const isOnLine = useSelector((state: any) => state.internet.isOnLine)
   useEffect(() => {
-    console.log(navigator.onLine)
     const intervalId = setInterval(() => {
       if (navigator.onLine) {
         dispatch({ type: 'internet/setIsOnLine', payload: true })
@@ -50,10 +49,8 @@ function App() {
   });
 
   const dispatch = useDispatch()
-  console.log(store.getState())
   const alertInfo = useSelector((state: any) => state.alertInfo);
   useEffect(() => {
-    console.log(alertInfo.showAlert)
     if (alertInfo.showAlert === true) {
       const intervalId = setInterval(() => {
         dispatch({ type: 'alertInfo/setShowAlert', payload: false })
@@ -70,7 +67,6 @@ function App() {
     data['user_tables'] = userTablesWithPending;
     data['geo_data'] = geoDataWithPending;
     const response = await updatePendingDataFromOPFS(data);
-    console.log(response)
     // dispatch({ type: 'internet/updateDataForUpdate', payload: data })
     if (userTablesWithPending?.length !== 0) {
     }

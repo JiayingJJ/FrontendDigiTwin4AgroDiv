@@ -11,13 +11,11 @@ const AddDataInTable = () => {
     const userInfo = useSelector((state: any) => state.user)
 
     const tables = useSelector((state: any) => state.datasetTable.tables)
-    console.log(tables)
     const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: [] })
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-        console.log(t.id)
 
         if (isOnLine) {
             const data = await fetchTableWithId(t.id)
@@ -54,11 +52,9 @@ const AddDataInTable = () => {
             <CardBody>
                 <Stack divider={<StackDivider />} spacing='4'>
                     {tables?.map((t: any) => {
-                        console.log(t)
                         return (
                             <Button
                                 onClick={() => {
-                                    console.log(t)
                                     getTableWithId(t)
                                 }} cursor={"pointer"}
                                 key={`${t.ID}-table-box`}>

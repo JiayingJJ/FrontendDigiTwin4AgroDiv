@@ -9,7 +9,6 @@ export const updatePendingDataFromOPFS = async (info: any) => {
         body: JSON.stringify({ opfs_info: info }),
     })
     const data = await response.json();
-    console.log(data)
     return data;
 }
 
@@ -61,8 +60,6 @@ export const addValueInColumns = async (table_id: string, columns: any) => {
         body: JSON.stringify({ table_id: table_id, columns: columns }),
     })
     const data = await response.json();
-    console.log(data)
-    console.log(response.status)
     return [response.status, data]
 }
 
@@ -80,7 +77,6 @@ export const getColumnWithId = async (table_id: string, id: string) => {
         method: "GET",
     })
     const data = await response.json();
-    console.log(data)
     return data;
 }
 export const getAllColumnsWithTableId = async (table_id: string) => {
@@ -88,6 +84,5 @@ export const getAllColumnsWithTableId = async (table_id: string) => {
         method: "GET",
     })
     const data = await response.json();
-    console.log(data)
     return [data, response.status];
 }

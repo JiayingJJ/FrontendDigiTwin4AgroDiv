@@ -21,7 +21,6 @@ const CreatedTables = () => {
 
         if (isOnLine) {
             const data = await fetchTableWithId(t.id)
-            console.log(data)
             if (data[1] === 500) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
@@ -38,7 +37,6 @@ const CreatedTables = () => {
         } else {
             await databaseSqlite.initDb()
             const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
-            console.log(data)
             const tableData = data.filter((i: any) => i.id === t.id)
             dispatch({ type: 'datasetTable/setSelectedTableId', payload: tableData[0].id })
             dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
@@ -53,16 +51,13 @@ const CreatedTables = () => {
     }
     const clickOnSaveBtn = async () => {
         const dataDelete = await deleteTableWithId(tableId);
-        console.log(dataDelete)
         const data = await getTablesWithUserId(userInfo)
         const filterData = data.filter((d) => {
             if (!d.deleted_at.Valid) {
                 return d;
             }
         });
-        console.log(filterData)
         dispatch({ type: 'datasetTable/setTables', payload: filterData })
-        console.log(data)
     }
     const clickOnCancelBtn = () => {
     }

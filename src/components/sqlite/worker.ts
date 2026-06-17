@@ -17,25 +17,20 @@ export class Database {
     private db: any = null;
 
     async initDb() {
-        console.log('crossOriginIsolated:', self.crossOriginIsolated)
-
-
+        // console.log('crossOriginIsolated:', self.crossOriginIsolated)
         if (!self.crossOriginIsolated) {
             throw new Error('Worker is not cross-origin isolated! OPFS not available.')
         }
         const sqlite3 = await sqlite3InitModule();
-
-        console.log("Running SQLite3 version", sqlite3.version.libVersion);
-
+        // console.log("Running SQLite3 version", sqlite3.version.libVersion);
         if (!sqlite3.oo1.OpfsDb) {
             throw new Error("OPFS is not available...")
         }
-
         this.db = new sqlite3.oo1.OpfsDb("/mydb.sqlite3");
-        console.log(
-            "OPFS is available, created persisted database at",
-            this.db.filename
-        );
+        // console.log(
+        //     "OPFS is available, created persisted database at",
+        //     this.db.filename
+        // );
 
         this.db.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -71,8 +66,6 @@ export class Database {
 );
 
   `);
-        console.log('Table "tasks" initialized.');
-
     }
 
     query(sql: string, params: any[] = []): any[] {
@@ -98,12 +91,9 @@ export class Database {
         const rows = this.query("SELECT * FROM users WHERE email = ?", [email]) as User[];
         return rows[0] ?? null;
     }
-// user_tables
+    // user_tables
     insertUserTables(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        console.log(data.TableName)
-        console.log(data.DataStatus.String)
-
         this.db.exec({
             sql: `INSERT INTO user_tables
     (id, user_id, table_name, columns_in_table, created_at, updated_at, deleted_at, data_status)
@@ -134,7 +124,6 @@ export class Database {
 
     getUserTablesWithDataStatus(status: string): UserTable[] | null {
         const rows = this.query("SELECT * FROM user_tables WHERE data_status = ?", [status]) as UserTable[];
-        console.log(rows)
         return rows ?? null;
     }
     updateUserTableColumns(tableId: string, userTableColumns: any): void {
@@ -148,8 +137,6 @@ export class Database {
     // geo_data
     insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        console.log(data)
-
         data.forEach(e => {
             this.db.exec({
                 sql: `INSERT OR IGNORE INTO geo_data
@@ -172,7 +159,6 @@ export class Database {
     }
     getGeoDataWithDataStatus(status: string): GeoData[] | null {
         const rows = this.query("SELECT * FROM geo_data WHERE data_status = ?", [status]) as GeoData[];
-        console.log(rows)
         return rows ?? null;
     }
 

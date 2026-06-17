@@ -40,16 +40,10 @@ const CreateColumns = () => {
         if(isOnLine){
         const postData = await postColumns(tableId, userTableColumns)
         if (tableColumns.length !== 0 && newColumns.length !== 0) {
-            console.log(newColumns)
-
             const putData = await putNewColumns(tableId, newColumns)
-            console.log(putData)
         }
         if (tableColumns.length !== 0 && editedColumns.length !== 0) {
-            console.log("patch")
             const getOldInfo = tableColumns.filter((tc: any) => editedColumns.some((e: any) => tc.id === e.id))
-            console.log(editedColumns)
-            console.log(getOldInfo)
             const result = editedColumns.map((editedC: any) => {
                 const newInfo = getOldInfo.find((old: any) => old.id === editedC.id);
                 return {
@@ -58,29 +52,21 @@ const CreateColumns = () => {
                     new_name: editedC.name ?? null
                 };
             });
-
-            console.log(result);
             const patchData = await patchColumns(tableId, result)
-            console.log(patchData)
         }
 
         if (tableColumns.length !== 0 && removedColumns.length !== 0) {
             const result = await removedColumns(tableId, removedColumns)
-            console.log(result)
         }
-        console.log(postData)
         dispatch({ type: 'datasetTable/setEditTable', payload: false })
-
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
         const data = await fetchTableWithId(tableId)
-        console.log(data)
         if (data[1] !== 500) {
             dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         }
         }else{
             await databaseSqlite.initDb()
-            console.log(userTableColumns)
             await databaseSqlite.updateUserTableColumns(tableId, userTableColumns)
         }
     }

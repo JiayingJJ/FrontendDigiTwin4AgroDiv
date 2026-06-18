@@ -1,6 +1,7 @@
 import { FaLocationArrow } from "react-icons/fa6";
 import { useDispatch } from 'react-redux';
 import { Map } from 'ol';
+import { Button } from "@chakra-ui/react";
 
 type Props = {
     olMap: Map,
@@ -21,12 +22,14 @@ const GetLocationWithUserInput = ({ olMap, getUserGeo, ortInfoRef }: Props) => {
         }
     }
     return (
-        <FaLocationArrow size={25} style={{
-            padding: "1px",
-            marginLeft: "10px",
-            marginRight: "10px",
-            color: "#faae2b"
-        }} onClick={getLocation} />
+        <Button variant={"unstyled"}>
+            <FaLocationArrow size={25} style={{
+                padding: "1px",
+                marginLeft: "10px",
+                marginRight: "10px",
+                color: "#faae2b"
+            }} onClick={getLocation} />
+        </Button>
     );
 }
 

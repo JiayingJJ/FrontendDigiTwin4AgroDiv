@@ -4,7 +4,7 @@ import { BsWater } from "react-icons/bs";
 import { FaLayerGroup } from "react-icons/fa";
 import { MdCameraOutdoor } from "react-icons/md";
 import { MdTerrain } from "react-icons/md";
-import { Tooltip, Box, HStack } from '@chakra-ui/react'
+import { Tooltip, Box, HStack, Button } from '@chakra-ui/react'
 import { Map } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import StadiaMaps from 'ol/source/StadiaMaps.js';
@@ -18,9 +18,6 @@ import Snap from 'ol/interaction/Snap.js';
 import { useRef, useState } from 'react';
 import { BiShapePolygon } from "react-icons/bi";
 import { TbPoint } from "react-icons/tb";
-import AddDataInTable from './AddDataInTable';
-import RendernInfo from './DatasetsInMaps/RendernInfo';
-import AllInfoForDrawedInTable from './DatasetsInMaps/AllInfoForDrawedInTable';
 type Props = {
   olMap: Map
 };
@@ -36,9 +33,7 @@ const layerButtons = [
 ];
 const MapActions = ({ olMap }: Props) => {
   const dispatch = useDispatch()
-  const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
-  const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
-  const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
+  const selectedLayer = useSelector((state: any) => state.openLayers.layerType)
   const layers = {
     standard: new TileLayer({
       source: new OSM(),
@@ -135,55 +130,52 @@ const MapActions = ({ olMap }: Props) => {
   const [selectType, setSelectType] = useState<boolean>(false);
   return (
     <HStack style={{ display: 'flex', justifyContent: "center" }}>
-      <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
-        <Box>
+      {!selectType 
+      ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+        <Button variant={"unstyled"}>
           <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
             dispatch({ type: 'openLayers/setDrawingInteraction', payload: true })
             setSelectType(true)
           }} />
-        </Box>
+        </Button>
       </Tooltip>
-      {selectType &&
-        <Box style={{
+      : <Box style={{
           display: "flex",
         }}>
           <Tooltip label={"Ein Punkt hinzufügen"} hasArrow >
-            <Box>
+            <Button variant={"unstyled"}>
               <TbPoint style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('Point')} />
-            </Box>
+            </Button>
           </Tooltip>
           <Tooltip label={"Ein Polygon hinzufügen"} hasArrow >
-            <Box>
+            <Button variant={"unstyled"}>
               <BiShapePolygon style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('Polygon')} />
-            </Box>
+            </Button>
           </Tooltip>
           <Tooltip label={"Abbrechen"} hasArrow >
-            <Box>
+            <Button variant={"unstyled"}>
               <MdCancel style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
                 dispatch({ type: 'openLayers/setDrawingInteraction', payload: false })
                 removeDrawInteraction()
                 setSelectType(false)
               }} />
-            </Box>
+            </Button>
           </Tooltip>
         </Box>
       }
 
       {layerButtons.map(({ icon: Icon, layerType, layerTooltip }) => (
-        <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >
-          <Box>
-            <Icon
-              key={layerType}
-              style={{ padding: "5px", margin: "5px" }}
-              size="30"
-              onClick={() => switchLayer(layerType)}
-            />
-          </Box>
-        </Tooltip>
-      ))}
-      {addDrawedInteractionInfo && <AddDataInTable />}
-      {rendernDataInfo && <RendernInfo />}
-      {rendernGeoDataList && <AllInfoForDrawedInTable />}
+          <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >
+            <Button variant={layerType === selectedLayer ? "solid" : "unstyled"} padding={"0 .4rem"}>
+              <Icon
+                key={layerType}
+                style={{ padding: "5px", margin: "5px" }}
+                size="30"
+                onClick={() => switchLayer(layerType)}
+              />
+            </Button>
+          </Tooltip>
+        ))}
     </HStack>
   );
 };

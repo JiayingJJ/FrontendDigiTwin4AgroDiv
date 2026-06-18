@@ -8,6 +8,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Geolocation from 'ol/Geolocation.js';
+import { Button } from "@chakra-ui/react";
 
 type Props = {
     olMap: Map,
@@ -54,11 +55,14 @@ const GetUserLocation = ({ olMap, positionFeature }: Props) => {
         }
     }
     return (
-        <FaLocationDot style={{
-            padding: "1px",
-            marginRight: "10px",
-            color: "#fa5246"
-        }} size={25} onClick={getUserLocation} />
+        <Button variant={"unstyled"}>
+            <FaLocationDot style={{
+                padding: "1px",
+                marginLeft: "10px",
+                marginRight: "10px",
+                color: "#fa5246"
+            }} size={25} onClick={getUserLocation} />
+        </Button>
     );
 }
 

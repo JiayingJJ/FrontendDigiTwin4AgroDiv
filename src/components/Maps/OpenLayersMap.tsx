@@ -12,7 +12,7 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Icon from 'ol/style/Icon';
-import { Card, CardHeader, CardBody, VStack, HStack, Button } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, VStack, HStack, Button, CardFooter } from '@chakra-ui/react'
 import { Tooltip } from '@chakra-ui/react'
 import { Input, Box } from '@chakra-ui/react'
 // Rest
@@ -29,6 +29,7 @@ import CircleStyle from 'ol/style/Circle';
 import RendernInfo from './DatasetsInMaps/RendernInfo';
 import { fetchTableWithId } from '../../api/userTables';
 import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
+import AllInfoForDrawedInTable from './DatasetsInMaps/AllInfoForDrawedInTable';
 
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
@@ -42,6 +43,9 @@ const OpenLayersMap = () => {
     const userInfo = useSelector((state: any) => state.user)
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
     const geoData = useSelector((state: any) => state.openLayers.geoData)
+    const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
+    const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
+    const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
@@ -201,7 +205,7 @@ const OpenLayersMap = () => {
             return
         }
         else {
-        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
+            dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.id;
@@ -261,38 +265,62 @@ const OpenLayersMap = () => {
             });
     }
 
-    return <HStack>
-        <Card style={{ height: "90vh", width: "80vw", color: "#f2f7f5", backgroundColor: "#60935D" }}>
-            <CardHeader>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    alignItems: "center"
-                }}>
-                    <Input placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} style={{ color: "#f2f7f5" }} _placeholder={{ color: "#f2f7f5" }} />
-                    <Tooltip label="Suchen" placement='top' hasArrow>
-                        <Box>
-                            <GetLocationWithUserInput olMap={olMap} getUserGeo={getUserGeo} ortInfoRef={ortInfoRef} />
-                        </Box>
-                    </Tooltip>
+    const cardPadding = "0.4rem";
 
-                    <Tooltip label="User Location" placement='top' hasArrow>
-                        <Box>
-                            <GetUserLocation olMap={olMap} positionFeature={positionFeature} />
-                        </Box>
-                    </Tooltip>
-                </div>
-            </CardHeader>
-            <CardBody ref={mapDivRef}
-                style={{ height: "90vh", width: "80vw" }}>
+    return <HStack width={"90vw"} height={"100%"} marginBottom={"0.5rem"}>
+        <Card width={"90vw"} height={"100%"} style={{ color: "#f2f7f5", backgroundColor: "#60935D" }}>
+            <CardBody ref={mapDivRef} padding={cardPadding}>
+                <Box position={"absolute"} zIndex={10} pointerEvents={"none"} width={`calc(100% - 2*${cardPadding})`} height={`calc(100% - 2*${cardPadding})`}>
+                    <Box position="relative" height={"100%"} width="100%" padding={"0.5rem"}>
+                        <VStack height="100%" justifyContent={"space-between"}>
+                            <HStack paddingLeft={"1.7rem"} width={"100%"} justifyContent={"space-between"}>
+                                <Card borderRadius={"1rem"} opacity={"0.9"} pointerEvents={"auto"}>
+                                    <CardBody padding={"0 .7rem"}>
+                                        <HStack justifyContent="end" alignItems="center">
+                                            <Input width={"100%"} minWidth={"20vw"} placeholder="Geben Sie ein Ortname oder ein Postleitzahl" type="text" ref={ortInfoRef} variant={"unstyled"} />
+                                            <Tooltip label="Suchen" placement='top' hasArrow>
+                                                <Box>
+                                                    <GetLocationWithUserInput olMap={olMap} getUserGeo={getUserGeo} ortInfoRef={ortInfoRef} />
+                                                </Box>
+                                            </Tooltip>
+
+                                            <Tooltip label="User Location" placement='top' hasArrow>
+                                                <Box>
+                                                    <GetUserLocation olMap={olMap} positionFeature={positionFeature} />
+                                                </Box>
+                                            </Tooltip>
+                                        </HStack>
+                                    </CardBody>
+                                </Card>
+                                <Card borderRadius={"1rem"} opacity={"0.9"} pointerEvents={"auto"}>
+                                    <CardBody padding={"0 .7rem"}>
+                                        <HStack justifyContent="end" alignItems="center">
+                                            <MapActions olMap={olMap} />
+                                        </HStack>
+                                    </CardBody>
+                                </Card>
+                            </HStack>
+
+                            <HStack width={"100%"} justifyContent={"space-between"}>
+                                <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
+                                    <CardBody padding={"0rem .7rem"}>
+                                        <Button variant="unstyled" onClick={showGeoJSON}>Daten laden und anzeigen</Button>
+                                    </CardBody>
+                                </Card>
+
+                                <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
+                                    <CardBody padding={"0rem .7rem"}>
+                                        {addDrawedInteractionInfo && <AddDataInTable />}
+                                        {rendernDataInfo && <RendernInfo />}
+                                        {rendernGeoDataList && <AllInfoForDrawedInTable />}
+                                    </CardBody>
+                                </Card>
+                            </HStack>
+                        </VStack>
+                    </Box>
+                </Box>
             </CardBody>
         </Card>
-        <VStack>
-            <Box style={{ display: "flex", flexDirection: "column" }}>
-                <MapActions olMap={olMap} />
-                <Button onClick={showGeoJSON}>Click</Button>
-            </Box>
-        </VStack>
     </HStack>
 };
 

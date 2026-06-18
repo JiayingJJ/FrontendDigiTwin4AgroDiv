@@ -112,10 +112,17 @@ const DatasetColumns = () => {
         }
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
     }
+    const handleCancel = async () => {
+        dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
+    }
     return (
         <VStack>
             {tableColumns.map((column: any) => renderDataset(column))}
-            <Button onClick={() => handleSubmit()}>Submit</Button>
+            {tableColumns.length !== 0 &&
+                <Box>
+                    <Button onClick={() => handleSubmit()}>Submit</Button>
+                    <Button onClick={() => handleCancel()}>Cancel</Button>
+                </Box>}
         </VStack>
     );
 }

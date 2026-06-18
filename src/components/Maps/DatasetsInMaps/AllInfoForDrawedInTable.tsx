@@ -6,6 +6,8 @@ import ModalComponent from '../../ModalComponent';
 import { getColumnWithId } from '../../../api/dataset';
 import { fetchTableWithId } from '../../../api/userTables';
 import { deleteGeoDataWithId, setGeoDataStatus } from '../../../api/geoData';
+import { FiPlusCircle } from "react-icons/fi";
+import { MdModeEdit } from "react-icons/md";
 import { removeDataFromUserTablesId } from '../../../api/userTableId';
 const AllInfoForDrawedInTable = () => {
 
@@ -58,21 +60,24 @@ const AllInfoForDrawedInTable = () => {
         const deleteUserTableIdColumn = await removeDataFromUserTablesId(userTableIdColumnId, tableId)
         await handleDeleteGeoData(geo.id)
     }
+    const handlerAddNewData = async () => {
+        dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+    }
     return (
         <>
-            <Card width={"100%"} textAlign={"center"}>
-                <CardHeader>
-                    <Heading size='md'>Angelegte Datenbanken</Heading>
-                </CardHeader>
-                <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
-            </Card>
-
             <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
+                <HStack spacing={".5rem"} style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
+                    <Heading size='md'>Dateneinsätze</Heading>
+                    <Box>
+                        <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"} onClick={() => handlerAddNewData()} />
+                    </Box>
+                </HStack>
+                <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
                 {geoDataWithSameGeometry?.map((geo: any) => {
                     return (
                         <Card minWidth={"200px"} width={"100%"}>
-                            <CardBody padding={"1rem"}>
-                                <HStack spacing={".5rem"} justifyContent={"space-between"}>
+                            <CardBody padding={".5rem"}>
+                                <HStack spacing={".5rem"} justifyContent={"space-around"}>
                                     <Button
                                         // disabled={addingColumns}
                                         // backgroundColor={selectedTableId === t.id ? "red" : "white"}
@@ -87,6 +92,7 @@ const AllInfoForDrawedInTable = () => {
                                     </Button>
                                     <Box style={{ display: "flex", alignItems: "center" }}>
                                         <MdDeleteForever cursor={"pointer"} onClick={() => handlerDeleteGeoDataAndColumn(geo)} size="25" />
+                                        <MdModeEdit cursor={"pointer"} size="25" />
                                     </Box>
                                 </HStack>
                             </CardBody>

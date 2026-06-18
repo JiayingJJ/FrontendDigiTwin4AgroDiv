@@ -28,8 +28,8 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {rendernDataInfo && <RendernInfo />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
+                    {rendernDataInfo && <RendernInfo />}
                     {addDrawedInteractionInfo && <AddDataInTable />}
                 </CardBody>
             </Card>

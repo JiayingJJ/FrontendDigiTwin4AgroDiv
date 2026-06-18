@@ -13,6 +13,7 @@ const AllInfoForDrawedInTable = () => {
 
     const dispatch = useDispatch()
     const geoDataWithSameGeometry = useSelector((state: any) => state.openLayers.geoDataWithSameGeometry)
+    const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
 
     const clickOnSaveBtn = async () => {
 
@@ -79,7 +80,7 @@ const AllInfoForDrawedInTable = () => {
                             <CardBody padding={".5rem"}>
                                 <HStack spacing={".5rem"} justifyContent={"space-around"}>
                                     <Button
-                                        // disabled={addingColumns}
+                                        // disabled={addDrawedInteractionInfo}
                                         // backgroundColor={selectedTableId === t.id ? "red" : "white"}
                                         onClick={() => {
                                             handlerGetData(geo)

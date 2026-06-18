@@ -17,6 +17,7 @@ interface OpenLayersState {
     selectedGeometryDataFromDatabase: null;
     geoDataWithSameGeometry: [];
     rendernGeoDataList: boolean;
+    showUserDataLayer: boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -36,6 +37,7 @@ const initialState: OpenLayersState = {
     selectedGeometryDataFromDatabase: null,
     geoDataWithSameGeometry: [],
     rendernGeoDataList: false,
+    showUserDataLayer: false,
 }
 
 const openLayersSlice = createSlice({
@@ -109,6 +111,9 @@ const openLayersSlice = createSlice({
             state.selectedGeoData = null;
             state.selectedGeometryDataFromDatabase = null;
         },
+        setShowUserDataLayer: (state, action) => {
+            state.showUserDataLayer = action.payload;
+        },
     }
 });
 
@@ -132,7 +137,8 @@ export const {
     setGeoDataWithSameGeometry,
     addGeoDataWithSameGeometry,
     setRendernGeoDataList,
-    clearReduxForGeoData
+    clearReduxForGeoData,
+    setShowUserDataLayer
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

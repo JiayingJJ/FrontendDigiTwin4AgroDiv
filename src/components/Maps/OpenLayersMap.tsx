@@ -221,6 +221,8 @@ const OpenLayersMap = () => {
                 if (dataId !== undefined) {
                     fetchDataForDrawed(dataId.RawMessage.column_id)
                 } else {
+                    dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
+                    dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType()})
                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                 }
                 // feature.setStyle(newStyle)

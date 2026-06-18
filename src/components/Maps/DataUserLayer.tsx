@@ -12,6 +12,9 @@ const DataUserLayer = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const showGeoJSON = () => {
+        dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
+        dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
+        dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setShowUserDataLayer', payload: !showUserDataLayer })
     };
@@ -25,9 +28,9 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {addDrawedInteractionInfo && <AddDataInTable />}
                     {rendernDataInfo && <RendernInfo />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
+                    {addDrawedInteractionInfo && <AddDataInTable />}
                 </CardBody>
             </Card>
         </HStack>

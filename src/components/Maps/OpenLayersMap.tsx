@@ -23,13 +23,11 @@ import TulpePic from '../../assets/Tulpe.jpg'
 import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
-import AddDataInTable from './AddDataInTable';
-import { getColumnWithId } from '../../api/dataset';
 import CircleStyle from 'ol/style/Circle';
-import RendernInfo from './DatasetsInMaps/RendernInfo';
-import { fetchTableWithId } from '../../api/userTables';
 import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
-import AllInfoForDrawedInTable from './DatasetsInMaps/AllInfoForDrawedInTable';
+import { getColumnWithId } from '../../api/dataset';
+import { fetchTableWithId } from '../../api/userTables';
+import DataUserLayer from './DataUserLayer';
 
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
@@ -43,6 +41,8 @@ const OpenLayersMap = () => {
     const userInfo = useSelector((state: any) => state.user)
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
     const geoData = useSelector((state: any) => state.openLayers.geoData)
+    const showUserDataLayer = useSelector((state: any) => state.openLayers.showUserDataLayer)
+    const layerType = useSelector((state: any) => state.openLayers.layerType)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
@@ -157,15 +157,24 @@ const OpenLayersMap = () => {
             });
         }
     }, [selectedGeometryDataFromDatabase])
-    const showGeoJSON = () => {
-        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
+
+    const statusForUserDataLayer = () => {
         if (!olMap) return;
-        const layers = olMap.getLayers().getArray();
-        const exists = layers.includes(vectorLayerUserData.current);
-        if (!exists) {
-            olMap.addLayer(vectorLayerUserData.current);
+
+        if (showUserDataLayer) {
+            const layers = olMap.getLayers().getArray();
+            const exists = layers.includes(vectorLayerUserData.current);
+            if (!exists) {
+                olMap.addLayer(vectorLayerUserData.current);
+            }
+        } else {
+            olMap?.removeLayer(vectorLayerUserData.current);
         }
-    };
+    }
+
+    useEffect(() => {
+        statusForUserDataLayer()
+    }, [layerType, showUserDataLayer])
 
     const newStyle = [new Style({
         stroke: new Stroke({
@@ -301,21 +310,7 @@ const OpenLayersMap = () => {
                                 </Card>
                             </HStack>
 
-                            <HStack width={"100%"} justifyContent={"space-between"}>
-                                <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
-                                    <CardBody padding={"0rem .7rem"}>
-                                        <Button variant="unstyled" onClick={showGeoJSON}>Daten laden und anzeigen</Button>
-                                    </CardBody>
-                                </Card>
-
-                                <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
-                                    <CardBody padding={"0rem .7rem"}>
-                                        {addDrawedInteractionInfo && <AddDataInTable />}
-                                        {rendernDataInfo && <RendernInfo />}
-                                        {rendernGeoDataList && <AllInfoForDrawedInTable />}
-                                    </CardBody>
-                                </Card>
-                            </HStack>
+                            <DataUserLayer />
                         </VStack>
                     </Box>
                 </Box>

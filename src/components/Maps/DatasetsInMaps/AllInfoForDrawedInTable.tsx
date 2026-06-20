@@ -9,6 +9,7 @@ import { deleteGeoDataWithId, setGeoDataStatus } from '../../../api/geoData';
 import { FiPlusCircle } from "react-icons/fi";
 import { MdModeEdit } from "react-icons/md";
 import { removeDataFromUserTablesId } from '../../../api/userTableId';
+import { readableTimestamp } from '../../../helpers';
 const AllInfoForDrawedInTable = () => {
 
     const dispatch = useDispatch()
@@ -19,17 +20,6 @@ const AllInfoForDrawedInTable = () => {
 
     }
     const clickOnCancelBtn = () => {
-    }
-    const readable = (ts: string) => {
-        return new Date(ts).toLocaleString("de-DE", {
-            timeZone: "Europe/Berlin",
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        });
     }
     const handleDeleteGeoData = async (id: string) => {
         const data = await deleteGeoDataWithId(id)
@@ -88,7 +78,7 @@ const AllInfoForDrawedInTable = () => {
                                         cursor={"pointer"}
                                         key={`${geo.id}-geoData-box`}>
                                         <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                            {readable(geo.updated_at)}
+                                            {readableTimestamp(geo.updated_at)}
                                         </Heading>
                                     </Button>
                                     <Box style={{ display: "flex", alignItems: "center" }}>

@@ -48,7 +48,7 @@ const Login = () => {
             if (data[1] !== 200) {
                 setAlert('error', "Error Message", "Bitte valide Informationen geben.", true)
             } else {
-                validData(data[0].ID, data[0].Name, data[0].Email)
+                validData(data[0].id, data[0].name, data[0].email)
             }
         } else {
             await databaseSqlite.initDb();

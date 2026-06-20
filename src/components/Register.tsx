@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { VStack, Input, Button, Box, } from '@chakra-ui/react'
 import { IoIosLogIn } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { PostUser } from '../api/user';
+import { PostUser, setUserDataStatus } from '../api/user';
 
 const Register = () => {
     const dispatch = useDispatch()
@@ -30,10 +30,11 @@ const Register = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: data[0].error })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
-            dispatch({ type: 'user/setUserId', payload: data[0].ID })
-            dispatch({ type: 'user/setName', payload: data[0].Name })
-            dispatch({ type: 'user/setEmail', payload: data[0].Email })
+            dispatch({ type: 'user/setUserId', payload: data[0].id })
+            dispatch({ type: 'user/setName', payload: data[0].name })
+            dispatch({ type: 'user/setEmail', payload: data[0].email })
             navigate("/")
+            const dataStatus = await setUserDataStatus(data[0].id, "merged")
         }
     }
     const handleChange = (event: any, value: string) => {

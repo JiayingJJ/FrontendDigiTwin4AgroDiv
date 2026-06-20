@@ -17,3 +17,6 @@ export const readableTimestamp = (ts: string) => {
         second: "2-digit",
     });
 }
+export const looksLikeIsoZ = (s: string) => {
+    return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s);
+}

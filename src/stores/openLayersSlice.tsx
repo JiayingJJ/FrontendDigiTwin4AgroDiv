@@ -117,6 +117,7 @@ const openLayersSlice = createSlice({
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
             state.selectedGeometryDataFromDatabase = null;
+            state.selectedPropertiesFromDatabase=[];
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;

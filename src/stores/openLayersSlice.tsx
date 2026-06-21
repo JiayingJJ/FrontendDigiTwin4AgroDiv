@@ -15,9 +15,11 @@ interface OpenLayersState {
     geoJsonData: [];
     selectedGeoData: string | null;
     selectedGeometryDataFromDatabase: null;
+    selectedPropertiesFromDatabase: [];
     geoDataWithSameGeometry: [];
     rendernGeoDataList: boolean;
     showUserDataLayer: boolean;
+    addNewColumnsDataInGeometry: boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -38,6 +40,8 @@ const initialState: OpenLayersState = {
     geoDataWithSameGeometry: [],
     rendernGeoDataList: false,
     showUserDataLayer: false,
+    addNewColumnsDataInGeometry: false,
+    selectedPropertiesFromDatabase: []
 }
 
 const openLayersSlice = createSlice({
@@ -95,6 +99,9 @@ const openLayersSlice = createSlice({
         setSelectedGeometryDataFromDatabase: (state, action) => {
             state.selectedGeometryDataFromDatabase = action.payload;
         },
+        setSelectedPropertiesDataFromDatabase: (state, action) => {
+            state.selectedPropertiesFromDatabase = action.payload;
+        },
         setGeoDataWithSameGeometry: (state, action) => {
             state.geoDataWithSameGeometry = action.payload;
         },
@@ -113,6 +120,9 @@ const openLayersSlice = createSlice({
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;
+        },
+        setAddNewColumnsDataInGeometry: (state, action) => {
+            state.addNewColumnsDataInGeometry = action.payload;
         },
     }
 });
@@ -138,7 +148,9 @@ export const {
     addGeoDataWithSameGeometry,
     setRendernGeoDataList,
     clearReduxForGeoData,
-    setShowUserDataLayer
+    setShowUserDataLayer,
+    setSelectedPropertiesDataFromDatabase,
+    setAddNewColumnsDataInGeometry
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

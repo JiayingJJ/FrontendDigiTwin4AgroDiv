@@ -8,21 +8,6 @@ export const getGeoData = async () => {
     return data;
 }
 
-export const getGeoDataWithUserColumnId = async (id: string) => {
-    const response = await fetch(`${apiUrl}/geodata/column/${id}`, {
-        method: "GET",
-    })
-    const data = await response.json();
-    return data;
-}
-export const getAllGeoDataWithTableId = async (table_id: string) => {
-    const response = await fetch(`${apiUrl}/geodata/tables/${table_id}`, {
-        method: "GET",
-    })
-    const data = await response.json();
-    return data;
-}
-
 export const insertGeoData = async (tableId: string, columnId: string, userId: string, properties: any, geometry_data: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/geodata`, {
@@ -57,4 +42,14 @@ export const getGeoDataWithUserId = async (user_id: string) => {
     })
     const data = await response.json();
     return data;
+}
+
+export const updateGeoDataProperties = async (id: string, properties: any, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/geodata/update/properties`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time, properties: properties }),
+    })
+    const data = await response.json();
+    return [data, response.status];
 }

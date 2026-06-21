@@ -19,7 +19,7 @@ import {
 import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
-import { getGeoData, insertGeoData, setGeoDataStatus } from "../../../api/geoData";
+import { getGeoData, insertGeoData, setGeoDataStatus, updateGeoDataProperties } from "../../../api/geoData";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -28,6 +28,9 @@ const DatasetColumns = () => {
     const userInfo = useSelector((state: any) => state.user)
     const geometry = useSelector((state: any) => state.openLayers.geometry)
     const geometryType = useSelector((state: any) => state.openLayers.geometryType)
+    const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
+    const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
+    const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
 
     const getColumnValues = () => {
         let columns = [];
@@ -90,6 +93,7 @@ const DatasetColumns = () => {
         }
     }
     const handleSubmit = async () => {
+        let dataInserGeoData: any;
         const data = await addValueInColumns(selectedTableId, getColumnValues())
         console.log(data)
         if (data[0] === 200) {
@@ -98,7 +102,14 @@ const DatasetColumns = () => {
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
             const properties = { "column_id": data[1].id, "table_id": selectedTableId }
-            const dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, userInfo.id, properties, geoData)
+            if (!addNewColumnsDataInGeometry) {
+                dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, userInfo.id, properties, geoData)
+            } else {
+                const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
+                const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
+                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedPropertiesFromDatabase.id}
+                dataInserGeoData = await updateGeoDataProperties(selectedPropertiesFromDatabase.id, properties, "pending")
+            }
             if (dataInserGeoData[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
@@ -106,7 +117,7 @@ const DatasetColumns = () => {
                 dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
                 dispatch({ type: 'alertInfo/setShowAlert', payload: true })
             } else {
-                const dataStatus = await setGeoDataStatus(dataInserGeoData[0].ID, "merged")
+                const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
             }
 
         }

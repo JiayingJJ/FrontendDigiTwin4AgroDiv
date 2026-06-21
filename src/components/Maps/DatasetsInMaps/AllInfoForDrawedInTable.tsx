@@ -15,6 +15,7 @@ const AllInfoForDrawedInTable = () => {
     const dispatch = useDispatch()
     const geoDataWithSameGeometry = useSelector((state: any) => state.openLayers.geoDataWithSameGeometry)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
+    const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
 
     const clickOnSaveBtn = async () => {
 
@@ -34,11 +35,19 @@ const AllInfoForDrawedInTable = () => {
         }
     }
     const handlerGetData = async (geo: any) => {
-        console.log(geo)
-        const tableId = geo.properties.RawMessage.table_id;
-        const userTableIdColumnId = geo.properties.RawMessage.column_id
-        const dataColumn = await getColumnWithId(tableId, userTableIdColumnId)
-        const dataTable = await fetchTableWithId(tableId)
+        let info: any;
+        let dataColumn: any;
+        let dataTable: any;
+
+        if (selectedPropertiesFromDatabase.length !== undefined) {
+            info = selectedPropertiesFromDatabase.filter((i: any) => geo.id === i.column_id)
+            dataColumn = await getColumnWithId(info[0].table_id, info[0].column_id)
+            dataTable = await fetchTableWithId(info[0].table_id)
+        } else {
+            info = selectedPropertiesFromDatabase
+            dataColumn = await getColumnWithId(info.table_id, info.column_id)
+            dataTable = await fetchTableWithId(info.table_id)
+        }
         dispatch({ type: 'openLayers/setSelectedGeoData', payload: geo })
         dispatch({ type: 'openLayers/setColumnInfo', payload: dataColumn })
         dispatch({ type: 'openLayers/setTableInfo', payload: dataTable[0] })
@@ -53,6 +62,7 @@ const AllInfoForDrawedInTable = () => {
     }
     const handlerAddNewData = async () => {
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+        dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
     }
     return (
         <>

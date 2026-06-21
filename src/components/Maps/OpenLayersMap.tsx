@@ -26,7 +26,6 @@ import GetUserLocation from './GetUserLocation';
 import CircleStyle from 'ol/style/Circle';
 import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
 import { getColumnWithId } from '../../api/dataset';
-import { fetchTableWithId } from '../../api/userTables';
 import DataUserLayer from './DataUserLayer';
 
 const OpenLayersMap = () => {
@@ -46,6 +45,7 @@ const OpenLayersMap = () => {
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
+    const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
@@ -76,7 +76,7 @@ const OpenLayersMap = () => {
                     image: new CircleStyle({
                         radius: 12,
                         fill: new Fill({
-                            color: '#3399CC'
+                            color: 'red'
                         }),
                         stroke: new Stroke({
                             color: '#fff',
@@ -105,7 +105,7 @@ const OpenLayersMap = () => {
             .map(item => ({
                 type: "Feature",
                 geometry: item.geometry_data.RawMessage,
-                properties: { id: item.properties }
+                properties: { ids: item.properties }
             }));
 
         return {
@@ -142,19 +142,23 @@ const OpenLayersMap = () => {
         fetchUserGeoData();
     }, []);
 
+    const getDataWithSameGeometry = async () => {
+        console.log(selectedPropertiesFromDatabase)
+        if (selectedPropertiesFromDatabase.length !== undefined) {
+            await Promise.all(
+                selectedPropertiesFromDatabase.map(async (proper: any) => {
+                    const data = await getColumnWithId(proper.table_id, proper.column_id);
+                    dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+                })
+            );
+        } else {
+            const data = await getColumnWithId(selectedPropertiesFromDatabase.table_id, selectedPropertiesFromDatabase.column_id);
+            dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+        }
+    };
     useEffect(() => {
         if (selectedGeometryDataFromDatabase !== null) {
-            geoData.forEach((gd: any) => {
-                const rawCoords = gd.geometry_data.RawMessage.coordinates;
-                const dbCoords = selectedGeometryDataFromDatabase.coordinates;
-                if (
-                    rawCoords[0] === dbCoords[0] &&
-                    rawCoords[1] === dbCoords[1]
-                ) {
-                    console.log(gd)
-                    dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
-                }
-            });
+            getDataWithSameGeometry()
         }
     }, [selectedGeometryDataFromDatabase])
 
@@ -200,9 +204,10 @@ const OpenLayersMap = () => {
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     const fetchDataForDrawed = async (id: string) => {
-        const geoId = geoDataFromRedux.filter((i: any) => i.column_id === id)
+        const geoId = geoDataFromRedux.filter((i: any) => i.id === id)
         if (geoId.length !== 0) {
             dispatch({ type: 'openLayers/setSelectedGeometryDataFromDatabase', payload: geoId[0].geometry_data.RawMessage })
+            dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: geoId[0].properties.RawMessage })
         }
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: true })
     }
@@ -217,12 +222,18 @@ const OpenLayersMap = () => {
             dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
-                const dataId = feature.values_.id;
+                const dataId = feature.values_.ids;
                 if (dataId !== undefined) {
-                    fetchDataForDrawed(dataId.RawMessage.column_id)
+                    const raw = dataId?.RawMessage;
+                    const id =
+                        Array.isArray(raw)
+                            ? raw?.[0]?.id
+                            : raw?.id;
+                    if (!id) throw new Error("id not found");
+                    fetchDataForDrawed(id);
                 } else {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
-                    dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType()})
+                    dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                 }
                 // feature.setStyle(newStyle)

@@ -103,7 +103,7 @@ const DatasetColumns = () => {
             const geoData = { "coordinates": geometry, "type": geometryType }
             const properties = { "column_id": data[1].id, "table_id": selectedTableId }
             if (!addNewColumnsDataInGeometry) {
-                dataInserGeoData = await insertGeoData(selectedTableId, data[1].id, userInfo.id, properties, geoData)
+                dataInserGeoData = await insertGeoData(userInfo.id, properties, geoData)
             } else {
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
                 const dataColumn = await getColumnWithId(selectedTableId, data[1].id);

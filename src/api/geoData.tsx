@@ -8,11 +8,11 @@ export const getGeoData = async () => {
     return data;
 }
 
-export const insertGeoData = async (tableId: string, columnId: string, userId: string, properties: any, geometry_data: any) => {
+export const insertGeoData = async (userId: string, properties: any, geometry_data: any) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/geodata`, {
         method: "POST",
-        body: JSON.stringify({ table_id: tableId, column_id: columnId, user_id: userId, properties: properties, geometry_data: geometry_data, created_at: time, updated_at: time, data_status: "pending" })
+        body: JSON.stringify({user_id: userId, properties: properties, geometry_data: geometry_data, created_at: time, updated_at: time, data_status: "pending" })
     })
     const data = await response.json();
     return [data, response.status]

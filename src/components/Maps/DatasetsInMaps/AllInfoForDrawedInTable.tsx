@@ -60,7 +60,6 @@ const AllInfoForDrawedInTable = () => {
         await handleDeleteGeoData(geo.id)
     }
     const handlerAddNewData = async () => {
-        dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
     }
     return (

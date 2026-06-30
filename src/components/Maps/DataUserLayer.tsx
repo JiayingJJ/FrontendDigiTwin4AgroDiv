@@ -20,10 +20,12 @@ const DataUserLayer = () => {
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const colorRedux = useSelector((state: any) => state.openLayers.color)
     const [colorPicker, setColorPicker] = useState(false);
+    const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
 
     const showGeoJSON = () => {
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
+        dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setShowUserDataLayer', payload: !showUserDataLayer })
@@ -41,6 +43,7 @@ const DataUserLayer = () => {
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
             const dataStatus = await setGeoDataStatus(data[0].id, "merged")
+            dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
         }
     }
     return (
@@ -53,7 +56,7 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged" && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                    {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                         <Button variant={"unstyled"}>
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>
@@ -64,7 +67,7 @@ const DataUserLayer = () => {
                     {colorPicker && <ColorPicker />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
                     {rendernDataInfo && <RendernInfo />}
-                    {addDrawedInteractionInfo && <AddDataInTable />}
+                    {(addDrawedInteractionInfo || addNewColumnsDataInGeometry) && <AddDataInTable />}
                 </CardBody>
             </Card>
         </HStack>

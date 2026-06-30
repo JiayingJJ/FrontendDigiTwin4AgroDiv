@@ -104,15 +104,16 @@ const DatasetColumns = () => {
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
-            const properties = { "column_id": data[1].id, "table_id": selectedTableId}
+            const properties = { "column_id": data[1].id, "table_id": selectedTableId }
             if (!addNewColumnsDataInGeometry) {
                 dataInserGeoData = await insertGeoData(userInfo.id, properties, geoData, colorRedux)
             } else {
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
                 const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedGeoData.id}
+                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedGeoData.id }
                 dataInserGeoData = await updateGeoDataProperties(selectedGeoData.id, properties, "pending")
             }
+            dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
             if (dataInserGeoData[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

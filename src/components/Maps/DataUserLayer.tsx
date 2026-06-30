@@ -56,14 +56,14 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                    {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                         <Button variant={"unstyled"}>
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>
-                        <Button variant={"unstyled"}>
+                    </Tooltip>}
+                    <Button variant={"unstyled"}>
                             <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => setColorPicker(!colorPicker)} />
                         </Button>
-                    </Tooltip>}
                     {colorPicker && <ColorPicker />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
                     {rendernDataInfo && <RendernInfo />}

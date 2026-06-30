@@ -46,6 +46,7 @@ const OpenLayersMap = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
+    const geometryFromRedux = useSelector((state: any) => state.openLayers.geometry)
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
@@ -214,6 +215,9 @@ const OpenLayersMap = () => {
     useEffect(() => {
         isDrawingRef.current = isDrawing;
     }, [isDrawing]);
+    const deepEqual = (a: any, b: any) => {
+        return JSON.stringify(a) === JSON.stringify(b);
+    }
     olMap?.on('click', (e) => {
         if (isDrawingRef.current === true) {
             return
@@ -223,7 +227,7 @@ const OpenLayersMap = () => {
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
                 const dataId = feature.values_.ids;
-                if (dataId !== undefined) {
+                if (dataId !== undefined && dataId.Valid === true) {
                     const raw = dataId?.RawMessage;
                     const id =
                         Array.isArray(raw)
@@ -235,6 +239,20 @@ const OpenLayersMap = () => {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
                     dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+                    if (dataId.Valid === false) {
+                        geoData.forEach((gd: any) => {
+                            const rawCoords = gd.geometry_data.RawMessage.coordinates;
+                            const dbCoords = geometryFromRedux;
+                            if (
+                                deepEqual(rawCoords, dbCoords)
+                            ) {
+                                console.log(gd)
+                                dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id } })
+                                dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
+                                // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
+                            }
+                        });
+                    }
                 }
                 // feature.setStyle(newStyle)
             }

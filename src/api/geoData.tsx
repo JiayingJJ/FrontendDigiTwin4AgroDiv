@@ -53,3 +53,13 @@ export const updateGeoDataProperties = async (id: string, properties: any, dataS
     const data = await response.json();
     return [data, response.status];
 }
+
+export const updateGeoDataColor = async (id: string, color: string, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/geodata/update/color`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time, color: color }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}

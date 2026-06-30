@@ -31,6 +31,8 @@ const DatasetColumns = () => {
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
+    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
+
 
     const getColumnValues = () => {
         let columns = [];
@@ -107,8 +109,8 @@ const DatasetColumns = () => {
             } else {
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
                 const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedPropertiesFromDatabase.id}
-                dataInserGeoData = await updateGeoDataProperties(selectedPropertiesFromDatabase.id, properties, "pending")
+                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedGeoData.id}
+                dataInserGeoData = await updateGeoDataProperties(selectedGeoData.id, properties, "pending")
             }
             if (dataInserGeoData[1] === 500) {
                 console.log("Alert Message")

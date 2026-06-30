@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, VStack, HStack, Button, CardFooter, Tooltip } from '@chakra-ui/react'
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { insertGeoData } from '../../api/geoData';
+import { insertGeoData, setGeoDataStatus } from '../../api/geoData';
 
 const DataUserLayer = () => {
     const dispatch = useDispatch()
@@ -16,6 +16,8 @@ const DataUserLayer = () => {
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
+    const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
+
     const showGeoJSON = () => {
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
@@ -28,6 +30,15 @@ const DataUserLayer = () => {
         const geoData = { "coordinates": geometry, "type": geometryType }
         console.log(geoData)
         const data = await insertGeoData(userInfo.id, {}, geoData)
+        if (data[1] === 500) {
+            console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        } else {
+            const dataStatus = await setGeoDataStatus(data[0].id, "merged")
+        }
     }
     return (
         <HStack width={"100%"} justifyContent={"space-between"}>
@@ -39,11 +50,11 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                    {(selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged") && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                         <Button variant={"unstyled"}>
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>
-                    </Tooltip>
+                    </Tooltip>}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
                     {rendernDataInfo && <RendernInfo />}
                     {addDrawedInteractionInfo && <AddDataInTable />}

@@ -50,7 +50,7 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {(selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged") && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                    {selectedGeoInfo!== null && selectedGeoInfo.data_status !== "merged" && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                         <Button variant={"unstyled"}>
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>

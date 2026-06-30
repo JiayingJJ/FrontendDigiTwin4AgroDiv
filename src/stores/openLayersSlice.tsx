@@ -21,7 +21,7 @@ interface OpenLayersState {
     showUserDataLayer: boolean;
     addNewColumnsDataInGeometry: boolean;
     // save geo_data id und data_status
-    selectedGeoInfo: [];
+    selectedGeoInfo: null;
 }
 
 const initialState: OpenLayersState = {
@@ -44,7 +44,7 @@ const initialState: OpenLayersState = {
     showUserDataLayer: false,
     addNewColumnsDataInGeometry: false,
     selectedPropertiesFromDatabase: [],
-    selectedGeoInfo: []
+    selectedGeoInfo: null
 }
 
 const openLayersSlice = createSlice({

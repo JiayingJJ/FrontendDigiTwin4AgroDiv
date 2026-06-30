@@ -47,7 +47,10 @@ const OpenLayersMap = () => {
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const geometryFromRedux = useSelector((state: any) => state.openLayers.geometry)
+    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const featureRedux = useSelector((state: any) => state.openLayers.feature)
     useEffect(() => {
+        dispatch({ type: 'openLayers/clearAllForGeoData', payload: null })
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
         const map = new Map({
             target: mapDivRef.current as HTMLDivElement,
@@ -71,13 +74,12 @@ const OpenLayersMap = () => {
         visible: true,
         style: (feature) => {
             const geometryType = feature.getGeometry()?.getType();
-
             if (geometryType === 'Point' || geometryType === 'MultiPoint') {
                 return new Style({
                     image: new CircleStyle({
                         radius: 12,
                         fill: new Fill({
-                            color: 'red'
+                            color: colorRedux
                         }),
                         stroke: new Stroke({
                             color: '#fff',
@@ -88,13 +90,13 @@ const OpenLayersMap = () => {
             }
             if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
                 return new Style({
-                    stroke: new Stroke({ color: 'blue', width: 1, lineDash: [30, 10] }),
+                    stroke: new Stroke({ color: 'white', width: 1, lineDash: [30, 10] }),
                 });
             }
             if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
                 return new Style({
-                    stroke: new Stroke({ color: 'blue', width: 1, lineDash: [30, 10] }),
-                    fill: new Fill({ color: 'rgba(0, 255, 0, 0.3)' }),
+                    stroke: new Stroke({ color: 'white', width: 1, lineDash: [30, 10] }),
+                    fill: new Fill({ color: colorRedux }),
                 });
             }
         }
@@ -129,7 +131,6 @@ const OpenLayersMap = () => {
             dispatch({ type: 'openLayers/setGeodata', payload: validData })
             const geoJsonData = backendToGeoJSON(validData);
             dispatch({ type: 'openLayers/setGeoJsonData', payload: geoJsonData })
-
             const format = new GeoJSON();
             const features = format.readFeatures(geoJsonData, {
                 dataProjection: 'EPSG:3857',
@@ -138,23 +139,62 @@ const OpenLayersMap = () => {
 
             vectorSourceUserData.current.clear();
             vectorSourceUserData.current.addFeatures(features);
+            features.forEach((feature) => {
+                let userColor;
+                const data = feature.values_.ids
+                if (data !== undefined && data.Valid === true) {
+                    const raw = data?.RawMessage;
+                    console.log(raw)
+                    userColor =
+                        Array.isArray(raw)
+                            ? raw?.[0]?.color
+                            : raw?.color;
+                    console.log(userColor)
+                    if (userColor === undefined) {
+                        userColor = "#ff0000";
+                    }
+                    if (feature.getGeometry()?.getType() === "Point") {
+                        feature.setStyle(
+                            new Style({
+                                image: new CircleStyle({
+                                    radius: 10,
+                                    fill: new Fill({ color: userColor }),
+                                    stroke: new Stroke({ color: "#fff", width: 2 }),
+                                }),
+                            })
+                        );
+                    } else if (feature.getGeometry()?.getType() === "Polygon") {
+                        feature.setStyle(
+                            new Style({
+                                stroke: new Stroke({ color: '#fff', width: 1, lineDash: [30, 10] }),
+                                fill: new Fill({ color: userColor }),
+                            })
+                        );
+                    }
+
+                }
+
+            })
         };
 
         fetchUserGeoData();
     }, []);
 
     const getDataWithSameGeometry = async () => {
-        console.log(selectedPropertiesFromDatabase)
         if (selectedPropertiesFromDatabase.length !== undefined) {
             await Promise.all(
                 selectedPropertiesFromDatabase.map(async (proper: any) => {
-                    const data = await getColumnWithId(proper.table_id, proper.column_id);
-                    dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+                    if (proper.table_id !== undefined) {
+                        const data = await getColumnWithId(proper.table_id, proper.column_id);
+                        dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+                    }
                 })
             );
         } else {
-            const data = await getColumnWithId(selectedPropertiesFromDatabase.table_id, selectedPropertiesFromDatabase.column_id);
-            dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+            if (selectedPropertiesFromDatabase.table_id !== undefined) {
+                const data = await getColumnWithId(selectedPropertiesFromDatabase.table_id, selectedPropertiesFromDatabase.column_id);
+                dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
+            }
         }
     };
     useEffect(() => {
@@ -228,6 +268,7 @@ const OpenLayersMap = () => {
             dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
             const feature = olMap.forEachFeatureAtPixel(e.pixel, (f) => f)
             if (feature !== undefined) {
+                dispatch({ type: 'openLayers/setFeature', payload: feature })
                 const dataId = feature.values_.ids;
                 if (dataId !== undefined && dataId.Valid === true) {
                     const raw = dataId?.RawMessage;
@@ -240,7 +281,6 @@ const OpenLayersMap = () => {
                 } else {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
                     dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
-                    dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                     if (dataId === undefined || dataId.Valid === false) {
                         geoData.forEach((gd: any) => {
                             const rawCoords = gd.geometry_data.RawMessage.coordinates;
@@ -248,11 +288,14 @@ const OpenLayersMap = () => {
                             if (
                                 deepEqual(rawCoords, dbCoords)
                             ) {
-                                console.log(gd)
                                 dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id, data_status: gd.data_status } })
                                 dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: gd.id, data_status: gd.data_status } })
                                 dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
                                 // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
+                            } else {
+                                dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
+                                dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+
                             }
                         });
                     }
@@ -261,6 +304,35 @@ const OpenLayersMap = () => {
             }
         }
     })
+    const [state, setState] = useState("")
+    useEffect(() => {
+        console.log(colorRedux)
+        setState(colorRedux)
+        if (featureRedux !== null) {
+            if (featureRedux.getGeometry()?.getType() === "Point") {
+                console.log("fix color point")
+                console.log("fix color point", colorRedux)
+
+                featureRedux.setStyle(
+                    new Style({
+                        image: new CircleStyle({
+                            radius: 10,
+                            fill: new Fill({ color: state }),
+                            stroke: new Stroke({ color: "#fff", width: 2 }),
+                        }),
+                    })
+                );
+            } else if (featureRedux.getGeometry()?.getType() === "Polygon") {
+                featureRedux.setStyle(
+                    new Style({
+                        stroke: new Stroke({ color: '#fff', width: 1, lineDash: [30, 10] }),
+                        fill: new Fill({ color: state }),
+                    })
+                );
+            }
+        }
+
+    }, [colorRedux])
     olMap?.on('pointermove', (event) => {
         const hit = olMap.hasFeatureAtPixel(event.pixel);
         olMap.getTargetElement().style.cursor = hit ? 'pointer' : '';

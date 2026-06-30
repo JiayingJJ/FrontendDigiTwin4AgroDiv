@@ -18,6 +18,13 @@ import Snap from 'ol/interaction/Snap.js';
 import { useRef, useState } from 'react';
 import { BiShapePolygon } from "react-icons/bi";
 import { TbPoint } from "react-icons/tb";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import CircleStyle from 'ol/style/Circle';
+import Stroke from 'ol/style/Stroke';
+
 type Props = {
   olMap: Map
 };
@@ -33,6 +40,7 @@ const layerButtons = [
 ];
 const MapActions = ({ olMap }: Props) => {
   const dispatch = useDispatch()
+      const colorRedux = useSelector((state: any) => state.openLayers.color)
   const selectedLayer = useSelector((state: any) => state.openLayers.layerType)
   const layers = {
     standard: new TileLayer({
@@ -109,7 +117,6 @@ const MapActions = ({ olMap }: Props) => {
       const coordinates = geometry?.getCoordinates();
       dispatch({ type: 'openLayers/setGeometryType', payload: type })
       dispatch({ type: 'openLayers/setGeometry', payload: coordinates })
-
       // removeDrawInteraction();
       // dispatch({ type: 'openLayers/setDrawingInteraction', payload: false });
     });

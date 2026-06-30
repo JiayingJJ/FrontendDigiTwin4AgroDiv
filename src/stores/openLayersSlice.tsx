@@ -22,6 +22,8 @@ interface OpenLayersState {
     addNewColumnsDataInGeometry: boolean;
     // save geo_data id und data_status
     selectedGeoInfo: null;
+    color: string|null;
+    feature: any;
 }
 
 const initialState: OpenLayersState = {
@@ -44,7 +46,9 @@ const initialState: OpenLayersState = {
     showUserDataLayer: false,
     addNewColumnsDataInGeometry: false,
     selectedPropertiesFromDatabase: [],
-    selectedGeoInfo: null
+    selectedGeoInfo: null,
+    color:null,
+    feature: null
 }
 
 const openLayersSlice = createSlice({
@@ -131,6 +135,12 @@ const openLayersSlice = createSlice({
         setSelectedGeoInfo: (state, action) => {
             state.selectedGeoInfo = action.payload;
         },
+        setColor: (state, action) => {
+            state.color = action.payload;
+        },
+        setFeature: (state, action) => {
+            state.feature = action.payload;
+        },
     }
 });
 
@@ -158,7 +168,8 @@ export const {
     setShowUserDataLayer,
     setSelectedPropertiesDataFromDatabase,
     setAddNewColumnsDataInGeometry,
-    setSelectedGeoInfo
+    setSelectedGeoInfo,
+    setColor
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

@@ -20,6 +20,8 @@ interface OpenLayersState {
     rendernGeoDataList: boolean;
     showUserDataLayer: boolean;
     addNewColumnsDataInGeometry: boolean;
+    // save geo_data id und data_status
+    selectedGeoInfo: [];
 }
 
 const initialState: OpenLayersState = {
@@ -41,7 +43,8 @@ const initialState: OpenLayersState = {
     rendernGeoDataList: false,
     showUserDataLayer: false,
     addNewColumnsDataInGeometry: false,
-    selectedPropertiesFromDatabase: []
+    selectedPropertiesFromDatabase: [],
+    selectedGeoInfo: []
 }
 
 const openLayersSlice = createSlice({
@@ -117,13 +120,16 @@ const openLayersSlice = createSlice({
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
             state.selectedGeometryDataFromDatabase = null;
-            state.selectedPropertiesFromDatabase=[];
+            state.selectedPropertiesFromDatabase = [];
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;
         },
         setAddNewColumnsDataInGeometry: (state, action) => {
             state.addNewColumnsDataInGeometry = action.payload;
+        },
+        setSelectedGeoInfo: (state, action) => {
+            state.selectedGeoInfo = action.payload;
         },
     }
 });
@@ -151,7 +157,8 @@ export const {
     clearReduxForGeoData,
     setShowUserDataLayer,
     setSelectedPropertiesDataFromDatabase,
-    setAddNewColumnsDataInGeometry
+    setAddNewColumnsDataInGeometry,
+    setSelectedGeoInfo
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

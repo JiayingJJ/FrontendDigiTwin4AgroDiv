@@ -22,7 +22,7 @@ interface OpenLayersState {
     addNewColumnsDataInGeometry: boolean;
     // save geo_data id und data_status
     selectedGeoInfo: null;
-    color: string|null;
+    color: string | null;
     feature: any;
 }
 
@@ -47,7 +47,7 @@ const initialState: OpenLayersState = {
     addNewColumnsDataInGeometry: false,
     selectedPropertiesFromDatabase: [],
     selectedGeoInfo: null,
-    color:null,
+    color: null,
     feature: null
 }
 
@@ -125,6 +125,17 @@ const openLayersSlice = createSlice({
             state.selectedGeoData = null;
             state.selectedGeometryDataFromDatabase = null;
             state.selectedPropertiesFromDatabase = [];
+        },
+        clearAllForGeoData:  (state, action) => {
+            state.columnInfo = null;
+            state.geoDataWithSameGeometry = [];
+            state.rendernDataInfo = false;
+            state.selectedGeoData = null;
+            state.selectedGeometryDataFromDatabase = null;
+            state.selectedPropertiesFromDatabase = [];
+            state.addNewColumnsDataInGeometry = false;
+            state.rendernGeoDataList = false;
+            state.showUserDataLayer =false;
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;

@@ -32,6 +32,7 @@ const DatasetColumns = () => {
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
+    const colorRedux = useSelector((state: any) => state.openLayers.color)
 
 
     const getColumnValues = () => {
@@ -103,9 +104,9 @@ const DatasetColumns = () => {
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
-            const properties = { "column_id": data[1].id, "table_id": selectedTableId }
+            const properties = { "column_id": data[1].id, "table_id": selectedTableId}
             if (!addNewColumnsDataInGeometry) {
-                dataInserGeoData = await insertGeoData(userInfo.id, properties, geoData)
+                dataInserGeoData = await insertGeoData(userInfo.id, properties, geoData, colorRedux)
             } else {
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
                 const dataColumn = await getColumnWithId(selectedTableId, data[1].id);

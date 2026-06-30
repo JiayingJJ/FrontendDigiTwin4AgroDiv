@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, VStack, HStack, Button, CardFooter, Tooltip } from '@chakra-ui/react'
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { insertGeoData, setGeoDataStatus } from '../../api/geoData';
-
+import ColorPicker from './ColorPicker';
+import { IoIosColorPalette } from "react-icons/io";
 const DataUserLayer = () => {
     const dispatch = useDispatch()
     const userInfo = useSelector((state: any) => state.user)
@@ -17,6 +18,8 @@ const DataUserLayer = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
+    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const [colorPicker, setColorPicker] = useState(false);
 
     const showGeoJSON = () => {
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
@@ -29,7 +32,7 @@ const DataUserLayer = () => {
         console.log(userInfo.id)
         const geoData = { "coordinates": geometry, "type": geometryType }
         console.log(geoData)
-        const data = await insertGeoData(userInfo.id, {}, geoData)
+        const data = await insertGeoData(userInfo.id, { color: colorRedux }, geoData, colorRedux)
         if (data[1] === 500) {
             console.log("Alert Message")
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
@@ -50,11 +53,15 @@ const DataUserLayer = () => {
 
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
                 <CardBody padding={"0rem .7rem"}>
-                    {selectedGeoInfo!== null && selectedGeoInfo.data_status !== "merged" && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                    {selectedGeoInfo !== null && selectedGeoInfo.data_status !== "merged" && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                         <Button variant={"unstyled"}>
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>
+                        <Button variant={"unstyled"}>
+                            <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => setColorPicker(!colorPicker)} />
+                        </Button>
                     </Tooltip>}
+                    {colorPicker && <ColorPicker />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
                     {rendernDataInfo && <RendernInfo />}
                     {addDrawedInteractionInfo && <AddDataInTable />}

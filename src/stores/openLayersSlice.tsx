@@ -136,6 +136,7 @@ const openLayersSlice = createSlice({
             state.addNewColumnsDataInGeometry = false;
             state.rendernGeoDataList = false;
             state.showUserDataLayer =false;
+            state.selectedGeoInfo=null;
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;

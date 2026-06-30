@@ -207,8 +207,10 @@ const OpenLayersMap = () => {
     const fetchDataForDrawed = async (id: string) => {
         const geoId = geoDataFromRedux.filter((i: any) => i.id === id)
         if (geoId.length !== 0) {
+            dispatch({ type: 'openLayers/setSelectedGeoData', payload: geoId[0] })
             dispatch({ type: 'openLayers/setSelectedGeometryDataFromDatabase', payload: geoId[0].geometry_data.RawMessage })
             dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: geoId[0].properties.RawMessage })
+            dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: geoId[0].id, data_status: geoId[0].data_status } })
         }
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: true })
     }
@@ -239,7 +241,7 @@ const OpenLayersMap = () => {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
                     dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
-                    if (dataId.Valid === false) {
+                    if (dataId === undefined || dataId.Valid === false) {
                         geoData.forEach((gd: any) => {
                             const rawCoords = gd.geometry_data.RawMessage.coordinates;
                             const dbCoords = geometryFromRedux;
@@ -247,7 +249,8 @@ const OpenLayersMap = () => {
                                 deepEqual(rawCoords, dbCoords)
                             ) {
                                 console.log(gd)
-                                dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id } })
+                                dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id, data_status: gd.data_status } })
+                                dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: gd.id, data_status: gd.data_status } })
                                 dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
                                 // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
                             }

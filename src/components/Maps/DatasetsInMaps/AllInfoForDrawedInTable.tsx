@@ -48,7 +48,6 @@ const AllInfoForDrawedInTable = () => {
             dataColumn = await getColumnWithId(info.table_id, info.column_id)
             dataTable = await fetchTableWithId(info.table_id)
         }
-        dispatch({ type: 'openLayers/setSelectedGeoData', payload: geo })
         dispatch({ type: 'openLayers/setColumnInfo', payload: dataColumn })
         dispatch({ type: 'openLayers/setTableInfo', payload: dataTable[0] })
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: true })

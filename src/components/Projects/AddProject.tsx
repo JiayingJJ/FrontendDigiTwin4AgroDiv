@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { MdCancel } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
-import { createProject, setProjectDataStatus } from '../../api/projects';
+import { createProject, getProjectWithCreatorId, setProjectDataStatus } from '../../api/projects';
 import { useSelector, useDispatch } from 'react-redux';
 
 const AddProject = () => {
@@ -42,7 +42,8 @@ const AddProject = () => {
             } else {
                 dispatch({ type: 'projects/setAddNewProject', payload: false })
                 const dataStatus = await setProjectDataStatus(data[0].id, "merged")
-                console.log(dataStatus)
+                const projectsWithCreatorId = await getProjectWithCreatorId(userInfo.id)
+                dispatch({ type: 'projects/setAllProjects', payload: projectsWithCreatorId[0] })
             }
         }
     }

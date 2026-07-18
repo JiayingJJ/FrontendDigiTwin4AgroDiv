@@ -19,6 +19,7 @@ const CreatedProjects = () => {
 
     const handlerGetProjectWithId = async (p: any) => {
         const data = await getProjectWithId(p.id)
+        dispatch({ type: 'projects/setSelectedProject', payload: data[0] })
         console.log(data)
     }
     const handleDeleteProject = async (p: any) => {

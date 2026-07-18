@@ -8,47 +8,57 @@ import {
     AlertTitle,
     AlertDescription,
     AlertIcon,
-    CloseButton
+    CloseButton,
+    Grid,
+    GridItem,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjects, getProjectWithCreatorId } from '../../api/projects';
 import AddProject from './AddProject';
 import CreatedProjects from './CreatedProjects';
+import ProjectInfo from './ProjectInfo';
 const ProjectsComponent = () => {
     const dispatch = useDispatch()
-        const addNewProject = useSelector((state: any) => state.projects.addNewProject)
-        const userInfo = useSelector((state: any) => state.user)
-    
+    const addNewProject = useSelector((state: any) => state.projects.addNewProject)
+    const userInfo = useSelector((state: any) => state.user)
+
     const handlerGetAllProjects = async () => {
         const data = await getAllProjects();
-        console.log(data)
         const dataWithCreatorId = await getProjectWithCreatorId(userInfo.id)
-        console.log(dataWithCreatorId)
-        
-        if(dataWithCreatorId[1]!==200){
 
-        }else{
-            const notDelete = dataWithCreatorId[0].filter((d: any) =>{if (!d.deleted_at.Valid) {
-                        return d;
-                    }})
-                    dispatch({ type: 'projects/setAllProjects', payload: notDelete})
+        if (dataWithCreatorId[1] !== 200) {
 
+        } else {
+            const notDelete = dataWithCreatorId[0].filter((d: any) => {
+                if (!d.deleted_at.Valid) {
+                    return d;
+                }
+            })
+            dispatch({ type: 'projects/setAllProjects', payload: notDelete })
         }
     }
     useEffect(() => {
         handlerGetAllProjects()
     }, [])
     return (
-        <VStack>
-            <CreatedProjects/>
-            <Button disabled={addNewProject} backgroundColor='#EDB458' onClick={() => {
-                console.log("click for add project")
-                    dispatch({ type: 'projects/setAddNewProject', payload: true })
-            }}>
-                Füge ein neue Projekt hinzu
-            </Button>
-            {addNewProject && <AddProject/>}
-        </VStack>
+        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"90vw"} height={"100%"} padding={"0 0 2vh 0"}>
+            <GridItem h='100%' w="100%">
+                <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
+
+                    <CreatedProjects />
+                    <Button disabled={addNewProject} backgroundColor='#EDB458' onClick={() => {
+                        console.log("click for add project")
+                        dispatch({ type: 'projects/setAddNewProject', payload: true })
+                    }}>
+                        Füge ein neue Projekt hinzu
+                    </Button>
+                    {addNewProject && <AddProject />}
+                </VStack>
+            </GridItem>
+            <GridItem colSpan={5} h='100%'>
+                <ProjectInfo />
+            </GridItem>
+        </Grid>
 
     );
 }

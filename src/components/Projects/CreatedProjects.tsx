@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
 import ModalComponent from '../ModalComponent';
-import { deleteProjectWithId, getProjectWithId } from '../../api/projects';
+import { deleteProjectWithId, getProjectWithCreatorId, getProjectWithId } from '../../api/projects';
 
 const CreatedProjects = () => {
     const dispatch = useDispatch()
     const allProjects = useSelector((state: any) => state.projects.allProjects)
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
+    const userInfo = useSelector((state: any) => state.user)
 
     const clickOnSaveBtn = async () => {
         const dataDelete = await deleteProjectWithId(selectedProject.id);
@@ -24,6 +25,18 @@ const CreatedProjects = () => {
     }
     const handleDeleteProject = async (p: any) => {
         const data = await deleteProjectWithId(p.id)
+        const projectsWithCreatorId = await getProjectWithCreatorId(userInfo.id)
+        if (projectsWithCreatorId[1] !== 200) {
+
+        } else {
+            const notDelete = projectsWithCreatorId[0].filter((d: any) => {
+                if (!d.deleted_at.Valid) {
+                    return d;
+                }
+            })
+            dispatch({ type: 'projects/setAllProjects', payload: notDelete })
+
+        }
         console.log(data)
     }
     return (

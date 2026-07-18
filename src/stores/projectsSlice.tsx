@@ -25,13 +25,19 @@ const projectsSlice = createSlice({
         setAddNewProject: (state, action) => {
             state.addNewProject = action.payload;
         },
+        clearProjectState: (state, action) => {
+            state.allProjects = [],
+            state.selectedProject = null,
+            state.addNewProject = false
+        }
     }
 });
 
 export const {
     setAllProjects,
     setSelectedProject,
-    setAddNewProject
+    setAddNewProject,
+    clearProjectState
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

@@ -50,3 +50,13 @@ export const setProjectDataStatus = async (id: string, dataStatus: string) => {
     const data = await response.json();
     return data;
 }
+
+export const updateProjectMembers = async (id: string, members: any, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/projects/project/members`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time, members: members }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}

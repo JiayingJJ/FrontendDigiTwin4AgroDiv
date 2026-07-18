@@ -43,7 +43,17 @@ const AddProject = () => {
                 dispatch({ type: 'projects/setAddNewProject', payload: false })
                 const dataStatus = await setProjectDataStatus(data[0].id, "merged")
                 const projectsWithCreatorId = await getProjectWithCreatorId(userInfo.id)
-                dispatch({ type: 'projects/setAllProjects', payload: projectsWithCreatorId[0] })
+                if (projectsWithCreatorId[1] !== 200) {
+
+                } else {
+                    const notDelete = projectsWithCreatorId[0].filter((d: any) => {
+                        if (!d.deleted_at.Valid) {
+                            return d;
+                        }
+                    })
+                    dispatch({ type: 'projects/setAllProjects', payload: notDelete })
+
+                }
             }
         }
     }

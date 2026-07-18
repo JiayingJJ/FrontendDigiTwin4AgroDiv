@@ -55,12 +55,20 @@ const ProjectInfo = () => {
     console.log(members)
     return (
         <HStack alignItems={"start"}>
-            {selectedProject !== null && <Card width={"100%"}>
+            <Card width={"100%"}>
                 <CardHeader>
-                    <Heading size={"md"}>{selectedProject.name}</Heading>
+                    <Heading size={"md"}>Project Info</Heading>
                 </CardHeader>
-                <CardBody>
+                {selectedProject !== null && <CardBody>
                     <Stack divider={<StackDivider />} spacing='4'>
+                        <Box>
+                            <Heading size='xs' textTransform=''>
+                                Project Name
+                            </Heading>
+                            <Text pt='2' fontSize='sm'>
+                                {selectedProject.name}
+                            </Text>
+                        </Box>
                         <Box>
                             <Heading size='xs' textTransform=''>
                                 Created At
@@ -99,11 +107,11 @@ const ProjectInfo = () => {
                             </Stack>
                         </Box>
                     </Stack>
-                </CardBody>
+                </CardBody>}
                 <CardFooter>
 
                 </CardFooter>
-            </Card>}
+            </Card>
         </HStack>
     );
 }

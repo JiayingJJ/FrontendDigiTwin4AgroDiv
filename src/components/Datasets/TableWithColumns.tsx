@@ -15,11 +15,14 @@ import {
     Card,
     CardHeader,
     CardBody,
-    CardFooter
+    CardFooter,
+    Text,
 } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
-import { CiCircleInfo } from "react-icons/ci";
+import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
 import CreateColumns from './CreateColumns';
+import { getProjectWithId } from '../../api/projects';
+import { setUserTableProjectId } from '../../api/userTables';
 const TableWithColumns = () => {
     const dispatch = useDispatch()
     const editTable = useSelector((state: any) => state.datasetTable.editTable)
@@ -31,8 +34,13 @@ const TableWithColumns = () => {
     const isChangingColumns = useSelector((state: any) => state.datasetTable.isChangingColumns)
     const newColumns = useSelector((state: any) => state.datasetTable.newColumns)
     const removedColumns = useSelector((state: any) => state.datasetTable.removedColumns)
-
+    const selectedTable = useSelector((state: any) => state.datasetTable.selectedTable)
+    const [projectName, setProjectName] = useState<string>("");
+    const allProjects = useSelector((state: any) => state.projects.allProjects)
+    const projectId = useSelector((state: any) => state.datasetTable.projectId)
+    const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
+
     useEffect(() => {
         if (tableColumns === undefined || tableColumns === null) return;
         const sortedColumns = [...tableColumns].sort(
@@ -142,6 +150,24 @@ const TableWithColumns = () => {
                 return <div key={key}>Unbekannter Feldtyp: {column.type}</div>;
         }
     }
+    const handleGetProjectInfo = async () => {
+        if (selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') {
+            const data = await getProjectWithId(selectedTable.project_id.String)
+            console.log(data[0])
+            setProjectName(data[0].name)
+        }
+    }
+    useEffect(() => {
+        setProjectName('')
+        if (selectedTable !== null)
+            handleGetProjectInfo()
+    }, [selectedTable])
+    const handleSelectProject = (e: any) => {
+        dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })
+    }
+    const handlePostProjectId = async() => {
+        const data = await setUserTableProjectId(selectedTableId, projectId, "pending")
+    }
     return (
         <HStack alignItems={"start"}>
             {!addingColumns && editTable && userTableColumns.length !== 0 &&
@@ -156,10 +182,35 @@ const TableWithColumns = () => {
                     <Heading size={"md"}>Input preview</Heading>
                 </CardHeader>
                 <CardBody>
+                    {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') ? <Box>
+                        <Heading size='xs' textTransform=''>
+                            Project Name
+                        </Heading>
+                        <Text pt='2' fontSize='sm'>
+                            {projectName}
+                        </Text>
+                    </Box> :
+                        <Box>
+                            <FormControl>
+                                <FormLabel>Project</FormLabel>
+                                <Select placeholder='Select project' onChange={handleSelectProject}>
+                                    {allProjects.map((p: any) => {
+                                        return (
+                                            <option value={p.id}>{p.name}</option>
+                                        )
+                                    })}
+                                </Select>
+                            </FormControl>
+                           <CiCircleCheck color="green" 
+                           cursor={projectId===null ? "not-allowed" : "pointer"}
+                            size="40" onClick={() => handlePostProjectId()
+                           } />
+                        </Box>
+                    }
                     {sortedTableColumns?.map(column => renderFormControl(column))}
                 </CardBody>
                 <CardFooter>
-                    {tableColumns!==null && tableColumns.length !== 0 &&
+                    {tableColumns !== null && tableColumns.length !== 0 &&
                         <Button colorScheme="green" onClick={() => {
                             dispatch({ type: 'datasetTable/setEditTable', payload: true })
                             console.log(tableColumns)

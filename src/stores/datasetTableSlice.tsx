@@ -27,6 +27,8 @@ interface DatasetTableState {
     removedColumns: [];
     hasChanged: boolean;
     isChangingColumns: [];
+    projectId: string|null;
+    selectedTable: []|null;
 }
 
 const initialState: DatasetTableState = {
@@ -48,6 +50,8 @@ const initialState: DatasetTableState = {
     removedColumns: [],
     hasChanged: false,
     isChangingColumns: [],
+    projectId: null,
+    selectedTable: null,
 }
 
 const datasetTableSlice = createSlice({
@@ -172,8 +176,16 @@ const datasetTableSlice = createSlice({
             state.newColumns = [];
             state.editedColumns = [];
             state.removedColumns = [];
+            state.projectId = null;
             state.selectedTableId = null;
-        }
+            state.selectedTable=null;
+        },
+        setProjectId: (state, action) => {
+            state.projectId = action.payload
+        },
+        setSelectedTable: (state, action) => {
+            state.selectedTable = action.payload
+        },
     }
 });
 
@@ -204,7 +216,9 @@ export const {
     addIsChangingColumns,
     removeIsChangingColumns,
     setIsChangingColumns,
-    clearInfoFromADatabase
+    clearInfoFromADatabase,
+    setProjectId,
+    setSelectedTable
 } = datasetTableSlice.actions;
 
 export default datasetTableSlice.reducer;

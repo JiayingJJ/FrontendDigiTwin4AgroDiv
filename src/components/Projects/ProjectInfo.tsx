@@ -122,7 +122,7 @@ const ProjectInfo = () => {
                                     return (
                                         <VStack>
                                             <Badge colorScheme='green' textTransform='' onClick={() => {
-                                                dispatch({ type: 'projects/setSelectedUserTables', payload: ut })
+                                                dispatch({ type: 'projects/setSelectedUserTable', payload: ut })
                                                 setViewActions(!viewActions)
                                             }} cursor={"pointer"}>{ut.table_name}</Badge>
                                             {viewActions && <TablesActionForView />}

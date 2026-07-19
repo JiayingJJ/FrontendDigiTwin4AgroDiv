@@ -21,7 +21,7 @@ function Tables() {
                 <TableCaption>{tableName}</TableCaption>
                 <Thead>
                     <Tr>
-                        {columns.map((c: any) => {
+                        {columns!==null&&columns.map((c: any) => {
                             return (
                                 <Th>{c.name}</Th>
                             )
@@ -30,9 +30,9 @@ function Tables() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {data.map((d: any, rowIndex: number) => (
+                    {data.error===undefined&&data.map((d: any, rowIndex: number) => (
                         <Tr key={rowIndex}>
-                            {columns.map((c: any, colIndex: number) => {
+                            {columns!==null&&columns.map((c: any, colIndex: number) => {
                                 const lowerCaseName = c.name.toLowerCase();
                                 const varName = lowerCaseName.replaceAll(" ", "_");
                                 const value = d[varName];

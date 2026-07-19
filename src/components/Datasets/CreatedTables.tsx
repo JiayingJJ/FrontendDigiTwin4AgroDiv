@@ -18,9 +18,11 @@ const CreatedTables = () => {
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
         dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
         dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
+        dispatch({ type: 'datasetTable/setSelectedTable', payload: [] })
 
         if (isOnLine) {
             const data = await fetchTableWithId(t.id)
+            dispatch({ type: 'datasetTable/setSelectedTable', payload: data[0] })
             if (data[1] === 500 || data[0].columns_in_table.RawMessage === null) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Datenbank hat keine Columns" })
@@ -38,6 +40,7 @@ const CreatedTables = () => {
             await databaseSqlite.initDb()
             const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
             const tableData = data.filter((i: any) => i.id === t.id)
+            dispatch({ type: 'datasetTable/setSelectedTable', payload: tableData[0] })
             dispatch({ type: 'datasetTable/setSelectedTableId', payload: tableData[0].id })
             dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
         }

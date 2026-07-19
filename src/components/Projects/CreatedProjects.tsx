@@ -4,6 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, B
 import { MdDeleteForever } from "react-icons/md";
 import ModalComponent from '../ModalComponent';
 import { deleteProjectWithId, getProjectWithCreatorId, getProjectWithId } from '../../api/projects';
+import { getUserTablesWithProjectId } from '../../api/userTables';
 
 const CreatedProjects = () => {
     const dispatch = useDispatch()
@@ -21,7 +22,8 @@ const CreatedProjects = () => {
     const handlerGetProjectWithId = async (p: any) => {
         const data = await getProjectWithId(p.id)
         dispatch({ type: 'projects/setSelectedProject', payload: data[0] })
-        console.log(data)
+        const userTablesData = await getUserTablesWithProjectId(data[0].id)
+        dispatch({ type: 'projects/setUserTablesForProject', payload: userTablesData })
     }
     const handleDeleteProject = async (p: any) => {
         const data = await deleteProjectWithId(p.id)

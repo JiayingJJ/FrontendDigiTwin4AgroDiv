@@ -21,6 +21,7 @@ import AddMember from './AddMember';
 
 const ProjectInfo = () => {
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
+    const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
     const [creator, setCreator] = useState<any>();
     const [members, setMembers] = useState<any>();
     const [addMember, setAddMember] = useState<boolean>(false);
@@ -52,7 +53,6 @@ const ProjectInfo = () => {
         setAddMember(!addMember)
 
     }
-    console.log(members)
     return (
         <HStack alignItems={"start"}>
             <Card width={"100%"}>
@@ -102,6 +102,20 @@ const ProjectInfo = () => {
                                 {members?.map((m: string) => {
                                     return (
                                         <Badge colorScheme='green' textTransform=''>{m}</Badge>
+                                    )
+                                })}
+                            </Stack>
+                        </Box>
+                        <Box>
+                            <HStack>
+                                <Heading size='xs' textTransform='uppercase'>
+                                    Tables
+                                </Heading>
+                            </HStack>
+                            <Stack direction='row' paddingTop={"10px"}>
+                                {userTablesForProject?.map((ut: any) => {
+                                    return (
+                                        <Badge colorScheme='green' textTransform=''>{ut.table_name}</Badge>
                                     )
                                 })}
                             </Stack>

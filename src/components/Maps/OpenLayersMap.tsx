@@ -282,22 +282,27 @@ const OpenLayersMap = () => {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
                     dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
                     if (dataId === undefined || dataId.Valid === false) {
-                        geoData.forEach((gd: any) => {
-                            const rawCoords = gd.geometry_data.RawMessage.coordinates;
-                            const dbCoords = geometryFromRedux;
-                            if (
-                                deepEqual(rawCoords, dbCoords)
-                            ) {
-                                dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id, data_status: gd.data_status } })
-                                dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: gd.id, data_status: gd.data_status } })
-                                dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
-                                // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
-                            } else {
-                                dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
-                                dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
+                        if (geoData.length !== 0) {
+                            geoData.forEach((gd: any) => {
+                                const rawCoords = gd.geometry_data.RawMessage.coordinates;
+                                const dbCoords = geometryFromRedux;
+                                if (
+                                    deepEqual(rawCoords, dbCoords)
+                                ) {
+                                    dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id, data_status: gd.data_status } })
+                                    dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: gd.id, data_status: gd.data_status } })
+                                    dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
+                                    // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
+                                } else {
+                                    dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
+                                    dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
 
-                            }
-                        });
+                                }
+                            });
+                        } else {
+                            dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
+                            dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
+                        }
                     }
                 }
                 // feature.setStyle(newStyle)

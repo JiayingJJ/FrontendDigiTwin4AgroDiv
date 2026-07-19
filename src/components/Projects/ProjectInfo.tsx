@@ -22,6 +22,7 @@ import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
 
 const ProjectInfo = () => {
+    const dispatch = useDispatch()
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
     const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
     const [creator, setCreator] = useState<any>();
@@ -119,10 +120,13 @@ const ProjectInfo = () => {
                             <Stack direction='row' paddingTop={"10px"}>
                                 {userTablesForProject?.map((ut: any) => {
                                     return (
-                                         <VStack>
-                                            <Badge colorScheme='green' textTransform='' onClick={() => setViewActions(!viewActions)} cursor={"pointer"}>{ut.table_name}</Badge>
-                                             {viewActions&&<TablesActionForView/>}
-                                         </VStack>
+                                        <VStack>
+                                            <Badge colorScheme='green' textTransform='' onClick={() => {
+                                                dispatch({ type: 'projects/setSelectedUserTables', payload: ut })
+                                                setViewActions(!viewActions)
+                                            }} cursor={"pointer"}>{ut.table_name}</Badge>
+                                            {viewActions && <TablesActionForView />}
+                                        </VStack>
                                     )
                                 })}
                             </Stack>

@@ -62,3 +62,11 @@ export const setUserTableDataStatus = async (id: string, dataStatus: string) => 
     const data = await response.json();
     return data;
 }
+export const getUserTablesWithProjectId = async (projectId: any) => {
+    const response = await fetch(`${apiUrl}/usertables/project/${projectId}`, {
+        method: "GET"
+    })
+    const data = await response.json();
+    console.log(data)
+    return data;
+}

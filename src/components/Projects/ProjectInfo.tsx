@@ -12,12 +12,14 @@ import {
     Stack,
     Text,
     IconButton,
-    Badge
+    Badge,
+    VStack
 } from '@chakra-ui/react'
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { readableTimestamp } from '../../helpers';
 import { fetchUserWithId } from '../../api/user';
 import AddMember from './AddMember';
+import TablesActionForView from './TablesActionForView';
 
 const ProjectInfo = () => {
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
@@ -25,6 +27,8 @@ const ProjectInfo = () => {
     const [creator, setCreator] = useState<any>();
     const [members, setMembers] = useState<any>();
     const [addMember, setAddMember] = useState<boolean>(false);
+    const [viewActions, setViewActions] = useState<boolean>(false);
+
     console.log(selectedProject)
     const getCreatorInfoWithId = async (id: string) => {
         const data = await fetchUserWithId(id)
@@ -115,7 +119,10 @@ const ProjectInfo = () => {
                             <Stack direction='row' paddingTop={"10px"}>
                                 {userTablesForProject?.map((ut: any) => {
                                     return (
-                                        <Badge colorScheme='green' textTransform=''>{ut.table_name}</Badge>
+                                         <VStack>
+                                            <Badge colorScheme='green' textTransform='' onClick={() => setViewActions(!viewActions)} cursor={"pointer"}>{ut.table_name}</Badge>
+                                             {viewActions&&<TablesActionForView/>}
+                                         </VStack>
                                     )
                                 })}
                             </Stack>

@@ -181,7 +181,7 @@ const TableWithColumns = () => {
                 <CardHeader>
                     <Heading size={"md"}>Input preview</Heading>
                 </CardHeader>
-                <CardBody>
+                {selectedTable!== null && <CardBody>
                     {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') ? <Box>
                         <Heading size='xs' textTransform=''>
                             Project Name
@@ -208,7 +208,7 @@ const TableWithColumns = () => {
                         </Box>
                     }
                     {sortedTableColumns?.map(column => renderFormControl(column))}
-                </CardBody>
+                </CardBody>}
                 <CardFooter>
                     {tableColumns !== null && tableColumns.length !== 0 &&
                         <Button colorScheme="green" onClick={() => {

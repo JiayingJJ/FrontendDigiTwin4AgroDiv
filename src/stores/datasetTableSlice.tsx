@@ -179,6 +179,7 @@ const datasetTableSlice = createSlice({
             state.projectId = null;
             state.selectedTableId = null;
             state.selectedTable=null;
+            state.createColumnsButton=false;
         },
         setProjectId: (state, action) => {
             state.projectId = action.payload

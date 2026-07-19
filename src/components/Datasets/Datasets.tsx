@@ -43,6 +43,7 @@ const Datasets = () => {
                 dispatch({ type: 'datasetTable/setTables', payload: filterData })
             }
         }
+        dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
         fechtData()
     }, [])
     useEffect(() => {

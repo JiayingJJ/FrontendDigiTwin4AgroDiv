@@ -27,6 +27,8 @@ const UserCreateANewTable = () => {
     const userInfo = useSelector((state: any) => state.user)
     const [tableName, setTableName] = useState<string>("");
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+    const allProjects = useSelector((state: any) => state.projects.allProjects)
+    const projectId = useSelector((state: any) => state.datasetTable.projectId)
 
     const handleChange = (e: any) => {
         setTableName(e.target.value)
@@ -36,7 +38,7 @@ const UserCreateANewTable = () => {
 
         setTableName("")
         if (isOnLine) {
-            const data = await createTable(userInfo, tableName)
+            const data = await createTable(userInfo, tableName, projectId)
             if (data[1] === 500) {
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
                 dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
@@ -65,6 +67,9 @@ const UserCreateANewTable = () => {
         }
 
     }
+    const handleSelectProject = (e: any) => {
+        dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })
+    }
     return (
         <>
             <VStack>
@@ -82,6 +87,16 @@ const UserCreateANewTable = () => {
                 <FormControl isRequired>
                     <FormLabel>Tabellenname</FormLabel>
                     <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
+                </FormControl>
+                <FormControl>
+                    <FormLabel>Project</FormLabel>
+                    <Select placeholder='Select project' onChange={handleSelectProject}>
+                        {allProjects.map((p: any) => {
+                            return (
+                                <option value={p.id}>{p.name}</option>
+                            )
+                        })}
+                    </Select>
                 </FormControl>
                 <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
                     dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })

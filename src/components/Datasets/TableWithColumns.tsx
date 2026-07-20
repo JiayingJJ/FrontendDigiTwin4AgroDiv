@@ -159,8 +159,9 @@ const TableWithColumns = () => {
     }
     useEffect(() => {
         setProjectName('')
-        if (selectedTable !== null)
+        if (selectedTable !== null){
             handleGetProjectInfo()
+        }
     }, [selectedTable])
     const handleSelectProject = (e: any) => {
         dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })

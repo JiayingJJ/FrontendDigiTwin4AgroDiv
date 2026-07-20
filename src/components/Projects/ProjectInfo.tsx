@@ -29,6 +29,7 @@ const ProjectInfo = () => {
     const [members, setMembers] = useState<any>();
     const [addMember, setAddMember] = useState<boolean>(false);
     const [viewActions, setViewActions] = useState<boolean>(false);
+    const selectedUserTable = useSelector((state: any) => state.projects.selectedUserTable)
 
     console.log(selectedProject)
     const getCreatorInfoWithId = async (id: string) => {
@@ -121,11 +122,12 @@ const ProjectInfo = () => {
                                 {userTablesForProject?.map((ut: any) => {
                                     return (
                                         <VStack>
-                                            <Badge colorScheme='green' textTransform='' onClick={() => {
+                                            <Badge key={`${ut.id}`} colorScheme='green' textTransform='' onClick={() => {
+                                                console.log(ut)
                                                 dispatch({ type: 'projects/setSelectedUserTable', payload: ut })
                                                 setViewActions(!viewActions)
                                             }} cursor={"pointer"}>{ut.table_name}</Badge>
-                                            {viewActions && <TablesActionForView />}
+                                            {selectedUserTable.id===ut.id && viewActions && <TablesActionForView />}
                                         </VStack>
                                     )
                                 })}

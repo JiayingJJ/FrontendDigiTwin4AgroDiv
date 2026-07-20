@@ -39,8 +39,8 @@ const TablesActionForView = () => {
     }
     return (
         <HStack>
-            <FaTable onClick={() => handleSwitchToDatabasePage()} />
-            <FaDatabase onClick={() => handleSwitchToDataPage()} />
+            <FaTable cursor="pointer" onClick={() => handleSwitchToDatabasePage()} />
+            <FaDatabase cursor="pointer" onClick={() => handleSwitchToDataPage()} />
         </HStack>
     );
 }

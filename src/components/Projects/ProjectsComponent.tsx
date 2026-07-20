@@ -46,7 +46,7 @@ const ProjectsComponent = () => {
             <GridItem h='100%' w="100%">
                 <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
                     <CreatedProjects />
-                    <Button disabled={addNewProject} backgroundColor='#EDB458' onClick={() => {
+                    <Button disabled={addNewProject} backgroundColor='#ecf39eff' onClick={() => {
                         console.log("click for add project")
                         dispatch({ type: 'projects/setAddNewProject', payload: true })
                     }}>

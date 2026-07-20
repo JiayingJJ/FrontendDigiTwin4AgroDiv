@@ -44,7 +44,7 @@ const CreatedProjects = () => {
     return (
         <>
             <Card width={"100%"} textAlign={"center"}>
-                <CardHeader>
+                <CardHeader backgroundColor={"#90a955ff"}>
                     <Heading size='md'>Angelegte Projects</Heading>
                 </CardHeader>
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
@@ -52,7 +52,6 @@ const CreatedProjects = () => {
 
             <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
                 {allProjects?.map((p: any) => {
-                    console.log(p)
                     return (
                         <Card minWidth={"200px"} width={"100%"}>
                             <CardBody padding={"1rem"}>
@@ -60,6 +59,7 @@ const CreatedProjects = () => {
                                     <Button
                                         // disabled={addingColumns}
                                         // backgroundColor={selectedTableId === t.id ? "red" : "white"}
+                                        backgroundColor={selectedProject.id === p.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             handlerGetProjectWithId(p)
                                         }} cursor={"pointer"}

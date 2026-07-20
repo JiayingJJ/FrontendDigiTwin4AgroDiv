@@ -67,8 +67,8 @@ const CreatedTables = () => {
 
     return (
         <>
-            <Card width={"100%"} textAlign={"center"}>
-                <CardHeader>
+            <Card width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"}>
+                <CardHeader backgroundColor={"#90a955ff"}>
                     <Heading size='md'>Angelegte Datenbanken</Heading>
                 </CardHeader>
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
@@ -81,8 +81,9 @@ const CreatedTables = () => {
                             <CardBody padding={"1rem"}>
                                 <HStack spacing={".5rem"} justifyContent={"space-between"}>
                                     <Button
+                                        width="100%" 
                                         disabled={addingColumns}
-                                        backgroundColor={selectedTableId === t.id ? "red" : "white"}
+                                        backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             getTableWithId(t)
                                         }} cursor={"pointer"}

@@ -52,8 +52,8 @@ const DatasetsTable = () => {
         const dataValues = await getAllColumnsWithTableId(t.id);
         console.log(dataColumns)
         console.log(dataValues)
-        console.log(dataValues[0])
-        if (dataColumns[1] === 200 && dataValues[1] === 200) {
+        //  && dataValues[1] === 200
+        if (dataColumns[1] === 200) {
             dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTableView/setData', payload: dataValues[0] })
             dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].table_name })
@@ -84,15 +84,15 @@ const DatasetsTable = () => {
                     {tables !== null && tables.length != 0 && tables.map((t: any) => {
                         const isSelected = t.id === selected;
                         return (
-                            <Card minWidth={"200px"} width={"100%"}>
-                                <CardBody padding={"1rem"}>
+                            <Card minWidth={"200px"} width={"100%"} backgroundColor={isSelected ? "#ba2d0bff" : "white"}>
+                                <CardBody padding={"1rem"} >
                                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
-                                        <Heading size='sm'> {t["table_name"]}</Heading>
-                                        {!isSelected ? <Button size="sm" onClick={() => handleRenderView(t)}>View data</Button> : <Button size="sm" onClick={close}>Close</Button>}
+                                        <Heading size='sm' > {t["table_name"]}</Heading>
+                                        {!isSelected ? <Button _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={() => handleRenderView(t)}>View data</Button> : <Button  _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={close}>Close</Button>}
                                     </HStack>
                                     {isSelected ? <VStack marginTop={".5rem"} spacing={".5rem"} justifyContent={"left"} width={"100%"}>
-                                        <Button size="sm" width={"100%"} onClick={() => setDescriptionOpen(!descriptionOpen)}>{descriptionOpen ? "Hide description" : "Show description"}</Button>
-                                        <Button size="sm" width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button>
+                                        <Button size="sm"  _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => setDescriptionOpen(!descriptionOpen)}>{descriptionOpen ? "Hide description" : "Show description"}</Button>
+                                        <Button size="sm"  _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button>
                                     </VStack> : null}
                                 </CardBody>
                             </Card>

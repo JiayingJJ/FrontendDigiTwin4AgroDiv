@@ -76,13 +76,13 @@ const Dashboard = () => {
                 width={"100vw"}
                 padding={"1rem 5vw"}
                 gap="2rem"
-                backgroundColor="#14342B"
+                backgroundColor="#31572cff"
             >
-                <Button width="100%" backgroundColor={activePage == "dashboard" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
-                <Button width="100%" backgroundColor={activePage == "maps" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
-                <Button width="100%" backgroundColor={activePage == "projects" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "projects" })}>Projects</Button>
-                <Button width="100%" backgroundColor={activePage == "datenbank" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "datenbank" })}>Datenbank</Button>
-                <Button width="100%" backgroundColor={activePage == "tableview" ? "#E8871E" : "#F7EDE2"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
+                <Button width="100%" backgroundColor={activePage == "dashboard" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
+                <Button width="100%" backgroundColor={activePage == "maps" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
+                <Button width="100%" backgroundColor={activePage == "projects" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "projects" })}>Projects</Button>
+                <Button width="100%" backgroundColor={activePage == "datenbank" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "datenbank" })}>Datenbank</Button>
+                <Button width="100%" backgroundColor={activePage == "tableview" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
             </HStack>
             {rendernPage()}
         </VStack>

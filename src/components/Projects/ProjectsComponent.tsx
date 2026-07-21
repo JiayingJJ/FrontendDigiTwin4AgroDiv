@@ -13,7 +13,7 @@ import {
     GridItem,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllProjects, getProjectWithCreatorId } from '../../api/projects';
+import { getAllProjects, getAllProjectsWithShared, getProjectWithCreatorId } from '../../api/projects';
 import AddProject from './AddProject';
 import CreatedProjects from './CreatedProjects';
 import ProjectInfo from './ProjectInfo';
@@ -24,12 +24,12 @@ const ProjectsComponent = () => {
 
     const handlerGetAllProjects = async () => {
         const data = await getAllProjects();
+        const projectsWithShared = await getAllProjectsWithShared(userInfo.id)
         const dataWithCreatorId = await getProjectWithCreatorId(userInfo.id)
-
-        if (dataWithCreatorId[1] !== 200) {
+        if (projectsWithShared[1] !== 200) {
 
         } else {
-            const notDelete = dataWithCreatorId[0].filter((d: any) => {
+            const notDelete = projectsWithShared[0].filter((d: any) => {
                 if (!d.deleted_at.Valid) {
                     return d;
                 }

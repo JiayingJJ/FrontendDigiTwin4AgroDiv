@@ -60,3 +60,10 @@ export const updateProjectMembers = async (id: string, members: any, dataStatus:
     const data = await response.json();
     return [data, response.status];
 }
+export const getAllProjectsWithShared = async (user_id: string) => {
+    const response = await fetch(`${apiUrl}/projects/all/${user_id}`, {
+        method: "GET",
+    })
+    const data = await response.json();
+    return [data, response.status];
+}

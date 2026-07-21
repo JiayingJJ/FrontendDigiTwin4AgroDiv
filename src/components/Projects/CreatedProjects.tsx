@@ -58,8 +58,7 @@ const CreatedProjects = () => {
                                 <HStack spacing={".5rem"} justifyContent={"space-between"}>
                                     <Button
                                         // disabled={addingColumns}
-                                        // backgroundColor={selectedTableId === t.id ? "red" : "white"}
-                                        backgroundColor={selectedProject.id === p.id ? "#ba2d0bff" : "white"}
+                                        backgroundColor={selectedProject !== null && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             handlerGetProjectWithId(p)
                                         }} cursor={"pointer"}

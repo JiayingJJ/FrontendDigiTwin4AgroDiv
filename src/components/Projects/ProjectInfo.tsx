@@ -127,7 +127,7 @@ const ProjectInfo = () => {
                                                 dispatch({ type: 'projects/setSelectedUserTable', payload: ut })
                                                 setViewActions(!viewActions)
                                             }} cursor={"pointer"}>{ut.table_name}</Badge>
-                                            {selectedUserTable.id===ut.id && viewActions && <TablesActionForView />}
+                                            {selectedUserTable !== null && selectedUserTable.id === ut.id && viewActions && <TablesActionForView />}
                                         </VStack>
                                     )
                                 })}

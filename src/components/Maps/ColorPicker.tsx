@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 import { Box } from '@chakra-ui/react'
-import { updateGeoDataColor } from "../../api/geoData";
+import { setGeoDataStatus, updateGeoDataColor } from "../../api/geoData";
 
 const ColorPicker = () => {
     const dispatch = useDispatch()
@@ -15,6 +15,11 @@ const ColorPicker = () => {
     }, [color])
     const handlerChangeColor = async() => {
         const data = await updateGeoDataColor(selectedGeoInfo.id, color, "pending")
+        if(data[1]!==200){
+
+        }else{
+            const dataStatus = await setGeoDataStatus(data[0].id, "merged")
+        }
     }
     return (
         <Box>

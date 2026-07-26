@@ -47,7 +47,7 @@ const OpenLayersMap = () => {
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const geometryFromRedux = useSelector((state: any) => state.openLayers.geometry)
-    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const featureRedux = useSelector((state: any) => state.openLayers.feature)
     useEffect(() => {
         dispatch({ type: 'openLayers/clearAllForGeoData', payload: null })

@@ -40,7 +40,7 @@ const layerButtons = [
 ];
 const MapActions = ({ olMap }: Props) => {
   const dispatch = useDispatch()
-      const colorRedux = useSelector((state: any) => state.openLayers.color)
+  const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
   const selectedLayer = useSelector((state: any) => state.openLayers.layerType)
   const layers = {
     standard: new TileLayer({
@@ -137,16 +137,16 @@ const MapActions = ({ olMap }: Props) => {
   const [selectType, setSelectType] = useState<boolean>(false);
   return (
     <HStack style={{ display: 'flex', justifyContent: "center" }}>
-      {!selectType 
-      ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
-        <Button variant={"unstyled"}>
-          <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-            dispatch({ type: 'openLayers/setDrawingInteraction', payload: true })
-            setSelectType(true)
-          }} />
-        </Button>
-      </Tooltip>
-      : <Box style={{
+      {!selectType
+        ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+          <Button variant={"unstyled"}>
+            <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+              dispatch({ type: 'openLayers/setDrawingInteraction', payload: true })
+              setSelectType(true)
+            }} />
+          </Button>
+        </Tooltip>
+        : <Box style={{
           display: "flex",
         }}>
           <Tooltip label={"Ein Punkt hinzufügen"} hasArrow >
@@ -172,17 +172,17 @@ const MapActions = ({ olMap }: Props) => {
       }
 
       {layerButtons.map(({ icon: Icon, layerType, layerTooltip }) => (
-          <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >
-            <Button variant={layerType === selectedLayer ? "solid" : "unstyled"} padding={"0 .4rem"}>
-              <Icon
-                key={layerType}
-                style={{ padding: "5px", margin: "5px" }}
-                size="30"
-                onClick={() => switchLayer(layerType)}
-              />
-            </Button>
-          </Tooltip>
-        ))}
+        <Tooltip key={`${layerType}-tooltip`} label={layerTooltip} hasArrow >
+          <Button variant={layerType === selectedLayer ? "solid" : "unstyled"} padding={"0 .4rem"}>
+            <Icon
+              key={layerType}
+              style={{ padding: "5px", margin: "5px" }}
+              size="30"
+              onClick={() => switchLayer(layerType)}
+            />
+          </Button>
+        </Tooltip>
+      ))}
     </HStack>
   );
 };

@@ -32,7 +32,7 @@ const DatasetColumns = () => {
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
-    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
 
 
     const getColumnValues = () => {

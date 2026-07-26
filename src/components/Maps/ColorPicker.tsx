@@ -7,26 +7,26 @@ import { setGeoDataStatus, updateGeoDataColor } from "../../api/geoData";
 
 const ColorPicker = () => {
     const dispatch = useDispatch()
-    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const [color, setColor] = useState("#aabbcc");
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     useEffect(() => {
-        dispatch({ type: 'openLayers/setColor', payload: color })
+        dispatch({ type: 'openLayers/setUserSelectedColor', payload: color })
     }, [color])
-    const handlerChangeColor = async() => {
+    const handlerChangeColor = async () => {
         const data = await updateGeoDataColor(selectedGeoInfo.id, color, "pending")
-        if(data[1]!==200){
+        if (data[1] !== 200) {
 
-        }else{
+        } else {
             const dataStatus = await setGeoDataStatus(data[0].id, "merged")
         }
     }
     return (
         <Box>
             <HexColorPicker color={color} onChange={setColor} />
-           <CiCircleCheck color="green" size="40" onClick={() => handlerChangeColor()}/>
+            <CiCircleCheck color="green" size="40" onClick={() => handlerChangeColor()} />
         </Box>
-        
+
     );
 }
 

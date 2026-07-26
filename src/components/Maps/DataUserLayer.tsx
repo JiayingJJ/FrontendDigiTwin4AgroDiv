@@ -18,7 +18,7 @@ const DataUserLayer = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
-    const colorRedux = useSelector((state: any) => state.openLayers.color)
+    const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const [colorPicker, setColorPicker] = useState(false);
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
 
@@ -61,9 +61,10 @@ const DataUserLayer = () => {
                             <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                         </Button>
                     </Tooltip>}
-                    <Button variant={"unstyled"}>
+                    {selectedGeoInfo !== null &&
+                        <Button variant={"unstyled"}>
                             <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => setColorPicker(!colorPicker)} />
-                        </Button>
+                        </Button>}
                     {colorPicker && <ColorPicker />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}
                     {rendernDataInfo && <RendernInfo />}

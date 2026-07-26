@@ -34,7 +34,7 @@ const DataUserLayer = () => {
         console.log(userInfo.id)
         const geoData = { "coordinates": geometry, "type": geometryType }
         console.log(geoData)
-        const data = await insertGeoData(userInfo.id, { color: colorRedux }, geoData, colorRedux)
+        const data = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
         if (data[1] === 500) {
             console.log("Alert Message")
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

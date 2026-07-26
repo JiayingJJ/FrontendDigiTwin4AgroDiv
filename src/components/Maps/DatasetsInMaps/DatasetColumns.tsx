@@ -104,13 +104,13 @@ const DatasetColumns = () => {
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
-            const properties = { "column_id": data[1].id, "table_id": selectedTableId }
-            if (!addNewColumnsDataInGeometry) {
-                dataInserGeoData = await insertGeoData(userInfo.id, properties, geoData, colorRedux)
-            } else {
-                const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
-                const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-                const properties = { "column_id": data[1].id, "table_id": selectedTableId, "id": selectedGeoData.id }
+            if (addNewColumnsDataInGeometry) {
+                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+                const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
+                dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
+            } 
+            else {
+                const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoData.id }
                 dataInserGeoData = await updateGeoDataProperties(selectedGeoData.id, properties, "pending")
             }
             dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })

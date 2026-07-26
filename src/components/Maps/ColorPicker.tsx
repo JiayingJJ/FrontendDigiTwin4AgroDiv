@@ -8,7 +8,8 @@ import { setGeoDataStatus, updateGeoDataColor } from "../../api/geoData";
 const ColorPicker = () => {
     const dispatch = useDispatch()
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
-    const [color, setColor] = useState("#aabbcc");
+    const colorFromDB = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
+    const [color, setColor] = useState(colorFromDB.color);
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     useEffect(() => {
         dispatch({ type: 'openLayers/setUserSelectedColor', payload: color })

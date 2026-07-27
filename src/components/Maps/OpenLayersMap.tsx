@@ -19,7 +19,6 @@ import { Input, Box } from '@chakra-ui/react'
 import * as turf from '@turf/turf';
 // Components
 import MapActions from './MapActions';
-import TulpePic from '../../assets/Tulpe.jpg'
 import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
@@ -28,7 +27,8 @@ import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
 import { getColumnWithId } from '../../api/dataset';
 import DataUserLayer from './DataUserLayer';
 import { deepEqual } from '../../helpers';
-
+import { renderToStaticMarkup } from "react-dom/server";
+import { MdPushPin } from "react-icons/md";
 const OpenLayersMap = () => {
     const dispatch = useDispatch()
     const geoJSONSource = '/data/deutschland.geojson';
@@ -53,62 +53,17 @@ const OpenLayersMap = () => {
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     const cardPadding = "0.4rem";
-    const stockeColor = "#fff";
+    const strockeColor = "#fff";
+    const missedStrockeColor = "#ba2d0bff";
+
     const vectorSourceUserData = useRef(new VectorSource());
     const vectorLayerUserData = useRef(new VectorLayer({
         source: vectorSourceUserData.current,
-        visible: true,
-        style: (feature) => {
-            const geometryType = feature.getGeometry()?.getType();
-            if (geometryType === 'Point' || geometryType === 'MultiPoint') {
-                return new Style({
-                    image: new CircleStyle({
-                        radius: 12,
-                        fill: new Fill({
-                            color: colorRedux
-                        }),
-                        stroke: new Stroke({
-                            color: stockeColor,
-                            width: 2,
-                        })
-                    })
-                });
-            }
-            if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
-                return new Style({
-                    stroke: new Stroke({ color: stockeColor, width: 1, lineDash: [30, 10] }),
-                });
-            }
-            if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
-                return new Style({
-                    stroke: new Stroke({ color: "red", width: 1, lineDash: [30, 10] }),
-                    fill: new Fill({ color: colorRedux }),
-                });
-            }
-        }
+        visible: true
     }));
-
-    // const newStyle = [new Style({
-    //     stroke: new Stroke({
-    //         color: 'blue',
-    //         width: 1,
-    //         lineDash: [30, 10],
-    //     }),
-    //     fill: new Fill({
-    //         color: 'rgba(0, 255, 0, 0.3)',
-    //     }),
-
-    // }), new Style({
-    //     image: new Icon({
-    //         src: TulpePic,
-    //         scale: 0.01,
-    //         anchor: [0.5, 0.5],
-    //     }),
-    //     geometry: (feature) => {
-    //         return feature?.getGeometry().getInteriorPoint();
-    //     },
-    // })
-    // ]
+    const svgString = renderToStaticMarkup(<MdPushPin color='#ba2d0bff' size={40}/>);
+    const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+    console.log(dataUrl)
     const backendToGeoJSON = (data: any[]) => {
         const features = data
             .filter(item => item.geometry_data.Valid)
@@ -268,64 +223,71 @@ const OpenLayersMap = () => {
     useEffect(() => {
         isDrawingRef.current = isDrawing;
     }, [isDrawing]);
+    const resetFeatures = (features: any) => {
+        features.forEach((feature) => {
+            let userColor;
+            let stroke;
+            const data = feature.values_.ids
+            if (data !== undefined && data.Valid === true) {
+                const raw = data?.RawMessage;
+                userColor =
+                    Array.isArray(raw)
+                        ? raw?.[0]?.color
+                        : raw?.color;
+                if (userColor === undefined || userColor === "") {
+                    userColor = "#fff";
+                    stroke = missedStrockeColor;
+                } else {
+                    stroke = strockeColor;
+
+                }
+                if (feature.getGeometry()?.getType() === "Point") {
+                    feature.setStyle(
+                        [new Style({
+                            image: new CircleStyle({
+                                radius: 10,
+                                fill: new Fill({ color: userColor }),
+                                stroke: new Stroke({ color: stroke, width: 2 }),
+                            }),
+                        })]
+                    );
+                } else if (feature.getGeometry()?.getType() === "Polygon") {
+                    feature.setStyle(
+                        new Style({
+                            stroke: new Stroke({ color: stroke, width: 2 }),
+                            fill: new Fill({ color: userColor }),
+                        })
+                    );
+                }
+
+            }
+
+        })
+    }
+    const fetchUserGeoData = async () => {
+        const data = await getGeoData();
+        // Get geo_data with UserId
+        const geoDataUserId = await getGeoDataWithUserId(userInfo.id);
+        const validData = data.filter((d: any) => {
+            if (!d.deleted_at.Valid) {
+                return d;
+            }
+        })
+        dispatch({ type: 'openLayers/setGeodata', payload: validData })
+        const geoJsonData = backendToGeoJSON(validData);
+        dispatch({ type: 'openLayers/setGeoJsonData', payload: geoJsonData })
+        const format = new GeoJSON();
+        const features = format.readFeatures(geoJsonData, {
+            dataProjection: 'EPSG:3857',
+            featureProjection: 'EPSG:3857'
+        });
+
+        vectorSourceUserData.current.clear();
+        vectorSourceUserData.current.addFeatures(features);
+        resetFeatures(features)
+    };
     useEffect(() => {
         dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
-        const fetchUserGeoData = async () => {
-            const data = await getGeoData();
-            // Get geo_data with UserId
-            const geoDataUserId = await getGeoDataWithUserId(userInfo.id);
-            const validData = data.filter((d: any) => {
-                if (!d.deleted_at.Valid) {
-                    return d;
-                }
-            })
-            dispatch({ type: 'openLayers/setGeodata', payload: validData })
-            const geoJsonData = backendToGeoJSON(validData);
-            dispatch({ type: 'openLayers/setGeoJsonData', payload: geoJsonData })
-            const format = new GeoJSON();
-            const features = format.readFeatures(geoJsonData, {
-                dataProjection: 'EPSG:3857',
-                featureProjection: 'EPSG:3857'
-            });
-
-            vectorSourceUserData.current.clear();
-            vectorSourceUserData.current.addFeatures(features);
-            features.forEach((feature) => {
-                let userColor;
-                const data = feature.values_.ids
-                if (data !== undefined && data.Valid === true) {
-                    const raw = data?.RawMessage;
-                    userColor =
-                        Array.isArray(raw)
-                            ? raw?.[0]?.color
-                            : raw?.color;
-                    if (userColor === undefined || userColor === "") {
-                        userColor = "#ff0000";
-                    }
-                    if (feature.getGeometry()?.getType() === "Point") {
-                        feature.setStyle(
-                            new Style({
-                                image: new CircleStyle({
-                                    radius: 10,
-                                    fill: new Fill({ color: userColor }),
-                                    stroke: new Stroke({ color: stockeColor, width: 1 }),
-                                }),
-                            })
-                        );
-                    } else if (feature.getGeometry()?.getType() === "Polygon") {
-                        feature.setStyle(
-                            new Style({
-                                stroke: new Stroke({ color: stockeColor, width: 1, lineDash: [30, 10] }),
-                                fill: new Fill({ color: userColor }),
-                            })
-                        );
-                    }
-
-                }
-
-            })
-        };
-
         fetchUserGeoData();
     }, []);
     useEffect(() => {
@@ -350,31 +312,49 @@ const OpenLayersMap = () => {
         statusForUserDataLayer()
     }, [layerType, showUserDataLayer])
     useEffect(() => {
-        console.log(colorRedux)
+        const features = vectorSourceUserData.current.getFeatures();
+        resetFeatures(features)
         if (featureRedux !== null) {
             if (featureRedux.getGeometry()?.getType() === "Point") {
-                console.log("fix color point", colorRedux)
-
                 featureRedux.setStyle(
-                    new Style({
+                    [new Style({
                         image: new CircleStyle({
                             radius: 10,
                             fill: new Fill({ color: colorRedux }),
-                            stroke: new Stroke({ color: "#fff", width: 2 }),
+                            stroke: new Stroke({ color: strockeColor, width: 2 }),
                         }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            color: "red",
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        })
                     })
+                    ]
                 );
             } else if (featureRedux.getGeometry()?.getType() === "Polygon") {
                 featureRedux.setStyle(
-                    new Style({
-                        stroke: new Stroke({ color: '#fff', width: 1, lineDash: [30, 10] }),
+                    [new Style({
+
+                        stroke: new Stroke({ color: strockeColor, width: 2 }),
                         fill: new Fill({ color: colorRedux }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        }),
+                        geometry: featureRedux => featureRedux.getGeometry().getInteriorPoint(),
                     })
+                    ]
                 );
             }
         }
 
-    }, [colorRedux])
+    }, [featureRedux, colorRedux])
 
     useEffect(() => {
         if (selectedGeometryDataFromDatabase !== null) {

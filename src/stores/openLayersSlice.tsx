@@ -24,6 +24,7 @@ interface OpenLayersState {
     userSelectedColor: string | null;
     feature: any;
     colorPicker:boolean;
+    allInfoInProperties: [];
 }
 
 const initialState: OpenLayersState = {
@@ -49,6 +50,7 @@ const initialState: OpenLayersState = {
     userSelectedColor: null,
     feature: null,
     colorPicker: false,
+    allInfoInProperties: []
 }
 
 const openLayersSlice = createSlice({
@@ -123,6 +125,7 @@ const openLayersSlice = createSlice({
             state.columnIdForDrawed=null;
             state.userSelectedColor=null;
             state.colorPicker =false;
+            state.allInfoInProperties=[];
         },
         clearAllForGeoData:  (state, action) => {
             state.columnInfo = null;
@@ -152,7 +155,14 @@ const openLayersSlice = createSlice({
         },
         setColorPicker: (state, action) => {
             state.colorPicker = action.payload;
+        },
+        setAllInfoInProperties: (state, action) => {
+            state.allInfoInProperties = action.payload;
+        },
+        addAllInfoInProperties: (state, action) => {
+            state.allInfoInProperties.push(action.payload);
         }
+        
     }
 });
 
@@ -180,7 +190,9 @@ export const {
     setAddNewColumnsDataInGeometry,
     setSelectedGeoInfo,
     setUserSelectedColor,
-    setColorPicker
+    setColorPicker,
+    setAllInfoInProperties,
+    addAllInfoInProperties
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

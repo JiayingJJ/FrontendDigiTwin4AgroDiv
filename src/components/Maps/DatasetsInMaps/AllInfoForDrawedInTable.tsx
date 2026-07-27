@@ -13,7 +13,7 @@ import { readableTimestamp } from '../../../helpers';
 const AllInfoForDrawedInTable = () => {
 
     const dispatch = useDispatch()
-    const geoDataWithSameGeometry = useSelector((state: any) => state.openLayers.geoDataWithSameGeometry)
+    const allInfoInProperties = useSelector((state: any) => state.openLayers.allInfoInProperties)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
 
@@ -72,7 +72,7 @@ const AllInfoForDrawedInTable = () => {
                     </Box>
                 </HStack>
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
-                {geoDataWithSameGeometry?.map((geo: any) => {
+                {allInfoInProperties?.map((geo: any) => {
                     return (
                         <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
                             <CardBody padding={".5rem"}>

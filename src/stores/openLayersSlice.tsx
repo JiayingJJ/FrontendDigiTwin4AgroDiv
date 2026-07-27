@@ -16,7 +16,6 @@ interface OpenLayersState {
     selectedGeoData: string | null;
     selectedGeometryDataFromDatabase: null;
     selectedPropertiesFromDatabase: [];
-    geoDataWithSameGeometry: [];
     rendernGeoDataList: boolean;
     showUserDataLayer: boolean;
     addNewColumnsDataInGeometry: boolean;
@@ -24,6 +23,7 @@ interface OpenLayersState {
     selectedGeoInfo: null;
     userSelectedColor: string | null;
     feature: any;
+    colorPicker:boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -41,14 +41,14 @@ const initialState: OpenLayersState = {
     geoJsonData: [],
     selectedGeoData: null,
     selectedGeometryDataFromDatabase: null,
-    geoDataWithSameGeometry: [],
     rendernGeoDataList: false,
     showUserDataLayer: false,
     addNewColumnsDataInGeometry: false,
     selectedPropertiesFromDatabase: [],
     selectedGeoInfo: null,
     userSelectedColor: null,
-    feature: null
+    feature: null,
+    colorPicker: false,
 }
 
 const openLayersSlice = createSlice({
@@ -109,26 +109,23 @@ const openLayersSlice = createSlice({
         setSelectedPropertiesDataFromDatabase: (state, action) => {
             state.selectedPropertiesFromDatabase = action.payload;
         },
-        setGeoDataWithSameGeometry: (state, action) => {
-            state.geoDataWithSameGeometry = action.payload;
-        },
-        addGeoDataWithSameGeometry: (state, action) => {
-            state.geoDataWithSameGeometry.push(action.payload);
-        },
         setRendernGeoDataList: (state, action) => {
             state.rendernGeoDataList = action.payload;
         },
         clearReduxForGeoData: (state, action) => {
             state.columnInfo = null;
-            state.geoDataWithSameGeometry = [];
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
+            state.selectedGeoInfo=null;
             state.selectedGeometryDataFromDatabase = null;
             state.selectedPropertiesFromDatabase = [];
+            state.feature=null;
+            state.columnIdForDrawed=null;
+            state.userSelectedColor=null;
+            state.colorPicker =false;
         },
         clearAllForGeoData:  (state, action) => {
             state.columnInfo = null;
-            state.geoDataWithSameGeometry = [];
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
             state.selectedGeometryDataFromDatabase = null;
@@ -153,6 +150,9 @@ const openLayersSlice = createSlice({
         setFeature: (state, action) => {
             state.feature = action.payload;
         },
+        setColorPicker: (state, action) => {
+            state.colorPicker = action.payload;
+        }
     }
 });
 
@@ -173,15 +173,14 @@ export const {
     setGeoJsonData,
     setSelectedGeoData,
     setSelectedGeometryDataFromDatabase,
-    setGeoDataWithSameGeometry,
-    addGeoDataWithSameGeometry,
     setRendernGeoDataList,
     clearReduxForGeoData,
     setShowUserDataLayer,
     setSelectedPropertiesDataFromDatabase,
     setAddNewColumnsDataInGeometry,
     setSelectedGeoInfo,
-    setUserSelectedColor
+    setUserSelectedColor,
+    setColorPicker
 } = openLayersSlice.actions;
 
 export default openLayersSlice.reducer;

@@ -73,8 +73,9 @@ const AllInfoForDrawedInTable = () => {
                 </HStack>
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
                 {geoDataWithSameGeometry?.map((geo: any) => {
+                    console.log(geo)
                     return (
-                        <Card minWidth={"200px"} width={"100%"}>
+                        <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
                             <CardBody padding={".5rem"}>
                                 <HStack spacing={".5rem"} justifyContent={"space-around"}>
                                     <Button

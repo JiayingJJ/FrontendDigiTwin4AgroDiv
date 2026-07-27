@@ -53,6 +53,7 @@ const OpenLayersMap = () => {
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     const cardPadding = "0.4rem";
+    const stockeColor = "#fff";
     const vectorSourceUserData = useRef(new VectorSource());
     const vectorLayerUserData = useRef(new VectorLayer({
         source: vectorSourceUserData.current,
@@ -67,7 +68,7 @@ const OpenLayersMap = () => {
                             color: colorRedux
                         }),
                         stroke: new Stroke({
-                            color: '#fff',
+                            color: stockeColor,
                             width: 2,
                         })
                     })
@@ -75,12 +76,12 @@ const OpenLayersMap = () => {
             }
             if (geometryType === 'LineString' || geometryType === 'MultiLineString') {
                 return new Style({
-                    stroke: new Stroke({ color: 'white', width: 1, lineDash: [30, 10] }),
+                    stroke: new Stroke({ color: stockeColor, width: 1, lineDash: [30, 10] }),
                 });
             }
             if (geometryType === 'Polygon' || geometryType === 'MultiPolygon') {
                 return new Style({
-                    stroke: new Stroke({ color: 'white', width: 1, lineDash: [30, 10] }),
+                    stroke: new Stroke({ color: "red", width: 1, lineDash: [30, 10] }),
                     fill: new Fill({ color: colorRedux }),
                 });
             }
@@ -307,14 +308,14 @@ const OpenLayersMap = () => {
                                 image: new CircleStyle({
                                     radius: 10,
                                     fill: new Fill({ color: userColor }),
-                                    stroke: new Stroke({ color: "#fff", width: 2 }),
+                                    stroke: new Stroke({ color: stockeColor, width: 1 }),
                                 }),
                             })
                         );
                     } else if (feature.getGeometry()?.getType() === "Polygon") {
                         feature.setStyle(
                             new Style({
-                                stroke: new Stroke({ color: '#fff', width: 1, lineDash: [30, 10] }),
+                                stroke: new Stroke({ color: stockeColor, width: 1, lineDash: [30, 10] }),
                                 fill: new Fill({ color: userColor }),
                             })
                         );

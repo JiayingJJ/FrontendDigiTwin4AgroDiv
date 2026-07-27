@@ -150,7 +150,7 @@ const OpenLayersMap = () => {
                             ? raw?.[0]?.color
                             : raw?.color;
                     console.log(userColor)
-                    if (userColor === undefined) {
+                    if (userColor === undefined || userColor==="") {
                         userColor = "#ff0000";
                     }
                     if (feature.getGeometry()?.getType() === "Point") {

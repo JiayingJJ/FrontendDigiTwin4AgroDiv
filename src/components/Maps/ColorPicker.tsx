@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CiCircleCheck, CiCircleRemove } from "react-icons/ci";
 import { Box } from '@chakra-ui/react'
 import { setGeoDataStatus, updateGeoDataColor } from "../../api/geoData";
-
+type Props = {
+}
 const ColorPicker = () => {
     const dispatch = useDispatch()
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
-    const colorFromDB = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
-    const [color, setColor] = useState(colorFromDB.color);
+    const [color, setColor] = useState(colorRedux);
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     useEffect(() => {
         dispatch({ type: 'openLayers/setUserSelectedColor', payload: color })

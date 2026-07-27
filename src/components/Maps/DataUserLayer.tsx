@@ -19,15 +19,16 @@ const DataUserLayer = () => {
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
-    const [colorPicker, setColorPicker] = useState(false);
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
+    const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
+    const colorPicker = useSelector((state: any) => state.openLayers.colorPicker)
 
     const showGeoJSON = () => {
+        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
-        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setShowUserDataLayer', payload: !showUserDataLayer })
     };
     const uploadGeomery = async () => {
@@ -63,7 +64,7 @@ const DataUserLayer = () => {
                     </Tooltip>}
                     {selectedGeoInfo !== null &&
                         <Button variant={"unstyled"}>
-                            <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => setColorPicker(!colorPicker)} />
+                            <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })} />
                         </Button>}
                     {colorPicker && <ColorPicker />}
                     {rendernGeoDataList && <AllInfoForDrawedInTable />}

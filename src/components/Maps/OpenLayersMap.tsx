@@ -150,7 +150,7 @@ const OpenLayersMap = () => {
                             ? raw?.[0]?.color
                             : raw?.color;
                     console.log(userColor)
-                    if (userColor === undefined || userColor==="") {
+                    if (userColor === undefined || userColor === "") {
                         userColor = "#ff0000";
                     }
                     if (feature.getGeometry()?.getType() === "Point") {
@@ -179,30 +179,6 @@ const OpenLayersMap = () => {
 
         fetchUserGeoData();
     }, []);
-
-    const getDataWithSameGeometry = async () => {
-        if (selectedPropertiesFromDatabase.length !== undefined) {
-            await Promise.all(
-                selectedPropertiesFromDatabase.map(async (proper: any) => {
-                    if (proper.table_id !== undefined) {
-                        const data = await getColumnWithId(proper.table_id, proper.column_id);
-                        dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
-                    }
-                })
-            );
-        } else {
-            if (selectedPropertiesFromDatabase.table_id !== undefined) {
-                const data = await getColumnWithId(selectedPropertiesFromDatabase.table_id, selectedPropertiesFromDatabase.column_id);
-                dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: data });
-            }
-        }
-    };
-    useEffect(() => {
-        if (selectedGeometryDataFromDatabase !== null) {
-            getDataWithSameGeometry()
-        }
-    }, [selectedGeometryDataFromDatabase])
-
     const statusForUserDataLayer = () => {
         if (!olMap) return;
 
@@ -221,27 +197,27 @@ const OpenLayersMap = () => {
         statusForUserDataLayer()
     }, [layerType, showUserDataLayer])
 
-    const newStyle = [new Style({
-        stroke: new Stroke({
-            color: 'blue',
-            width: 1,
-            lineDash: [30, 10],
-        }),
-        fill: new Fill({
-            color: 'rgba(0, 255, 0, 0.3)',
-        }),
+    // const newStyle = [new Style({
+    //     stroke: new Stroke({
+    //         color: 'blue',
+    //         width: 1,
+    //         lineDash: [30, 10],
+    //     }),
+    //     fill: new Fill({
+    //         color: 'rgba(0, 255, 0, 0.3)',
+    //     }),
 
-    }), new Style({
-        image: new Icon({
-            src: TulpePic,
-            scale: 0.01,
-            anchor: [0.5, 0.5],
-        }),
-        geometry: (feature) => {
-            return feature?.getGeometry().getInteriorPoint();
-        },
-    })
-    ]
+    // }), new Style({
+    //     image: new Icon({
+    //         src: TulpePic,
+    //         scale: 0.01,
+    //         anchor: [0.5, 0.5],
+    //     }),
+    //     geometry: (feature) => {
+    //         return feature?.getGeometry().getInteriorPoint();
+    //     },
+    // })
+    // ]
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const isDrawingRef = useRef(isDrawing);
     const fetchDataForDrawed = async (id: string) => {
@@ -251,6 +227,11 @@ const OpenLayersMap = () => {
             dispatch({ type: 'openLayers/setSelectedGeometryDataFromDatabase', payload: geoId[0].geometry_data.RawMessage })
             dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: geoId[0].properties.RawMessage })
             dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: geoId[0].id, data_status: geoId[0].data_status } })
+            if (geoId[0].properties.RawMessage[0] === undefined) {
+                dispatch({ type: 'openLayers/setUserSelectedColor', payload: geoId[0].properties.RawMessage.color })
+            } else {
+                dispatch({ type: 'openLayers/setUserSelectedColor', payload: geoId[0].properties.RawMessage[0].color })
+            }
         }
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: true })
     }
@@ -292,7 +273,6 @@ const OpenLayersMap = () => {
                                     dispatch({ type: 'openLayers/setSelectedPropertiesDataFromDatabase', payload: { id: gd.id, data_status: gd.data_status } })
                                     dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: gd.id, data_status: gd.data_status } })
                                     dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
-                                    // dispatch({ type: 'openLayers/addGeoDataWithSameGeometry', payload: gd })
                                 } else {
                                     dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
                                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
@@ -309,20 +289,17 @@ const OpenLayersMap = () => {
             }
         }
     })
-    const [state, setState] = useState("")
     useEffect(() => {
         console.log(colorRedux)
-        setState(colorRedux)
         if (featureRedux !== null) {
             if (featureRedux.getGeometry()?.getType() === "Point") {
-                console.log("fix color point")
                 console.log("fix color point", colorRedux)
 
                 featureRedux.setStyle(
                     new Style({
                         image: new CircleStyle({
                             radius: 10,
-                            fill: new Fill({ color: state }),
+                            fill: new Fill({ color: colorRedux }),
                             stroke: new Stroke({ color: "#fff", width: 2 }),
                         }),
                     })
@@ -331,7 +308,7 @@ const OpenLayersMap = () => {
                 featureRedux.setStyle(
                     new Style({
                         stroke: new Stroke({ color: '#fff', width: 1, lineDash: [30, 10] }),
-                        fill: new Fill({ color: state }),
+                        fill: new Fill({ color: colorRedux }),
                     })
                 );
             }

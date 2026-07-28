@@ -62,7 +62,7 @@ const CreatedProjects = () => {
                                         onClick={() => {
                                             handlerGetProjectWithId(p)
                                         }} cursor={"pointer"}
-                                        key={`${p.id}-table-box`}>
+                                        key={`${p.id}-table-box-project`}>
                                         <Heading size='xs' textTransform='uppercase' padding={"10px"}>
                                             {p.name}
                                         </Heading>

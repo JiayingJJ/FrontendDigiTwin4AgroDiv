@@ -46,7 +46,7 @@ const CreatedTables = () => {
         }
     }
     const handleDeleteTable = async (t: any) => {
-        setTableId(t.ID)
+        setTableId(t.id)
         dispatch({ type: 'modalInfo/setShowModal', payload: true })
         dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
         dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
@@ -87,7 +87,7 @@ const CreatedTables = () => {
                                         onClick={() => {
                                             getTableWithId(t)
                                         }} cursor={"pointer"}
-                                        key={`${t.id}-table-box`}>
+                                        key={`${t.id}-table-box-created`}>
                                         <Heading size='xs' textTransform='uppercase' padding={"10px"}>
                                             {t.table_name}
                                         </Heading>

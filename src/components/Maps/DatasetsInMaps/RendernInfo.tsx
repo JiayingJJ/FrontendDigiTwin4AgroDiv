@@ -46,14 +46,14 @@ const RendernInfo = () => {
             dispatch({ type: 'openLayers/clearTableIdForDrawed', payload: null })
             dispatch({ type: 'openLayers/clearColumnIdForDrawed', payload: null })
         }
-        } key={`${columnInfo.id}-geoData-modal`} size={"6xl"}>
+        } key={`${columnInfo?.id}-geoData-modal`} size={"6xl"}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{tableInfo.table_name}</ModalHeader>
+                <ModalHeader>{tableInfo?.table_name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     <Stack divider={<StackDivider />} spacing='4'>
-                        {Object.entries(columnInfo)
+                        {columnInfo !== null && Object.entries(columnInfo)
                             .filter(([key]) => !notShow.includes(key))
                             .map(([key, value]) => (
                                 <Box key={key}>

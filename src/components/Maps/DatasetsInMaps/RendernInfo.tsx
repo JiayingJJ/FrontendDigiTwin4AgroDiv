@@ -37,7 +37,6 @@ const RendernInfo = () => {
     }
     useEffect(() => {
         handlerGetUserEmail(userInfo.id)
-        console.log(columnInfo)
     }, [])
 
     return (

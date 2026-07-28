@@ -78,7 +78,7 @@ const AllInfoForDrawedInTable = () => {
                                 <HStack spacing={".5rem"} justifyContent={"space-around"}>
                                     <Button
                                         // disabled={addDrawedInteractionInfo}
-                                        backgroundColor={columnInfo.id === geo.id ? "#ba2d0bff" : "#F7EDE2"}
+                                        backgroundColor={columnInfo?.id === geo.id ? "#ba2d0bff" : "#F7EDE2"}
                                         onClick={() => {
                                             handlerGetData(geo)
                                         }}

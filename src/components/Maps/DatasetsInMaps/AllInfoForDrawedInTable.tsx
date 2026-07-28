@@ -16,6 +16,7 @@ const AllInfoForDrawedInTable = () => {
     const allInfoInProperties = useSelector((state: any) => state.openLayers.allInfoInProperties)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
+    const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
 
     const clickOnSaveBtn = async () => {
 
@@ -31,7 +32,7 @@ const AllInfoForDrawedInTable = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
-            const dataStatus = await setGeoDataStatus(data[0].ID, "merged")
+            const dataStatus = await setGeoDataStatus(data[0].id, "merged")
         }
     }
     const handlerGetData = async (geo: any) => {
@@ -63,22 +64,21 @@ const AllInfoForDrawedInTable = () => {
     }
     return (
         <>
-            <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
-                <HStack spacing={".5rem"} style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
+            <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"}>
+                <HStack style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}  backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
                     <Heading size='md'>Dateneinsätze</Heading>
                     <Box>
-                        <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"} onClick={() => handlerAddNewData()} />
+                        <FiPlusCircle style={{ padding: "5px", margin: "5px"}} size="30" cursor={"pointer"} onClick={() => handlerAddNewData()} />
                     </Box>
                 </HStack>
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
                 {allInfoInProperties?.map((geo: any) => {
                     return (
-                        <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
-                            <CardBody padding={".5rem"}>
+                        // <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
                                 <HStack spacing={".5rem"} justifyContent={"space-around"}>
                                     <Button
                                         // disabled={addDrawedInteractionInfo}
-                                        // backgroundColor={selectedTableId === t.id ? "red" : "white"}
+                                        backgroundColor={columnInfo.id === geo.id ? "#ba2d0bff" : "#F7EDE2"}
                                         onClick={() => {
                                             handlerGetData(geo)
                                         }}
@@ -93,8 +93,6 @@ const AllInfoForDrawedInTable = () => {
                                         <MdModeEdit cursor={"pointer"} size="25" />
                                     </Box>
                                 </HStack>
-                            </CardBody>
-                        </Card>
                     )
                 })}
             </VStack>

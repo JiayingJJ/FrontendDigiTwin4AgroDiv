@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
 import DatasetColumns from './DatasetsInMaps/DatasetColumns';
 import { fetchTableWithId } from '../../api/userTables';
 import { databaseSqlite } from '../sqlite/db';
@@ -11,6 +11,7 @@ const AddDataInTable = () => {
     const userInfo = useSelector((state: any) => state.user)
 
     const tables = useSelector((state: any) => state.datasetTable.tables)
+    const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const getTableWithId = async (t: any) => {
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: [] })
         dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
@@ -44,20 +45,20 @@ const AddDataInTable = () => {
 
     }
     return (
-        <Card>
-            <CardHeader>
-                <Heading size='md'>Verfügbare Datenbank</Heading>
-            </CardHeader>
-
-            <CardBody>
-                <Stack divider={<StackDivider />} spacing='4'>
+        <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"} paddingTop={"10px"}>
+                <Heading style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}  backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} py={"13px"} paddingLeft={"5px"} size='md'>Verfügbare Datenbank</Heading>
+                <Stack divider={<StackDivider borderColor='#90a955ff' />} spacing={2}>
                     {tables?.map((t: any) => {
+                        console.log(t)
                         return (
                             <Button
                                 onClick={() => {
                                     getTableWithId(t)
                                 }} cursor={"pointer"}
-                                key={`${t.ID}-table-box`}>
+                                key={`${t.id}-table-box-add`}
+                                marginTop={"2px"}
+                                width={"100%"}
+                                backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "#F7EDE2"}>
                                 <Heading size='xs' textTransform='uppercase' padding={"10px"}>
                                     {t.table_name}
                                 </Heading>
@@ -65,9 +66,8 @@ const AddDataInTable = () => {
                         )
                     })}
                 </Stack>
-            </CardBody>
             <DatasetColumns />
-        </Card>
+        </VStack>
     );
 }
 

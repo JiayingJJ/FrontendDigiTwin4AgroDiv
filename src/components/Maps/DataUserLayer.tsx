@@ -3,7 +3,16 @@ import AddDataInTable from './AddDataInTable';
 import AllInfoForDrawedInTable from './DatasetsInMaps/AllInfoForDrawedInTable';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, VStack, HStack, Button, CardFooter, Tooltip } from '@chakra-ui/react'
+import {
+    Card, CardHeader, CardBody, VStack, HStack, Button, CardFooter, Tooltip,
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+} from '@chakra-ui/react'
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { insertGeoData, setGeoDataStatus } from '../../api/geoData';
 import ColorPicker from './ColorPicker';
@@ -54,24 +63,46 @@ const DataUserLayer = () => {
                     <Button variant="unstyled" onClick={showGeoJSON}>{!showUserDataLayer ? "Daten laden und anzeigen" : "Daten verstecken"}</Button>
                 </CardBody>
             </Card>
+            <Drawer
+                isOpen={rendernGeoDataList||addDrawedInteractionInfo||addNewColumnsDataInGeometry}
+                placement='right'
+                onClose={() => {
+                    dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
+                    dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
+                    dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
+                    dispatch({ type: 'openLayers/setFeature', payload: null })
+                }}
+                size="sm"
+            >
+                <DrawerOverlay/>
+                <DrawerContent opacity={0.9}>
+                    <DrawerCloseButton />
+                    <DrawerHeader>
+                        {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                            <Button variant={"unstyled"}>
+                                <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
+                            </Button>
+                        </Tooltip>}
+                        {selectedGeoInfo !== null &&
+                            <Button variant={"unstyled"}>
+                                <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+                                    console.log(colorPicker)
+                                    console.log(selectedGeoInfo)
+                                    dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })}} />
+                            </Button>}
+                        {colorPicker && <ColorPicker />}
+                    </DrawerHeader>
+                    <DrawerBody>
+                        {rendernGeoDataList && <AllInfoForDrawedInTable />}
+                        <RendernInfo />
+                        {(addDrawedInteractionInfo || addNewColumnsDataInGeometry) && <AddDataInTable />}
+                    </DrawerBody>
 
-            <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
-                <CardBody padding={"0rem .7rem"}>
-                    {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
-                        <Button variant={"unstyled"}>
-                            <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
-                        </Button>
-                    </Tooltip>}
-                    {selectedGeoInfo !== null &&
-                        <Button variant={"unstyled"}>
-                            <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })} />
-                        </Button>}
-                    {colorPicker && <ColorPicker />}
-                    {rendernGeoDataList && <AllInfoForDrawedInTable />}
-                    {rendernDataInfo && <RendernInfo />}
-                    {(addDrawedInteractionInfo || addNewColumnsDataInGeometry) && <AddDataInTable />}
-                </CardBody>
-            </Card>
+                    <DrawerFooter>
+                       
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </HStack>
     );
 }

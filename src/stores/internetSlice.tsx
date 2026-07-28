@@ -5,7 +5,7 @@ interface InternetState {
 }
 
 const initialState: InternetState = {
-    isOnLine: false,
+    isOnLine: true,
 }
 
 const internetSlice = createSlice({

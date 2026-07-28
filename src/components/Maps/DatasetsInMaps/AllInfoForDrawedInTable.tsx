@@ -38,7 +38,6 @@ const AllInfoForDrawedInTable = () => {
         let info: any;
         let dataColumn: any;
         let dataTable: any;
-
         if (selectedPropertiesFromDatabase.length !== undefined) {
             info = selectedPropertiesFromDatabase.filter((i: any) => geo.id === i.column_id)
             dataColumn = await getColumnWithId(info[0].table_id, info[0].column_id)

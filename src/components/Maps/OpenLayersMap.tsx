@@ -61,9 +61,8 @@ const OpenLayersMap = () => {
         source: vectorSourceUserData.current,
         visible: true
     }));
-    const svgString = renderToStaticMarkup(<MdPushPin color='#ba2d0bff' size={40}/>);
+    const svgString = renderToStaticMarkup(<MdPushPin color='#ba2d0bff' size={40} />);
     const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
-    console.log(dataUrl)
     const backendToGeoJSON = (data: any[]) => {
         const features = data
             .filter(item => item.geometry_data.Valid)
@@ -312,6 +311,54 @@ const OpenLayersMap = () => {
         statusForUserDataLayer()
     }, [layerType, showUserDataLayer])
     useEffect(() => {
+        let userColor;
+        const features = vectorSourceUserData.current.getFeatures();
+        resetFeatures(features)
+        if (colorRedux === undefined || colorRedux === "" || colorRedux === null) {
+            userColor = "#fff";
+        }
+        if (featureRedux !== null) {
+            if (featureRedux.getGeometry()?.getType() === "Point") {
+                featureRedux.setStyle(
+                    [new Style({
+                        image: new CircleStyle({
+                            radius: 10,
+                            fill: new Fill({ color: userColor }),
+                            stroke: new Stroke({ color: strockeColor, width: 2 }),
+                        }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            color: "red",
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        })
+                    })
+                    ]
+                );
+            } else if (featureRedux.getGeometry()?.getType() === "Polygon") {
+                featureRedux.setStyle(
+                    [new Style({
+
+                        stroke: new Stroke({ color: strockeColor, width: 2 }),
+                        fill: new Fill({ color: userColor }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        }),
+                        geometry: featureRedux => featureRedux.getGeometry().getInteriorPoint(),
+                    })
+                    ]
+                );
+            }
+        }
+
+    }, [featureRedux])
+    useEffect(() => {
         const features = vectorSourceUserData.current.getFeatures();
         resetFeatures(features)
         if (featureRedux !== null) {
@@ -354,8 +401,7 @@ const OpenLayersMap = () => {
             }
         }
 
-    }, [featureRedux, colorRedux])
-
+    }, [colorRedux])
     useEffect(() => {
         if (selectedGeometryDataFromDatabase !== null) {
             getDataInProperties()

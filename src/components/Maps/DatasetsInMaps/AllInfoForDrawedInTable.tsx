@@ -75,7 +75,7 @@ const AllInfoForDrawedInTable = () => {
                 {allInfoInProperties?.map((geo: any) => {
                     return (
                         // <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
-                                <HStack spacing={".5rem"} justifyContent={"space-around"}>
+                                <HStack spacing={".5rem"} justifyContent={"space-around"} key={`${geo.id}-dataset-btn`}>
                                     <Button
                                         // disabled={addDrawedInteractionInfo}
                                         backgroundColor={columnInfo?.id === geo.id ? "#ba2d0bff" : "#F7EDE2"}

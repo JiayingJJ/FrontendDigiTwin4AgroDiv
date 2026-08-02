@@ -39,7 +39,7 @@ const SelectComponent = ({ id, index, data }: Props) => {
         }
     }, [])
     return (
-        <FormControl padding={"8px"} marginTop={"5px"}>
+        <FormControl padding={"8px"} marginTop={"5px"} key={`${id}-select-comp-dataset-page`}>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
                     <FormLabel>Geben Sie bitte ein Name für das Select</FormLabel>

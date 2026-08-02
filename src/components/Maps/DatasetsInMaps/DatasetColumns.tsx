@@ -55,7 +55,7 @@ const DatasetColumns = () => {
         switch (column.type) {
             case 'radio':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-radio`}>
                         <FormLabel as='legend'>{column.name}</FormLabel>
                         <RadioGroup defaultValue='Ja'>
                             <HStack spacing='24px'>
@@ -67,30 +67,30 @@ const DatasetColumns = () => {
                 );
             case 'select':
                 return (
-                    <SelectComponent name={column.name} hint={column.hint} id={column.id} additionalInfo={column.additional_info} />
+                    <SelectComponent key={`${column.id}-select`} name={column.name} hint={column.hint} id={column.id} additionalInfo={column.additional_info} />
                 );
             case 'text':
                 return (
                     <Box key={column.id}>
-                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                        <InputComponent key={`${column.id}-text`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             case 'timestamp':
                 return (
                     <Box key={column.id} draggable>
-                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                        <InputComponent key={`${column.id}-timestamp`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             case 'real':
                 return (
                     <Box key={column.id} draggable>
-                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                        <InputComponent key={`${column.id}-real`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             case 'integer':
                 return (
                     <Box key={column.id} draggable>
-                        <InputComponent name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                        <InputComponent key={`${column.id}-integer`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             default:
@@ -144,7 +144,7 @@ const DatasetColumns = () => {
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
     }
     return (
-        <Modal closeOnOverlayClick={false} isOpen={addNewColumnsDataInGeometry && userInputColumnValues.length !== 0} onClose={() => handleCancel()} key={`${1}-dataset-modal`} size={"6xl"}>
+        <Modal closeOnOverlayClick={false} isOpen={addNewColumnsDataInGeometry && userInputColumnValues.length !== 0} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>{selectedTable?.table_name}</ModalHeader>

@@ -31,6 +31,7 @@ const AddDataInTable = () => {
                 dispatch({ type: 'datasetTable/setUserId', payload: t.user_id })
             } else {
                 dispatch({ type: 'datasetTable/setSelectedTableId', payload: data[0].id })
+                dispatch({ type: 'datasetTable/setSelectedTable', payload: data[0] })
                 dispatch({ type: 'datasetTable/setTableColumns', payload: data[0].columns_in_table.RawMessage })
                 dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: data[0].columns_in_table.RawMessage })
             }
@@ -39,6 +40,7 @@ const AddDataInTable = () => {
             const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
             const tableData = data.filter((i: any) => i.id === t.id)
             dispatch({ type: 'datasetTable/setSelectedTableId', payload: tableData[0].id })
+            dispatch({ type: 'datasetTable/setSelectedTable', payload: tableData[0] })
             dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
             dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: JSON.parse(tableData[0].columns_in_table) })
         }
@@ -46,26 +48,26 @@ const AddDataInTable = () => {
     }
     return (
         <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"} paddingTop={"10px"}>
-                <Heading style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}  backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} py={"13px"} paddingLeft={"5px"} size='md'>Verfügbare Datenbank</Heading>
-                <Stack divider={<StackDivider borderColor='#90a955ff' />} spacing={2}>
-                    {tables?.map((t: any) => {
-                        console.log(t)
-                        return (
-                            <Button
-                                onClick={() => {
-                                    getTableWithId(t)
-                                }} cursor={"pointer"}
-                                key={`${t.id}-table-box-add`}
-                                marginTop={"2px"}
-                                width={"100%"}
-                                backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "#F7EDE2"}>
-                                <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                    {t.table_name}
-                                </Heading>
-                            </Button>
-                        )
-                    })}
-                </Stack>
+            <Heading style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} py={"13px"} paddingLeft={"5px"} size='md'>Verfügbare Datenbank</Heading>
+            <Stack divider={<StackDivider borderColor='#90a955ff' />} spacing={2}>
+                {tables?.map((t: any) => {
+                    console.log(t)
+                    return (
+                        <Button
+                            onClick={() => {
+                                getTableWithId(t)
+                            }} cursor={"pointer"}
+                            key={`${t.id}-table-box-add`}
+                            marginTop={"2px"}
+                            width={"100%"}
+                            backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "#F7EDE2"}>
+                            <Heading size='xs' textTransform='uppercase' padding={"10px"}>
+                                {t.table_name}
+                            </Heading>
+                        </Button>
+                    )
+                })}
+            </Stack>
             <DatasetColumns />
         </VStack>
     );

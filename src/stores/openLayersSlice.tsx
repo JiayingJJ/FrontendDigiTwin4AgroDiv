@@ -23,8 +23,9 @@ interface OpenLayersState {
     selectedGeoInfo: null;
     userSelectedColor: string | null;
     feature: any;
-    colorPicker:boolean;
+    colorPicker: boolean;
     allInfoInProperties: [];
+    getUpdateFromDatabase: boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -50,7 +51,8 @@ const initialState: OpenLayersState = {
     userSelectedColor: null,
     feature: null,
     colorPicker: false,
-    allInfoInProperties: []
+    allInfoInProperties: [],
+    getUpdateFromDatabase: false,
 }
 
 const openLayersSlice = createSlice({
@@ -118,16 +120,16 @@ const openLayersSlice = createSlice({
             state.columnInfo = null;
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
-            state.selectedGeoInfo=null;
+            state.selectedGeoInfo = null;
             state.selectedGeometryDataFromDatabase = null;
             state.selectedPropertiesFromDatabase = [];
-            state.feature=null;
-            state.columnIdForDrawed=null;
-            state.userSelectedColor=null;
-            state.colorPicker =false;
-            state.allInfoInProperties=[];
+            state.feature = null;
+            state.columnIdForDrawed = null;
+            state.userSelectedColor = null;
+            state.colorPicker = false;
+            state.allInfoInProperties = [];
         },
-        clearAllForGeoData:  (state, action) => {
+        clearAllForGeoData: (state, action) => {
             state.columnInfo = null;
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
@@ -135,8 +137,8 @@ const openLayersSlice = createSlice({
             state.selectedPropertiesFromDatabase = [];
             state.addNewColumnsDataInGeometry = false;
             state.rendernGeoDataList = false;
-            state.showUserDataLayer =false;
-            state.selectedGeoInfo=null;
+            state.showUserDataLayer = false;
+            state.selectedGeoInfo = null;
         },
         setShowUserDataLayer: (state, action) => {
             state.showUserDataLayer = action.payload;
@@ -161,8 +163,14 @@ const openLayersSlice = createSlice({
         },
         addAllInfoInProperties: (state, action) => {
             state.allInfoInProperties.push(action.payload);
+        },
+        setGetUpdateFromDatabase: (state, action) => {
+            state.getUpdateFromDatabase = action.payload;
+        },
+        updateGeoDataAfterChange: (state, action) => {
+            console.log(JSON.parse(JSON.stringify(action.payload)))
+            state.geoData = action.payload.geoData;
         }
-        
     }
 });
 

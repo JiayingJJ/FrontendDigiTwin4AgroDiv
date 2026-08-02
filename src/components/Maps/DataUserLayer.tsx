@@ -14,7 +14,7 @@ import {
     DrawerCloseButton,
 } from '@chakra-ui/react'
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { insertGeoData, setGeoDataStatus } from '../../api/geoData';
+import { getGeoData, insertGeoData, setGeoDataStatus } from '../../api/geoData';
 import ColorPicker from './ColorPicker';
 import { IoIosColorPalette } from "react-icons/io";
 const DataUserLayer = () => {
@@ -52,9 +52,27 @@ const DataUserLayer = () => {
             dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
             dispatch({ type: 'alertInfo/setShowAlert', payload: true })
         } else {
+            const geoData = await getGeoData();
+            console.log(geoData)
+            const validData = geoData.filter((d: any) => {
+                if (!d.deleted_at.Valid) {
+                    return d;
+                }
+            })
+            // dispatch({ type: 'openLayers/setGeodata', payload: validData })
+            dispatch({ type: 'openLayers/updateGeoDataAfterChange', payload: { geoData: validData, id: data[0].id } })
+
             const dataStatus = await setGeoDataStatus(data[0].id, "merged")
             dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
+            dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+            handlerOnCloseDrawer()
         }
+    }
+    const handlerOnCloseDrawer = () => {
+        dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
+        dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
+        dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
+        dispatch({ type: 'openLayers/setFeature', payload: null })
     }
     return (
         <HStack width={"100%"} justifyContent={"space-between"}>
@@ -64,17 +82,12 @@ const DataUserLayer = () => {
                 </CardBody>
             </Card>
             <Drawer
-                isOpen={rendernGeoDataList||addDrawedInteractionInfo||addNewColumnsDataInGeometry}
+                isOpen={rendernGeoDataList || addDrawedInteractionInfo || addNewColumnsDataInGeometry}
                 placement='right'
-                onClose={() => {
-                    dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
-                    dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
-                    dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
-                    dispatch({ type: 'openLayers/setFeature', payload: null })
-                }}
+                onClose={() => handlerOnCloseDrawer()}
                 size="sm"
             >
-                <DrawerOverlay/>
+                <DrawerOverlay />
                 <DrawerContent opacity={0.9}>
                     <DrawerCloseButton />
                     <DrawerHeader>
@@ -88,7 +101,8 @@ const DataUserLayer = () => {
                                 <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
                                     console.log(colorPicker)
                                     console.log(selectedGeoInfo)
-                                    dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })}} />
+                                    dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })
+                                }} />
                             </Button>}
                         {colorPicker && <ColorPicker />}
                     </DrawerHeader>
@@ -99,7 +113,6 @@ const DataUserLayer = () => {
                     </DrawerBody>
 
                     <DrawerFooter>
-                       
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>

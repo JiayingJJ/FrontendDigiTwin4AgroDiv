@@ -51,6 +51,8 @@ const OpenLayersMap = () => {
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const featureRedux = useSelector((state: any) => state.openLayers.feature)
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
+    const getUpdateFromDatabase = useSelector((state: any) => state.openLayers.getUpdateFromDatabase)
+    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
     const isDrawingRef = useRef(isDrawing);
     const cardPadding = "0.4rem";
     const strockeColor = "#fff";
@@ -153,10 +155,6 @@ const OpenLayersMap = () => {
         if (selectedPropertiesFromDatabase.length !== undefined) {
             await Promise.all(
                 selectedPropertiesFromDatabase.map(async (proper: any) => {
-                    console.log("proper: ", proper)
-                    console.log(" proper.table_id: ", proper.table_id)
-
-
                     if (proper.table_id !== undefined) {
                         const data = await getColumnWithId(proper.table_id, proper.column_id);
                         console.log("data: ", data)
@@ -408,6 +406,17 @@ const OpenLayersMap = () => {
         }
     }, [selectedGeometryDataFromDatabase])
 
+    useEffect(() => {
+        if (getUpdateFromDatabase) {
+            console.log(getUpdateFromDatabase)
+            dispatch({ type: 'openLayers/clearReduxForGeoData', payload: null })
+            // fetchUserGeoData();
+            console.log(selectedGeoData)
+            if (selectedGeoData !== null && selectedGeoData.id !== null)
+                fetchDataForDrawed(selectedGeoData.id);
+            getDataInProperties()
+        }
+    }, [getUpdateFromDatabase])
 
     return <HStack width={"90vw"} height={"100%"} marginBottom={"0.5rem"}>
         <Card width={"90vw"} height={"100%"} style={{ color: "#f2f7f5", backgroundColor: "#60935D" }}>

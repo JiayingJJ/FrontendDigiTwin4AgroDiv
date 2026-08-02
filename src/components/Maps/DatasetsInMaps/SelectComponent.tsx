@@ -28,11 +28,11 @@ const SelectComponent = ({ name, hint, id, additionalInfo }: Props) => {
 
     };
     return (
-        <FormControl key={`${id}-tooltip`}>
+        <FormControl key={`${id}-select-comp-form`}>
             <FormLabel>{name}</FormLabel>
-            <Select placeholder='auswählen' onChange={handleChange}>
+            <Select placeholder='auswählen' onChange={handleChange} key={`${id}-select-comp-form-selec`}>
                 {additionalInfo.options.map((o: string) => {
-                    return (<option>{o}</option>)
+                    return (<option key={`${o}-select-comp-form-value`}>{o}</option>)
                 })}
             </Select>
         </FormControl>

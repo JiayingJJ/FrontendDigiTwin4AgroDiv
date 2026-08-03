@@ -74,23 +74,23 @@ const CreatedTables = () => {
                 <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
             </Card>
 
-            <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
+            <VStack spacing={".5rem"}>
                 {tables?.map((t: any) => {
                     return (
-                        <Card minWidth={"200px"} width={"100%"}>
+                        <Card width={"100%"}>
                             <CardBody padding={"1rem"}>
                                 <HStack spacing={".5rem"} justifyContent={"space-between"}>
                                     <Button
-                                        width="100%" 
+                                        width={"100%"}
+                                        textTransform='uppercase'
+                                        whiteSpace={"wrap"}
                                         disabled={addingColumns}
                                         backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             getTableWithId(t)
-                                        }} cursor={"pointer"}
+                                        }}
                                         key={`${t.id}-table-box-created`}>
-                                        <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                            {t.table_name}
-                                        </Heading>
+                                        {t.table_name}
                                     </Button>
                                     <Box style={{ display: "flex", alignItems: "center" }}>
                                         <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />

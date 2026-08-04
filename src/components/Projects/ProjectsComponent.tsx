@@ -42,7 +42,7 @@ const ProjectsComponent = () => {
         dispatch({ type: 'projects/clearProjectState', payload: null })
     }, [])
     return (
-        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"90vw"} height={"100%"} padding={"0 0 2vh 0"}>
+        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"95vw"} height={"100%"} padding={"0 0 2vh 0"}>
             <GridItem h='100%' w="100%">
                 <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
                     <CreatedProjects />

@@ -18,6 +18,7 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
+import FileUploadComponent from './FileUploadComponent';
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -72,31 +73,37 @@ const ColumnsComponent = ({ }: Props) => {
                 );
             case 'select':
                 return (
-                    <Box key={column.id} draggable onDrag={() => console.log(index)}>
+                    <Box key={column.id} onDrag={() => console.log(index)}>
                         <SelectComponent id={column.id} index={index} data={data[0]} /></Box>
                 );
             case 'text':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'timestamp':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'real':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             case 'integer':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <TextComponent id={column.id} index={index} data={data[0]} />
+                    </Box>
+                );
+                case 'file':
+                return (
+                    <Box key={column.id}>
+                        <FileUploadComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             default:
@@ -105,7 +112,6 @@ const ColumnsComponent = ({ }: Props) => {
     }
 
     return (
-        <>
             <Box>
                 {userTableColumns?.map((column: ColumnType, index: number) => {
                     return (
@@ -116,7 +122,6 @@ const ColumnsComponent = ({ }: Props) => {
                     )
                 })}
             </Box>
-        </>
     );
 }
 

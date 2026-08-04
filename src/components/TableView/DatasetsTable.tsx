@@ -78,7 +78,7 @@ const DatasetsTable = () => {
     const [descriptionOpen, setDescriptionOpen] = useState(false);
 
     return (
-        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"90vw"} height={"100%"} padding={"0 0 2vh 0"}>
+        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"95vw"} height={"100%"} padding={"0 0 2vh 0"}>
             <GridItem h='100%' w="100%">
                 <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
                     {tables !== null && tables.length != 0 && tables.map((t: any) => {

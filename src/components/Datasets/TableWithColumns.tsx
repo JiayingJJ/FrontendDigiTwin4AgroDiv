@@ -17,12 +17,16 @@ import {
     CardBody,
     CardFooter,
     Text,
+    Grid,
+    GridItem
 } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
 import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
 import { setUserTableProjectId } from '../../api/userTables';
+import { FiPlusCircle } from "react-icons/fi";
+
 const TableWithColumns = () => {
     const dispatch = useDispatch()
     const editTable = useSelector((state: any) => state.datasetTable.editTable)
@@ -159,70 +163,78 @@ const TableWithColumns = () => {
     }
     useEffect(() => {
         setProjectName('')
-        if (selectedTable !== null){
+        if (selectedTable !== null) {
             handleGetProjectInfo()
         }
     }, [selectedTable])
     const handleSelectProject = (e: any) => {
         dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })
     }
-    const handlePostProjectId = async() => {
+    const handlePostProjectId = async () => {
         const data = await setUserTableProjectId(selectedTableId, projectId, "pending")
     }
     return (
         <HStack alignItems={"start"}>
-            {!addingColumns && editTable && userTableColumns.length !== 0 &&
-                <Card width={"200%"}>
-                    <CardBody>
+            <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
+                {(tableColumns.length === 0 && (!addingColumns && !editTable)) ?
+                    <GridItem colSpan={1}>
+                        <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
+                            onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
+                    </GridItem>
+                    : (addingColumns || editTable) &&
+                    <GridItem colSpan={5}>
                         <CreateColumns />
-                    </CardBody>
-                </Card>
-            }
-            <Card width={"100%"}>
-                <CardHeader>
-                    <Heading size={"md"}>Input preview</Heading>
-                </CardHeader>
-                {selectedTable!== null && <CardBody>
-                    {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') ? <Box>
-                        <Heading size='xs' textTransform=''>
-                            Project Name
-                        </Heading>
-                        <Text pt='2' fontSize='sm'>
-                            {projectName}
-                        </Text>
-                    </Box> :
-                        <Box>
-                            <FormControl>
-                                <FormLabel>Project</FormLabel>
-                                <Select placeholder='Select project' onChange={handleSelectProject}>
-                                    {allProjects.map((p: any) => {
-                                        return (
-                                            <option value={p.id}>{p.name}</option>
-                                        )
-                                    })}
-                                </Select>
-                            </FormControl>
-                           <CiCircleCheck color="green" 
-                           cursor={projectId===null ? "not-allowed" : "pointer"}
-                            size="40" onClick={() => handlePostProjectId()
-                           } />
-                        </Box>
-                    }
-                    {sortedTableColumns?.map(column => renderFormControl(column))}
-                </CardBody>}
-                <CardFooter>
-                    {tableColumns !== null && tableColumns.length !== 0 &&
-                        <Button colorScheme="green" onClick={() => {
-                            dispatch({ type: 'datasetTable/setEditTable', payload: true })
-                            console.log(tableColumns)
-                            dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
-                        }} >
-                            <Box marginRight={".5rem"}>Edit Columns</Box>
-                            <MdModeEdit color="white" cursor={"pointer"} size="25" />
-                        </Button>
-                    }
-                </CardFooter>
-            </Card>
+                    </GridItem>
+                }
+                <GridItem colSpan={addingColumns || editTable ? 2 : tableColumns.length === 0 ? 6 : 7}>
+                    <Card width={"100%"}>
+                        <CardHeader>
+                            <Heading size={"md"}>Input preview</Heading>
+                        </CardHeader>
+                        {selectedTable !== null && <CardBody>
+                            {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') ? <Box>
+                                <Heading size='xs' textTransform=''>
+                                    Project Name
+                                </Heading>
+                                <Text pt='2' fontSize='sm'>
+                                    {projectName}
+                                </Text>
+                            </Box> :
+                                <Box>
+                                    <FormControl>
+                                        <FormLabel>Project</FormLabel>
+                                        <Select placeholder='Select project' onChange={handleSelectProject}>
+                                            {allProjects.map((p: any) => {
+                                                return (
+                                                    <option value={p.id}>{p.name}</option>
+                                                )
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                    <CiCircleCheck color="green"
+                                        cursor={projectId === null ? "not-allowed" : "pointer"}
+                                        size="40" onClick={() => handlePostProjectId()
+                                        } />
+                                </Box>
+                            }
+                            {sortedTableColumns?.map(column => renderFormControl(column))}
+                        </CardBody>}
+                        <CardFooter>
+                            {tableColumns !== null && tableColumns.length !== 0 &&
+                                <Button colorScheme="green" onClick={() => {
+                                    dispatch({ type: 'datasetTable/setEditTable', payload: true })
+                                    console.log(tableColumns)
+                                    dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
+                                }} >
+                                    <Box marginRight={".5rem"}>Edit Columns</Box>
+                                    <MdModeEdit color="white" cursor={"pointer"} size="25" />
+                                </Button>
+                            }
+                        </CardFooter>
+                    </Card>
+                </GridItem>
+
+            </Grid>
         </HStack>
     );
 }

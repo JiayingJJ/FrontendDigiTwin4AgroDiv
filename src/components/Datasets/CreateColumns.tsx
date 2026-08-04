@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, GridItem, Button, HStack, VStack, Grid } from '@chakra-ui/react'
 import { FiPlusCircle } from "react-icons/fi";
 import { CiCircleRemove } from "react-icons/ci";
 
@@ -33,6 +33,7 @@ const CreateColumns = () => {
     const clickOnSaveBtn = () => {
         dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
+        dispatch({ type: 'datasetTable/setEditTable', payload: false })  
     }
     const clickOnCancelBtn = () => {
     }
@@ -71,28 +72,37 @@ const CreateColumns = () => {
         }
     }
     return (
-        <>
-            {editTable === false && <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
-                onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />}
-            {((addingColumns && !editTable && userTableColumns.length !== 0) || (!addingColumns && editTable && userTableColumns.length !== 0)) ? <ColumnsComponent /> : null}
-            {(addingColumns || editTable) && <HStack spacing={".5rem"}>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Add a Select column</Button>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Add an Input column</Button>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} disabled={!hasChanged} onClick={() => handlePostColumns()}>Submit</Button>
-                <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
-                    if (userTableColumns.length !== 0) {
-                        dispatch({ type: 'modalInfo/setShowModal', payload: true })
-                        dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
-                        dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
-                        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
-                    } else {
-                        dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
-                        dispatch({ type: 'datasetTable/setEditTable', payload: false })
-                    }
-                }}>Cancel</Button>
-            </HStack>}
+        <Grid templateRows={`repeat(8, 1fr)`} height={"90vh"}>
+            <GridItem rowSpan={7} overflowY={"auto"} overflowX={"hidden"}>
+                {((addingColumns && !editTable && userTableColumns.length !== 0) || (!addingColumns && editTable && userTableColumns.length !== 0)) ? <ColumnsComponent /> : null}
+            </GridItem>
+            <GridItem rowSpan={1}>
+
+                {(addingColumns || editTable) && <VStack paddingTop={"15px"}>
+                    <HStack>
+                        <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("select")}>Add a Select column</Button>
+                        <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("text")}>Add an Input column</Button>
+                        <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => addColumns("file")}>Add an File or Picture column</Button>
+                    </HStack>
+                    <HStack>
+                        <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} disabled={!hasChanged} onClick={() => handlePostColumns()}>Submit</Button>
+                        <Button backgroundColor={"#E8871E"} _hover={{ backgroundColor: "#EDB458" }} onClick={() => {
+                            if (userTableColumns.length !== 0) {
+                                dispatch({ type: 'modalInfo/setShowModal', payload: true })
+                                dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
+                                dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
+                                dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+                            } else {
+                                dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
+                                dispatch({ type: 'datasetTable/setEditTable', payload: false })
+                            }
+                        }}>Cancel</Button>
+                    </HStack>
+                </VStack>}
+            </GridItem>
+
             <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
-        </>
+        </Grid>
     );
 }
 

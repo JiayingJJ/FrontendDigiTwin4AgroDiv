@@ -20,7 +20,8 @@ const Datasets = () => {
     const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
     const userInfo = useSelector((state: any) => state.user)
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
-
+    const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
+    const editTable = useSelector((state: any) => state.datasetTable.editTable)
     useEffect(() => {
         async function fechtData() {
             if (isOnLine) {
@@ -72,14 +73,17 @@ const Datasets = () => {
     }, [updatedTables])
     return (
         <>
-            <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"90vw"} height={"100%"} padding={"0 0 2vh 0"}>
-                <GridItem h='100%' w="100%">
-                    <VStack spacing={".5rem"} overflowX={"hidden"} width={"100%"}>
+            <Grid templateColumns={`repeat(7, 1fr)`} gap={3} width={"95vw"} height={"100%"}>
+                <GridItem h='100%' colSpan={2}>
+                    <VStack spacing={".5rem"}>
                         <CreatedTables />
-                        <Button disabled={addNewDataset} backgroundColor='#ecf39eff' onClick={() => {
-                            dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
-                            dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-                        }}>
+                        <Button
+                            width={"100%"}
+                            whiteSpace={"wrap"}
+                            disabled={addNewDataset} backgroundColor='#ecf39eff' onClick={() => {
+                                dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
+                                dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
+                            }}>
                             Füge ein neue Datenbankformat hinzu
                         </Button>
                         {addNewDataset && <UserCreateANewTable />}
@@ -87,7 +91,6 @@ const Datasets = () => {
                 </GridItem>
                 <GridItem colSpan={5} h='100%'>
                     <TableWithColumns />
-                    {createColumnsButton && <CreateColumns />}
                 </GridItem>
             </Grid>
         </>

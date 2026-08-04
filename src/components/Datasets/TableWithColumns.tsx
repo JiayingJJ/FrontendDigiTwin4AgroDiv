@@ -176,7 +176,7 @@ const TableWithColumns = () => {
     return (
         <HStack alignItems={"start"}>
             <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
-                {(tableColumns.length === 0 && (!addingColumns && !editTable)) ?
+                {(tableColumns.length === 0 && selectedTableId!==null && (!addingColumns && !editTable)) ?
                     <GridItem colSpan={1}>
                         <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
                             onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />

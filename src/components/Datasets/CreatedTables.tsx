@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
+import { Card, CardBody, Box, Button, HStack, VStack } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
-import ModalComponent from '../ModalComponent';
 import { databaseSqlite } from '../sqlite/db';
 import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 const CreatedTables = () => {
@@ -52,55 +51,34 @@ const CreatedTables = () => {
         dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
     }
-    const clickOnSaveBtn = async () => {
-        const dataDelete = await deleteTableWithId(tableId);
-        const data = await getTablesWithUserId(userInfo)
-        const filterData = data.filter((d) => {
-            if (!d.deleted_at.Valid) {
-                return d;
-            }
-        });
-        dispatch({ type: 'datasetTable/setTables', payload: filterData })
-    }
-    const clickOnCancelBtn = () => {
-    }
 
     return (
-        <>
-            <Card width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"}>
-                <CardHeader backgroundColor={"#90a955ff"}>
-                    <Heading size='md'>Angelegte Datenbanken</Heading>
-                </CardHeader>
-                <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
-            </Card>
-
-            <VStack spacing={".5rem"}>
-                {tables?.map((t: any) => {
-                    return (
-                        <Card width={"100%"}>
-                            <CardBody padding={"1rem"}>
-                                <HStack spacing={".5rem"} justifyContent={"space-between"}>
-                                    <Button
-                                        width={"100%"}
-                                        textTransform='uppercase'
-                                        whiteSpace={"wrap"}
-                                        disabled={addingColumns}
-                                        backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "white"}
-                                        onClick={() => {
-                                            getTableWithId(t)
-                                        }}
-                                        key={`${t.id}-table-box-created`}>
-                                        {t.table_name}
-                                    </Button>
-                                    <Box style={{ display: "flex", alignItems: "center" }}>
-                                        <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
-                                    </Box>
-                                </HStack>
-                            </CardBody>
-                        </Card>)
-                })}
-            </VStack>
-        </>
+        <VStack spacing={".5rem"}>
+            {tables?.map((t: any) => {
+                return (
+                    <Card width={"100%"}>
+                        <CardBody padding={"10px"}>
+                            <HStack spacing={".3rem"} justifyContent={"space-between"}>
+                                <Button
+                                    width={"100%"}
+                                    textTransform='uppercase'
+                                    whiteSpace={"wrap"}
+                                    disabled={addingColumns}
+                                    backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "white"}
+                                    onClick={() => {
+                                        getTableWithId(t)
+                                    }}
+                                    key={`${t.id}-table-box-created`}>
+                                    {t.table_name}
+                                </Button>
+                                <Box style={{ display: "flex", alignItems: "center" }}>
+                                    <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
+                                </Box>
+                            </HStack>
+                        </CardBody>
+                    </Card>)
+            })}
+        </VStack>
     );
 }
 

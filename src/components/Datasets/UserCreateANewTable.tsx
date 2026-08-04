@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import {
     Button,
-    Box,
-    HStack,
-    VStack,
     FormControl,
     FormLabel,
-    FormErrorMessage,
     FormHelperText,
     Input,
-    RadioGroup,
-    Radio,
-    Select
+    Select,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
 } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid';
 import { FaCheck } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
-import { setUserTableColumnDataStatus } from '../../api/dataset';
 import { MdCancel } from "react-icons/md";
 import { databaseSqlite } from '../sqlite/db';
 import { getCurrentTime } from '../../helpers';
@@ -29,6 +29,7 @@ const UserCreateANewTable = () => {
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
     const allProjects = useSelector((state: any) => state.projects.allProjects)
     const projectId = useSelector((state: any) => state.datasetTable.projectId)
+    const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
 
     const handleChange = (e: any) => {
         setTableName(e.target.value)
@@ -71,47 +72,58 @@ const UserCreateANewTable = () => {
         dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })
     }
     return (
-        <>
-            <VStack>
-                <FormControl>
-                    <FormLabel>User Name</FormLabel>
-                    <Input placeholder='Name' defaultValue={userInfo.name} />
-                </FormControl>
-
-                <FormControl>
-                    <FormLabel>Email address</FormLabel>
-                    <Input type='email' defaultValue={userInfo.email} />
-                    <FormHelperText>Prüfen, ob Email Address korrekt ist</FormHelperText>
-                </FormControl>
-
-                <FormControl isRequired>
-                    <FormLabel>Tabellenname</FormLabel>
-                    <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Project</FormLabel>
-                    <Select placeholder='Select project' onChange={handleSelectProject}>
-                        {allProjects.map((p: any) => {
-                            return (
-                                <option value={p.id}>{p.name}</option>
-                            )
-                        })}
-                    </Select>
-                </FormControl>
-                <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
-                    dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
-                    dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
-                    dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
-                }}>
-                    Abbrechen
-                </Button>
-                <Button disabled={tableName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
-                    clickForCreateTable(userInfo, tableName)
-                }}>
-                    Tabelle erstellen
-                </Button>
-            </VStack>
-        </>
+        <Modal closeOnOverlayClick={false}
+            isOpen={addNewDataset}
+            onClose={() =>
+                dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
+            }
+            // key={`${selectedTable?.id}-render-table-modal`}
+            size={"5xl"}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Add new Dataset</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                    <FormControl>
+                        <FormLabel>User Name</FormLabel>
+                        <Input placeholder='Name' defaultValue={userInfo.name} />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Email address</FormLabel>
+                        <Input type='email' defaultValue={userInfo.email} />
+                        <FormHelperText>Prüfen, ob Email Address korrekt ist</FormHelperText>
+                    </FormControl>
+                    <FormControl isRequired>
+                        <FormLabel>Tabellenname</FormLabel>
+                        <Input placeholder='Name' onChange={(e) => handleChange(e)} value={tableName} />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Project</FormLabel>
+                        <Select placeholder='Select project' onChange={handleSelectProject}>
+                            {allProjects.map((p: any) => {
+                                return (
+                                    <option value={p.id}>{p.name}</option>
+                                )
+                            })}
+                        </Select>
+                    </FormControl>
+                </ModalBody>
+                <ModalFooter>
+                    <Button marginRight="5px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                        dispatch({ type: 'datasetTable/setCreateColumnsButton', payload: false })
+                        dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
+                        dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
+                    }}>
+                        Abbrechen
+                    </Button>
+                    <Button disabled={tableName === ""} rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                        clickForCreateTable(userInfo, tableName)
+                    }}>
+                        Tabelle erstellen
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }
 

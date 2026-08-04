@@ -418,8 +418,8 @@ const OpenLayersMap = () => {
         }
     }, [getUpdateFromDatabase])
 
-    return <HStack width={"90vw"} height={"100%"} marginBottom={"0.5rem"}>
-        <Card width={"90vw"} height={"100%"} style={{ color: "#f2f7f5", backgroundColor: "#60935D" }}>
+    return <HStack width={"95vw"} height={"100%"} marginBottom={"0.5rem"}>
+        <Card width={"95vw"} height={"100%"} style={{ color: "#f2f7f5", backgroundColor: "#60935D" }}>
             <CardBody ref={mapDivRef} padding={cardPadding}>
                 <Box position={"absolute"} zIndex={10} pointerEvents={"none"} width={`calc(100% - 2*${cardPadding})`} height={`calc(100% - 2*${cardPadding})`}>
                     <Box position="relative" height={"100%"} width="100%" padding={"0.5rem"}>

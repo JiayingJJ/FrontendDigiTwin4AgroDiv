@@ -74,7 +74,8 @@ const Dashboard = () => {
             <HStack
                 justifyContent={"space-between"}
                 width={"100vw"}
-                padding={"1rem 5vw"}
+                height={"10vh"}
+                padding={"1rem 3vw"}
                 gap="2rem"
                 backgroundColor="#31572cff"
             >

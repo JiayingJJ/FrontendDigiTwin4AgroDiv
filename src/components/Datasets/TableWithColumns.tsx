@@ -200,7 +200,7 @@ const TableWithColumns = () => {
                                     {projectName}
                                 </Text>
                             </Box> :
-                                <Box>
+                                <HStack style={{display: "flex", alignItems:"end", width:"50%"}}>
                                     <FormControl>
                                         <FormLabel>Project</FormLabel>
                                         <Select placeholder='Select project' onChange={handleSelectProject}>
@@ -215,7 +215,7 @@ const TableWithColumns = () => {
                                         cursor={projectId === null ? "not-allowed" : "pointer"}
                                         size="40" onClick={() => handlePostProjectId()
                                         } />
-                                </Box>
+                                </HStack>
                             }
                             {sortedTableColumns?.map(column => renderFormControl(column))}
                         </CardBody>}

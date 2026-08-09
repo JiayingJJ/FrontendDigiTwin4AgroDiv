@@ -171,7 +171,7 @@ const TableWithColumns = () => {
     }
     const handleGetProjectInfo = async () => {
         if (selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') {
-            const data = await getProjectWithId(selectedTable.project_id.String)
+            const data = await getProjectWithId(selectedTable.project_id)
             console.log(data[0])
             setProjectName(data[0].name)
         }
@@ -207,7 +207,7 @@ const TableWithColumns = () => {
                             <Heading size={"md"}>Input preview</Heading>
                         </CardHeader>
                         {selectedTable !== null && <CardBody>
-                            {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') ? <Box>
+                            {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) ? <Box>
                                 <Heading size='xs' textTransform=''>
                                     Project Name
                                 </Heading>

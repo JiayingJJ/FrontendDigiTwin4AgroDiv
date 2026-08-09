@@ -207,7 +207,7 @@ const TableWithColumns = () => {
                             <Heading size={"md"}>Input preview</Heading>
                         </CardHeader>
                         {selectedTable !== null && <CardBody>
-                            {(selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) ? <Box>
+                            {(selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) ? <Box>
                                 <Heading size='xs' textTransform=''>
                                     Project Name
                                 </Heading>

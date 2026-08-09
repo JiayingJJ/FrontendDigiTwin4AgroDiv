@@ -205,6 +205,7 @@ const OpenLayersMap = () => {
                         } else {
                             dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
                             dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
+                            dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                         }
                     }
                 }

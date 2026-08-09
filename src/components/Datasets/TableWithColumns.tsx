@@ -26,6 +26,7 @@ import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
 import { setUserTableProjectId } from '../../api/userTables';
 import { FiPlusCircle } from "react-icons/fi";
+import FileImageComponent from './FileImageComponent';
 
 const TableWithColumns = () => {
     const dispatch = useDispatch()
@@ -150,6 +151,20 @@ const TableWithColumns = () => {
                         </Box>
                     </FormControl>
                 );
+            case 'image':
+                return (
+                    <FormControl key={`${column.id}-tooltip`}>
+                        <FormLabel>{column.name}</FormLabel>
+                        <Box style={{ display: "flex", flexDirection: "row" }}>
+                            <Input placeholder={`${column.hint}`} />
+                            <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
+                                <Box>
+                                    <CiCircleInfo color="green" cursor={"pointer"} size="40" />
+                                </Box>
+                            </Tooltip>
+                        </Box>
+                    </FormControl>
+                )
             default:
                 return <div key={key}>Unbekannter Feldtyp: {column.type}</div>;
         }
@@ -176,7 +191,7 @@ const TableWithColumns = () => {
     return (
         <HStack alignItems={"start"}>
             <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
-                {(tableColumns.length === 0 && selectedTableId!==null && (!addingColumns && !editTable)) ?
+                {(tableColumns.length === 0 && selectedTableId !== null && (!addingColumns && !editTable)) ?
                     <GridItem colSpan={1}>
                         <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
                             onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
@@ -200,7 +215,7 @@ const TableWithColumns = () => {
                                     {projectName}
                                 </Text>
                             </Box> :
-                                <HStack style={{display: "flex", alignItems:"end", width:"50%"}}>
+                                <HStack style={{ display: "flex", alignItems: "end", width: "50%" }}>
                                     <FormControl>
                                         <FormLabel>Project</FormLabel>
                                         <Select placeholder='Select project' onChange={handleSelectProject}>

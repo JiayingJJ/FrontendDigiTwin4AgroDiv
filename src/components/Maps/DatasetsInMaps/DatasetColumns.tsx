@@ -21,6 +21,7 @@ import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 import { getGeoData, insertGeoData, setGeoDataStatus, updateGeoDataProperties } from "../../../api/geoData";
+import FileUploadComponent from "./FileUploadComponent";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -77,22 +78,28 @@ const DatasetColumns = () => {
                 );
             case 'timestamp':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <InputComponent key={`${column.id}-timestamp`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             case 'real':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <InputComponent key={`${column.id}-real`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
             case 'integer':
                 return (
-                    <Box key={column.id} draggable>
+                    <Box key={column.id}>
                         <InputComponent key={`${column.id}-integer`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
                     </Box>
                 );
+            case 'image':
+                return (
+                    <Box key={column.id}>
+                        <FileUploadComponent key={`${column.id}-integer`} name={column.name} hint={column.hint} id={column.id} type={column.type} />
+                    </Box>
+                )
             default:
                 return <div>Unbekannter Feldtyp: {column.type}</div>;
         }
@@ -140,7 +147,6 @@ const DatasetColumns = () => {
     }
     const handleCancel = async () => {
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
-        dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
     }
     return (

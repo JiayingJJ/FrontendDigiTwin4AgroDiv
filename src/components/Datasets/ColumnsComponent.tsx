@@ -18,7 +18,8 @@ import {
 import SelectComponent from './SelectComponent';
 import TextComponent from './TextComponent';
 import type { ColumnType } from '../../stores/datasetTableSlice';
-import FileUploadComponent from './FileUploadComponent';
+import FileImageComponent from './FileImageComponent';
+
 type Props = {
 }
 const ColumnsComponent = ({ }: Props) => {
@@ -100,10 +101,16 @@ const ColumnsComponent = ({ }: Props) => {
                         <TextComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
-                case 'file':
+            case 'file':
                 return (
                     <Box key={column.id}>
-                        <FileUploadComponent id={column.id} index={index} data={data[0]} />
+                        <FileImageComponent id={column.id} index={index} data={data[0]} />
+                    </Box>
+                );
+            case 'image':
+                return (
+                    <Box key={column.id}>
+                        <FileImageComponent id={column.id} index={index} data={data[0]} />
                     </Box>
                 );
             default:
@@ -112,16 +119,16 @@ const ColumnsComponent = ({ }: Props) => {
     }
 
     return (
-            <Box>
-                {userTableColumns?.map((column: ColumnType, index: number) => {
-                    return (
-                        <VStack alignItems={"left"}>
-                            {index !== 0 && <Divider orientation='horizontal' borderColor={"red"} borderRadius={10} borderWidth={2} />}
-                            {renderForm(column, index)}
-                        </VStack>
-                    )
-                })}
-            </Box>
+        <Box>
+            {userTableColumns?.map((column: ColumnType, index: number) => {
+                return (
+                    <VStack alignItems={"left"}>
+                        {index !== 0 && <Divider orientation='horizontal' borderColor={"red"} borderRadius={10} borderWidth={2} />}
+                        {renderForm(column, index)}
+                    </VStack>
+                )
+            })}
+        </Box>
     );
 }
 

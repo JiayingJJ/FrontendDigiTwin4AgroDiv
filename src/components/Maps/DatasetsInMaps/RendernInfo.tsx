@@ -7,6 +7,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
+    Image
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { MdDeleteForever } from "react-icons/md";
@@ -15,6 +16,7 @@ import { fetchUserWithId } from '../../../api/user';
 import { useEffect, useState } from 'react';
 import { GrStatusGoodSmall } from "react-icons/gr";
 import { looksLikeIsoZ, readableTimestamp } from '../../../helpers';
+import { downloadImage } from '../../../api/file';
 export interface MapData {
     name: string,
     email: string,
@@ -31,6 +33,7 @@ const RendernInfo = () => {
     const [userEmail, setUserEmail] = useState<String>("");
     const notShow = ["deleted_at", "id", "created_at", "updated_at"]
     const userInfo = useSelector((state: any) => state.user)
+    const [image, setImage] = useState<any[]>([])
     const handlerGetUserEmail = async (value: string) => {
         const data = await fetchUserWithId(value)
         setUserEmail(data[0].email)
@@ -38,7 +41,26 @@ const RendernInfo = () => {
     useEffect(() => {
         handlerGetUserEmail(userInfo.id)
     }, [])
+    useEffect(() => {
+        const run = async () => {
+            const blobs: Blob[] = [];
+            await Promise.all(
+                tableInfo?.columns_in_table?.RawMessage.map(async (raw: any) => {
+                    if (raw.type === "image" && columnInfo !== null) {
+                        const name = raw.name.toLowerCase().replaceAll(" ", "_");
+                        const data = await downloadImage(columnInfo[name]);
+                        blobs.push(data);
+                    }
+                }) ?? []
+            );
 
+            const urls = blobs.map(b => URL.createObjectURL(b));
+            setImage(urls);
+        };
+        run();
+        return () => {
+        };
+    }, [tableInfo, columnInfo]);
     return (
         <Modal closeOnOverlayClick={false} isOpen={rendernDataInfo} onClose={() => {
             dispatch({ type: 'openLayers/setRendernDataInfo', payload: false })
@@ -84,6 +106,12 @@ const RendernInfo = () => {
                                     </Text>
                                 </Box>
                             ))}
+                        {image.map((u) => {
+                            console.log(u)
+                            return (
+                                <Image width="30%" height="30%" src={u} />
+                            )
+                        })}
                     </Stack>
                 </ModalBody>
                 <ModalFooter>

@@ -12,3 +12,13 @@ export const uploadImage = async (fileName: string, file: File, userId: string) 
     const data = await response.json();
     return [response.status, data];
 }
+
+export const downloadImage = async (fileName: string) => {
+    const response = await fetch(`${apiUrl}/api/download`, {
+        method: "POST",
+        body: JSON.stringify({ file_name: fileName }),
+    })
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    return blob
+}

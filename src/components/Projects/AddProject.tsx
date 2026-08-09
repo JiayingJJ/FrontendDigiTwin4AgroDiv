@@ -59,7 +59,6 @@ const AddProject = () => {
     }
     return (
         <VStack>
-
             <FormControl isRequired>
                 <FormLabel>Project Name</FormLabel>
                 <Input placeholder='Name' onChange={(e) => handleChange(e)} value={projectName} />

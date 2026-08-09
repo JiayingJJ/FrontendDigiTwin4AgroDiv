@@ -29,7 +29,6 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
         if (type === "timestamp") {
             setLabelName(getCurrentTime())
             dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: getCurrentTime() } })
-
         }
     }, [])
     return (

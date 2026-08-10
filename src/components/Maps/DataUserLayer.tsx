@@ -69,6 +69,7 @@ const DataUserLayer = () => {
         }
     }
     const handlerOnCloseDrawer = () => {
+        dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })

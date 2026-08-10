@@ -129,7 +129,6 @@ const OpenLayersMap = () => {
         const userInfo = info.toLowerCase();
         fetch(`${geoJSONSource}`)
             .then((res) => {
-                console.log('Response Status:', res.status);
                 if (!res.ok) throw new Error(`HTTP ${res.status} - Datei nicht gefunden!`);
                 return res.json();
             })
@@ -151,13 +150,11 @@ const OpenLayersMap = () => {
             });
     }
     const getDataInProperties = async () => {
-        console.log("selectedPropertiesFromDatabase: ", selectedPropertiesFromDatabase)
         if (selectedPropertiesFromDatabase.length !== undefined) {
             await Promise.all(
                 selectedPropertiesFromDatabase.map(async (proper: any) => {
                     if (proper.table_id !== undefined) {
                         const data = await getColumnWithId(proper.table_id, proper.column_id);
-                        console.log("data: ", data)
                         dispatch({ type: 'openLayers/addAllInfoInProperties', payload: data });
                     }
                 })
@@ -417,10 +414,8 @@ const OpenLayersMap = () => {
 
     useEffect(() => {
         if (getUpdateFromDatabase) {
-            console.log(getUpdateFromDatabase)
             dispatch({ type: 'openLayers/clearReduxForGeoData', payload: null })
             // fetchUserGeoData();
-            console.log(selectedGeoData)
             if (selectedGeoData !== null && selectedGeoData.id !== null)
                 fetchDataForDrawed(selectedGeoData.id);
             getDataInProperties()

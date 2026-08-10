@@ -201,7 +201,7 @@ const TableWithColumns = () => {
                         <CreateColumns />
                     </GridItem>
                 }
-                <GridItem colSpan={addingColumns || editTable ? 2 : tableColumns.length === 0 ? 6 : 7}>
+                <GridItem colSpan={addingColumns || editTable ? 2 : tableColumns.length === 0 ? 6 : 7} overflowY={"auto"} height={"90vh"}>
                     <Card width={"100%"}>
                         <CardHeader>
                             <Heading size={"md"}>Input preview</Heading>

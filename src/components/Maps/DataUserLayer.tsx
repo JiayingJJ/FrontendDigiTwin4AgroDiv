@@ -73,7 +73,6 @@ const DataUserLayer = () => {
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
-        dispatch({ type: 'openLayers/setFeature', payload: null })
     }
     return (
         <HStack width={"100%"} justifyContent={"space-between"}>

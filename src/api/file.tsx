@@ -19,6 +19,6 @@ export const downloadImage = async (fileName: string) => {
         body: JSON.stringify({ file_name: fileName }),
     })
     const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+    // const url = window.URL.createObjectURL(blob);
     return blob
 }

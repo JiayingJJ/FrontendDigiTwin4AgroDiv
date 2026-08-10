@@ -7,7 +7,8 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    Image
+    Image,
+    VStack
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import { MdDeleteForever } from "react-icons/md";
@@ -31,7 +32,7 @@ const RendernInfo = () => {
     const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
     const [userEmail, setUserEmail] = useState<String>("");
-    const notShow = ["deleted_at", "id", "created_at", "updated_at"]
+    const shouldShow = ["data_status", "user_id"]
     const userInfo = useSelector((state: any) => state.user)
     const [image, setImage] = useState<any[]>([])
     const handlerGetUserEmail = async (value: string) => {
@@ -43,19 +44,22 @@ const RendernInfo = () => {
     }, [])
     useEffect(() => {
         const run = async () => {
-            const blobs: Blob[] = [];
+            const blobs: any[] = [];
             await Promise.all(
                 tableInfo?.columns_in_table?.RawMessage.map(async (raw: any) => {
                     if (raw.type === "image" && columnInfo !== null) {
                         const name = raw.name.toLowerCase().replaceAll(" ", "_");
                         const data = await downloadImage(columnInfo[name]);
-                        blobs.push(data);
+                        blobs.push({ colName: name, data: data });
                     }
                 }) ?? []
             );
-
-            const urls = blobs.map(b => URL.createObjectURL(b));
-            setImage(urls);
+            blobs.map((b) => {
+                const url = URL.createObjectURL(b.data)
+                b.data = url
+                return url
+            });
+            setImage(blobs);
         };
         run();
         return () => {
@@ -75,10 +79,10 @@ const RendernInfo = () => {
                 <ModalBody pb={6}>
                     <Stack divider={<StackDivider />} spacing='4'>
                         {columnInfo !== null && Object.entries(columnInfo)
-                            .filter(([key]) => !notShow.includes(key))
+                            .filter(([key]) => shouldShow.includes(key))
                             .map(([key, value]) => (
                                 <Box key={key}>
-                                    <Heading size="xs" textTransform="uppercase">{key === "user_id" ? "User Email" : key}</Heading>
+                                    <Heading size="xs">{key === "user_id" ? "User email" : "Data status"}</Heading>
                                     <Text pt="2" fontSize="sm">
                                         {key === "data_status" && value === "pending" ? (
                                             <Tooltip label="pending" placement="top-start">
@@ -92,24 +96,34 @@ const RendernInfo = () => {
                                                     <GrStatusGoodSmall color="green" />
                                                 </Box>
                                             </Tooltip>
-                                        ) : looksLikeIsoZ(value) ? (
-                                            readableTimestamp(value)
                                         ) : key === "user_id" ? (
                                             userEmail
-                                        ) : (
-                                            typeof value === "string" || typeof value === "number"
-                                                ? value
-                                                : value == null
-                                                    ? ""
-                                                    : JSON.stringify(value)
-                                        )}
+                                        ) : null}
                                     </Text>
                                 </Box>
                             ))}
-                        {image.map((u) => {
-                            console.log(u)
+                        {columnInfo !== null && tableInfo?.columns_in_table?.RawMessage.map((raw: any) => {
+                            const field = raw.name.toLowerCase().replaceAll(" ", "_");
+                            const cellValue = columnInfo[field];
                             return (
-                                <Image width="30%" height="30%" src={u} />
+                                <VStack key={field} align="start">
+                                    <Heading size={"xs"}>{raw.name}</Heading>
+                                    {raw.type === "image" ?
+                                        <>
+                                            {Object.entries(image).map((key) => {
+                                                console.log(key)
+                                                console.log(key[1])
+                                                if (key[1].colName === raw.name.toLowerCase().replaceAll(" ", "_")) {
+                                                    return (
+                                                        <Image width="30%" height="30%" src={key[1].data} />
+                                                    )
+                                                }
+                                            })}</> :
+                                        raw.type === "timestamp" ?
+                                            <Text>{readableTimestamp(cellValue)}</Text> :
+                                            <Text>{cellValue}</Text>
+                                    }
+                                </VStack>
                             )
                         })}
                     </Stack>

@@ -42,18 +42,15 @@ const DatasetsTable = () => {
         return data;
     }
     useEffect(() => {
-
         getAllDataSets()
     }, [])
-    console.log(tables)
     const handleRenderView = async (t: any) => {
         close()
         const dataColumns = await fetchTableWithId(t.id)
         const dataValues = await getAllColumnsWithTableId(t.id);
-        console.log(dataColumns)
-        console.log(dataValues)
         //  && dataValues[1] === 200
         if (dataColumns[1] === 200) {
+            dispatch({ type: 'datasetTableView/setSelectedTable', payload: dataColumns[0] })
             dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].columns_in_table.RawMessage })
             dispatch({ type: 'datasetTableView/setData', payload: dataValues[0] })
             dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].table_name })
@@ -73,13 +70,14 @@ const DatasetsTable = () => {
         dispatch({ type: 'datasetTableView/setTableName', payload: null })
         dispatch({ type: 'datasetTableView/setRenderTable', payload: false })
         dispatch({ type: 'datasetTableView/setTableID', payload: null })
+        dispatch({ type: 'datasetTableView/setSelectedTable', payload: null })
     }
 
     const [descriptionOpen, setDescriptionOpen] = useState(false);
 
     return (
-        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"95vw"} height={"100%"} padding={"0 0 2vh 0"}>
-            <GridItem h='100%' w="100%">
+        <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"95vw"} height={"90vh"} padding={"0 0 2vh 0"}>
+            <GridItem h='90vh' w="100%" overflowY={"auto"}>
                 <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
                     {tables !== null && tables.length != 0 && tables.map((t: any) => {
                         const isSelected = t.id === selected;
@@ -88,11 +86,11 @@ const DatasetsTable = () => {
                                 <CardBody padding={"1rem"} >
                                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
                                         <Heading size='sm' > {t["table_name"]}</Heading>
-                                        {!isSelected ? <Button _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={() => handleRenderView(t)}>View data</Button> : <Button  _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={close}>Close</Button>}
+                                        {!isSelected ? <Button _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={() => handleRenderView(t)}>View data</Button> : <Button _hover={{ backgroundColor: "#ecf39eff" }} size="sm" onClick={close}>Close</Button>}
                                     </HStack>
                                     {isSelected ? <VStack marginTop={".5rem"} spacing={".5rem"} justifyContent={"left"} width={"100%"}>
-                                        <Button size="sm"  _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => setDescriptionOpen(!descriptionOpen)}>{descriptionOpen ? "Hide description" : "Show description"}</Button>
-                                        <Button size="sm"  _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button>
+                                        <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => setDescriptionOpen(!descriptionOpen)}>{descriptionOpen ? "Hide description" : "Show description"}</Button>
+                                        <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button>
                                     </VStack> : null}
                                 </CardBody>
                             </Card>
@@ -103,11 +101,7 @@ const DatasetsTable = () => {
 
             <GridItem colSpan={descriptionOpen ? 4 : 5} h='100%'>
                 {renderTable
-                    ? <Card >
-                        <CardBody>
-                            <Tables />
-                        </CardBody>
-                    </Card>
+                    ? <Tables />
                     : <Box color="gray" height="100%" alignContent={"center"} textAlign={"center"}>
                         {tables !== null && tables.length != 0 ? "Select a table on the left side to view it here." : "No tables created. Create your first table inside the 'Database' section"}
                     </Box>

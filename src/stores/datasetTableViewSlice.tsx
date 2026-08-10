@@ -8,6 +8,7 @@ interface DatasetTableViewState {
     data: any,
     tableName: string | null,
     tableID: string | null,
+    selectedTable: [] | null,
 }
 
 const initialState: DatasetTableViewState = {
@@ -17,6 +18,7 @@ const initialState: DatasetTableViewState = {
     data: null,
     tableName: null,
     tableID: null,
+    selectedTable: null
 }
 
 const datasetTableViewSlice = createSlice({
@@ -44,6 +46,9 @@ const datasetTableViewSlice = createSlice({
         setTableID: (state, action) => {
             state.tableID = action.payload;
         },
+        setSelectedTable: (state, action) =>{
+            state.selectedTable = action.payload;
+        }
     }
 });
 

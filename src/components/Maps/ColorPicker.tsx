@@ -9,7 +9,7 @@ type Props = {
 const ColorPicker = () => {
     const dispatch = useDispatch()
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
-    const [color, setColor] = useState(colorRedux !== null ? colorRedux : "#fff");
+    const [color, setColor] = useState(colorRedux !== null && colorRedux !== "" ? colorRedux : "#fff");
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const setAlert = (status: string, title: string, msg: string, show: boolean) => {
         dispatch({ type: 'alertInfo/setAlertStatus', payload: status })

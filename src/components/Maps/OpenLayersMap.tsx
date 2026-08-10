@@ -315,6 +315,8 @@ const OpenLayersMap = () => {
         resetFeatures(features)
         if (colorRedux === undefined || colorRedux === "" || colorRedux === null) {
             userColor = "#fff";
+        }else{
+            userColor= colorRedux
         }
         if (featureRedux !== null) {
             if (featureRedux.getGeometry()?.getType() === "Point") {
@@ -358,7 +360,13 @@ const OpenLayersMap = () => {
 
     }, [featureRedux])
     useEffect(() => {
+        let userColor;
         const features = vectorSourceUserData.current.getFeatures();
+        if (colorRedux === undefined || colorRedux === "" || colorRedux === null) {
+            userColor = "#fff";
+        }else{
+            userColor=colorRedux;
+        }
         resetFeatures(features)
         if (featureRedux !== null) {
             if (featureRedux.getGeometry()?.getType() === "Point") {
@@ -366,7 +374,7 @@ const OpenLayersMap = () => {
                     [new Style({
                         image: new CircleStyle({
                             radius: 10,
-                            fill: new Fill({ color: colorRedux }),
+                            fill: new Fill({ color: userColor }),
                             stroke: new Stroke({ color: strockeColor, width: 2 }),
                         }),
                     }),
@@ -385,7 +393,7 @@ const OpenLayersMap = () => {
                     [new Style({
 
                         stroke: new Stroke({ color: strockeColor, width: 2 }),
-                        fill: new Fill({ color: colorRedux }),
+                        fill: new Fill({ color: userColor }),
                     }),
                     new Style({
                         image: new Icon({

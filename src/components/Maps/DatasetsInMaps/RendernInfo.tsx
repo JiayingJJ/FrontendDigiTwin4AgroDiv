@@ -35,6 +35,7 @@ const RendernInfo = () => {
     const shouldShow = ["data_status", "user_id"]
     const userInfo = useSelector((state: any) => state.user)
     const [image, setImage] = useState<any[]>([])
+    const [largeImage, setLargeImage] = useState<any>(null);
     const handlerGetUserEmail = async (value: string) => {
         const data = await fetchUserWithId(value)
         setUserEmail(data[0].email)
@@ -73,60 +74,76 @@ const RendernInfo = () => {
         }
         } key={`${columnInfo?.id}-geoData-modal`} size={"6xl"}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent maxHeight={"75vh"}>
                 <ModalHeader>{tableInfo?.table_name}</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
-                    <Stack divider={<StackDivider />} spacing='4'>
-                        {columnInfo !== null && Object.entries(columnInfo)
-                            .filter(([key]) => shouldShow.includes(key))
-                            .map(([key, value]) => (
-                                <Box key={key}>
-                                    <Heading size="xs">{key === "user_id" ? "User email" : "Data status"}</Heading>
-                                    <Text pt="2" fontSize="sm">
-                                        {key === "data_status" && value === "pending" ? (
-                                            <Tooltip label="pending" placement="top-start">
-                                                <Box>
-                                                    <GrStatusGoodSmall color="red" />
-                                                </Box>
-                                            </Tooltip>
-                                        ) : key === "data_status" && value === "merged" ? (
-                                            <Tooltip label="merged" placement="top-start">
-                                                <Box>
-                                                    <GrStatusGoodSmall color="green" />
-                                                </Box>
-                                            </Tooltip>
-                                        ) : key === "user_id" ? (
-                                            userEmail
-                                        ) : null}
-                                    </Text>
-                                </Box>
-                            ))}
-                        {columnInfo !== null && tableInfo?.columns_in_table?.RawMessage.map((raw: any) => {
-                            const field = raw.name.toLowerCase().replaceAll(" ", "_");
-                            const cellValue = columnInfo[field];
-                            return (
-                                <VStack key={field} align="start">
-                                    <Heading size={"xs"}>{raw.name}</Heading>
-                                    {raw.type === "image" ?
-                                        <>
-                                            {Object.entries(image).map((key) => {
-                                                console.log(key)
-                                                console.log(key[1])
-                                                if (key[1].colName === raw.name.toLowerCase().replaceAll(" ", "_")) {
-                                                    return (
-                                                        <Image width="30%" height="30%" src={key[1].data} />
-                                                    )
-                                                }
-                                            })}</> :
-                                        raw.type === "timestamp" ?
-                                            <Text>{readableTimestamp(cellValue)}</Text> :
-                                            <Text>{cellValue}</Text>
-                                    }
-                                </VStack>
-                            )
-                        })}
-                    </Stack>
+                <ModalBody pb={6} overflowY={"auto"}>
+                    {largeImage
+                        ? <Box height={"100%"}>
+                            <Heading size="md" marginBottom={"1rem"}>{largeImage.heading}</Heading>
+                            <Image
+                                cursor={"zoom-out"} 
+                                src={largeImage.src} onClick={() => { setLargeImage(null) }} />
+                        </Box>
+                        : <Stack divider={<StackDivider />} spacing='4'>
+                            {columnInfo !== null && Object.entries(columnInfo)
+                                .filter(([key]) => shouldShow.includes(key))
+                                .map(([key, value]) => (
+                                    <Box key={key}>
+                                        <Heading size="xs">{key === "user_id" ? "User email" : "Data status"}</Heading>
+                                        <Text pt="2" fontSize="sm">
+                                            {key === "data_status" && value === "pending" ? (
+                                                <Tooltip label="pending" placement="top-start">
+                                                    <Box>
+                                                        <GrStatusGoodSmall color="red" />
+                                                    </Box>
+                                                </Tooltip>
+                                            ) : key === "data_status" && value === "merged" ? (
+                                                <Tooltip label="merged" placement="top-start">
+                                                    <Box>
+                                                        <GrStatusGoodSmall color="green" />
+                                                    </Box>
+                                                </Tooltip>
+                                            ) : key === "user_id" ? (
+                                                userEmail
+                                            ) : null}
+                                        </Text>
+                                    </Box>
+                                ))}
+                            {columnInfo !== null && tableInfo?.columns_in_table?.RawMessage.map((raw: any) => {
+                                const field = raw.name.toLowerCase().replaceAll(" ", "_");
+                                const cellValue = columnInfo[field];
+                                return (
+                                    <VStack key={field} align="start">
+                                        <Heading size={"xs"}>{raw.name}</Heading>
+                                        {raw.type === "image" ?
+                                            <>
+                                                {Object.entries(image).map((key) => {
+                                                    console.log(key)
+                                                    console.log(key[1])
+                                                    if (key[1].colName === raw.name.toLowerCase().replaceAll(" ", "_")) {
+                                                        return (
+                                                            <Image width="30%" height="30%" src={key[1].data}
+                                                                cursor={"zoom-in"}
+                                                                onClick={() => {
+                                                                    setLargeImage({
+                                                                        heading: raw.name,
+                                                                        src: key[1].data,
+                                                                    })
+                                                                }}
+                                                            />
+                                                        )
+                                                    }
+                                                })}</> :
+                                            raw.type === "timestamp" ?
+                                                <Text>{readableTimestamp(cellValue)}</Text> :
+                                                <Text>{cellValue}</Text>
+                                        }
+                                    </VStack>
+                                )
+                            })}
+                        </Stack>
+                    }
                 </ModalBody>
                 <ModalFooter>
                 </ModalFooter>

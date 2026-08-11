@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, GridItem, Button, HStack, VStack, Grid } from '@chakra-ui/react'
-import { FiPlusCircle } from "react-icons/fi";
-import { CiCircleRemove } from "react-icons/ci";
-
+import { GridItem, Button, HStack, VStack, Grid } from '@chakra-ui/react'
 import ColumnsComponent from './ColumnsComponent';
 import { v4 as uuidv4 } from 'uuid';
-import ModalComponent from '../ModalComponent';
 import { patchColumns, postColumns, putNewColumns, removeColumns } from '../../api/dataset';
 import { fetchTableWithId } from '../../api/userTables';
 import { databaseSqlite } from '../sqlite/db';
@@ -28,14 +24,6 @@ const CreateColumns = () => {
         dispatch({ type: 'datasetTable/addUserTableColumns', payload: { id: newId, name: "", type: type, position: userTableColumns.length } })
         dispatch({ type: 'datasetTable/setUserTableColumnIndex', payload: 1 })
         dispatch({ type: 'datasetTable/addIsChangingColumns', payload: newId })
-    }
-
-    const clickOnSaveBtn = () => {
-        dispatch({ type: 'datasetTable/clearUserTableColumns', payload: [] })
-        dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
-        dispatch({ type: 'datasetTable/setEditTable', payload: false })  
-    }
-    const clickOnCancelBtn = () => {
     }
     const handlePostColumns = async () => {
         if (isOnLine) {
@@ -92,6 +80,7 @@ const CreateColumns = () => {
                                 dispatch({ type: 'modalInfo/setModalHeader', payload: "Nicht gespeicherte Informationen" })
                                 dispatch({ type: 'modalInfo/setModalBody', payload: "Wollen Sie die Änderung verwerfen?" })
                                 dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+                                dispatch({ type: 'modalInfo/setModalType', payload: "createColumns" })
                             } else {
                                 dispatch({ type: 'datasetTable/setAddingColumns', payload: false })
                                 dispatch({ type: 'datasetTable/setEditTable', payload: false })
@@ -100,8 +89,6 @@ const CreateColumns = () => {
                     </HStack>
                 </VStack>}
             </GridItem>
-
-            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
         </Grid>
     );
 }

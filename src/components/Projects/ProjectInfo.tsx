@@ -20,6 +20,8 @@ import { readableTimestamp } from '../../helpers';
 import { fetchUserWithId } from '../../api/user';
 import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
+import { MdDeleteForever } from "react-icons/md";
+
 
 const ProjectInfo = () => {
     const dispatch = useDispatch()
@@ -59,11 +61,21 @@ const ProjectInfo = () => {
         setAddMember(!addMember)
 
     }
+    const handleDeleteProject = async (p: any) => {
+        dispatch({ type: 'modalInfo/setShowModal', payload: true })
+        dispatch({ type: 'modalInfo/setModalHeader', payload: "Project löschen" })
+        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Project ${p.name} löschen?` })
+        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+        dispatch({ type: 'modalInfo/setModalType', payload: "deleteProject" })
+    }
     return (
         <HStack alignItems={"start"}>
             <Card width={"100%"}>
                 <CardHeader>
-                    <Heading size={"md"}>Project Info</Heading>
+                    <HStack spacing={".5rem"} justifyContent={"space-between"}>
+                        <Heading size={"md"}>Project Info</Heading>
+                        <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />
+                    </HStack>
                 </CardHeader>
                 {selectedProject !== null && <CardBody>
                     <Stack divider={<StackDivider />} spacing='4'>

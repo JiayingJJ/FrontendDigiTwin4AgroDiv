@@ -23,6 +23,8 @@ import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 import { getGeoData, insertGeoData, setGeoDataStatus, updateGeoDataProperties } from "../../../api/geoData";
 import FileUploadComponent from "./FileUploadComponent";
+import { uploadImage } from "../../../api/file";
+import store from "../../../stores/stores";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -39,9 +41,11 @@ const DatasetColumns = () => {
     const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
+    const files = useSelector((state: any) => state.openLayers.files)
     const getColumnValues = () => {
+        const states = store.getState();
         let columns = [];
-        userInputColumnValues.map((v: any) => {
+        states.datasetTable.userInputColumnValues.map((v: any) => {
             let string = v.name.replace(/[^a-zA-Z0-9]/g, '_');
             columns.push({ name: string, value: v.value })
         })
@@ -105,17 +109,24 @@ const DatasetColumns = () => {
                 return <div>Unbekannter Feldtyp: {column.type}</div>;
         }
     }
+    const handlerUpload = async () => {
+        await Promise.all(files.map(async (f: any) => {
+            const data = await uploadImage(f.name, f.file, userInfo.id)
+            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: f.id, value: data[1] } })
+        }))
+    }
+
     const handleSubmit = async () => {
+        await handlerUpload();
         let dataInserGeoData: any;
         const data = await addValueInColumns(selectedTableId, getColumnValues())
-        console.log(data)
         if (data[0] === 200) {
             const status = 'merged'
             const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
             if (addDrawedInteractionInfo) {
-                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, files)
                 const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
                 dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
             }
@@ -149,6 +160,7 @@ const DatasetColumns = () => {
     const handleCancel = async () => {
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
+        dispatch({ type: 'openLayers/clearFiles', payload: null })
     }
     return (
         <Modal closeOnOverlayClick={false} isOpen={addNewColumnsDataInGeometry && userInputColumnValues.length !== 0} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>

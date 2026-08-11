@@ -26,6 +26,7 @@ interface OpenLayersState {
     colorPicker: boolean;
     allInfoInProperties: [];
     getUpdateFromDatabase: boolean;
+    files: [];
 }
 
 const initialState: OpenLayersState = {
@@ -53,6 +54,7 @@ const initialState: OpenLayersState = {
     colorPicker: false,
     allInfoInProperties: [],
     getUpdateFromDatabase: false,
+    files: [],
 }
 
 const openLayersSlice = createSlice({
@@ -128,6 +130,7 @@ const openLayersSlice = createSlice({
             state.userSelectedColor = null;
             state.colorPicker = false;
             state.allInfoInProperties = [];
+            state.files=[]
         },
         clearAllForGeoData: (state, action) => {
             state.columnInfo = null;
@@ -170,6 +173,15 @@ const openLayersSlice = createSlice({
         updateGeoDataAfterChange: (state, action) => {
             console.log(JSON.parse(JSON.stringify(action.payload)))
             state.geoData = action.payload.geoData;
+        },
+        setFiles: (state, action) => {
+            state.files = action.payload.geoData;
+        },
+        addFiles: (state, action) => {
+            state.files.push(action.payload);
+        },
+        clearFiles: (state, action) => {
+            state.files=[]
         }
     }
 });

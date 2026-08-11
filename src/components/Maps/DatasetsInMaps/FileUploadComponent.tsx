@@ -6,6 +6,7 @@ import {
     Box,
     Image,
     FormControl,
+    Heading
 } from "@chakra-ui/react";
 import { useRef, useState, type ChangeEvent } from "react";
 import { FiUploadCloud } from "react-icons/fi";
@@ -25,8 +26,6 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
 
     const fileInputRef = useRef(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [fileName, setFileName] = useState<String | null>(null);
-    const userInfo = useSelector((state: any) => state.user)
     const updateImage = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
@@ -34,23 +33,14 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
             const lastDotIndex = file.name.lastIndexOf(".");
             let uniqueFileName;
             if (lastDotIndex === -1) {
-                const replace = file.name.replaceAll(" ", "_")
                 uniqueFileName = `${file.name}_${Date.now()}`;
             } else {
                 const namePart = file.name.substring(0, lastDotIndex);
-                console.log("namePart: ", namePart)
-
                 const replace = namePart.replaceAll(" ", "_")
-                console.log("replace: ", replace)
-
                 const extensionPart = file.name.substring(lastDotIndex);
-                console.log("extensionPart: ", extensionPart)
-
                 uniqueFileName = `${replace}_${Date.now()}${extensionPart}`;
             }
-            console.log("uniqueFileName: ", uniqueFileName)
-            setFileName(uniqueFileName)
-            console.log(file)
+            dispatch({ type: 'openLayers/addFiles', payload: { id: id, name: uniqueFileName, file: file } })
             setImageFile(file);
         }
     };
@@ -68,18 +58,9 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     const handleImageUploadClick = () => {
         fileInputRef.current?.click();
     };
-    const handlerUpload = async () => {
-        console.log(imageFile)
-        console.log(fileName)
-        const data = await uploadImage(fileName, imageFile, userInfo.id);
-        console.log(id)
-        console.log(data)
-        dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: data[1] } })
-
-    }
     return (
         <FormControl onMouseOver={() => { console.log() }}>
-            <Text mb='8px'>{name}</Text>
+            <Heading as='h4' size='md' padding={"15px 0px 10px 0px"}>{name}</Heading>
             {imageFile ? (
                 <Image
                     maxWidth={"128px"}
@@ -110,7 +91,6 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
                     </Box>
                 </VStack>
             )}
-            <Button onClick={() => handlerUpload()}>Upload</Button>
             <input
                 ref={fileInputRef}
                 type="file"
@@ -119,7 +99,6 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
                 onChange={updateImage}
             />
         </FormControl>
-
     );
 }
 

@@ -19,6 +19,11 @@ import {
     Text,
     Grid,
     GridItem,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
 } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
@@ -128,7 +133,25 @@ const TableWithColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} />
+                            <NumberInput size='sm' defaultValue={0} min={-1000} precision={2} step={0.1} height="100%">
+                                <NumberInputField />
+                                <NumberInputStepper height="100%">
+                                    <NumberIncrementStepper
+                                        bg='green.200'
+                                        _active={{ bg: 'green.300' }}
+                                        children='+'
+                                        height="50%"
+                                        lineHeight="1"
+                                    />
+                                    <NumberDecrementStepper
+                                        bg='pink.200'
+                                        _active={{ bg: 'pink.300' }}
+                                        children='-'
+                                        height="50%"
+                                        lineHeight="1"
+                                    />
+                                </NumberInputStepper>
+                            </NumberInput>
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />
@@ -142,7 +165,25 @@ const TableWithColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} />
+                            <NumberInput size='sm' defaultValue={0} min={-1000} step={1} height="100%">
+                                <NumberInputField />
+                                <NumberInputStepper height="100%">
+                                    <NumberIncrementStepper
+                                        bg='green.200'
+                                        _active={{ bg: 'green.300' }}
+                                        children='+'
+                                        height="50%"
+                                        lineHeight="1"
+                                    />
+                                    <NumberDecrementStepper
+                                        bg='pink.200'
+                                        _active={{ bg: 'pink.300' }}
+                                        children='-'
+                                        height="50%"
+                                        lineHeight="1"
+                                    />
+                                </NumberInputStepper>
+                            </NumberInput>
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />

@@ -7,7 +7,7 @@ import { CiCircleRemove } from "react-icons/ci";
 import ColumnsComponent from './ColumnsComponent';
 import { v4 as uuidv4 } from 'uuid';
 import ModalComponent from '../ModalComponent';
-import { patchColumns, postColumns, putNewColumns } from '../../api/dataset';
+import { patchColumns, postColumns, putNewColumns, removeColumns } from '../../api/dataset';
 import { fetchTableWithId } from '../../api/userTables';
 import { databaseSqlite } from '../sqlite/db';
 const CreateColumns = () => {
@@ -57,7 +57,7 @@ const CreateColumns = () => {
             }
 
             if (tableColumns.length !== 0 && removedColumns.length !== 0) {
-                const result = await removedColumns(tableId, removedColumns)
+                const result = await removeColumns(tableId, removedColumns)
             }
             dispatch({ type: 'datasetTable/setEditTable', payload: false })
             dispatch({ type: 'datasetTable/setAddingColumns', payload: false })

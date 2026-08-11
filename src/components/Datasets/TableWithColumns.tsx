@@ -18,7 +18,7 @@ import {
     CardFooter,
     Text,
     Grid,
-    GridItem
+    GridItem,
 } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
@@ -26,7 +26,7 @@ import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
 import { setUserTableProjectId } from '../../api/userTables';
 import { FiPlusCircle } from "react-icons/fi";
-import FileImageComponent from './FileImageComponent';
+import { FiUploadCloud } from "react-icons/fi";
 
 const TableWithColumns = () => {
     const dispatch = useDispatch()
@@ -114,7 +114,7 @@ const TableWithColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} type='datetime-local'/>
+                            <Input placeholder={`${column.hint}`} type='datetime-local' />
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />
@@ -156,12 +156,30 @@ const TableWithColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} />
-                            <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
-                                <Box>
-                                    <CiCircleInfo color="green" cursor={"pointer"} size="40" />
+                            <HStack style={{ display: "flex", alignItems: "center" }}>
+                                <Box cursor="not-allowed"
+                                    w="50%"
+                                    maxW={"100%"}
+                                    border="2px dashed"
+                                    borderColor={"blue.500"}
+                                    background={"blue.50"}
+                                    borderRadius="12px"
+                                    p={7}
+                                    transition="all 150ms ease"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    textAlign="center"
+                                    _hover={"blue.500"}
+                                ><FiUploadCloud size={30} /> {"Drag & Drop file here or click for select a file"}
                                 </Box>
-                            </Tooltip>
+                                <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
+                                    <Box>
+                                        <CiCircleInfo color="green" cursor={"pointer"} size="40" />
+                                    </Box>
+                                </Tooltip>
+                            </HStack>
+
                         </Box>
                     </FormControl>
                 )

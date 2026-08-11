@@ -68,7 +68,6 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     const handleImageUploadClick = () => {
         fileInputRef.current?.click();
     };
-    const isDragActive = true
     const handlerUpload = async () => {
         console.log(imageFile)
         console.log(fileName)
@@ -80,24 +79,7 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     }
     return (
         <FormControl onMouseOver={() => { console.log() }}>
-
             <Text mb='8px'>{name}</Text>
-            {/* <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Box style={{ display: "flex", flexDirection: "column" }}>
-                                {type === "timestamp" ? <Input placeholder={`${hint}`} value={labelName} onChange={(e) => {
-                                    console.log(id)
-                                    console.log(e.target.value)
-                                    setLabelName(e.target.value)
-                                    dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
-                                }} /> : <Input placeholder={`${hint}`} value={labelName} onChange={(e) => {
-                                    console.log(id)
-                                    setLabelName(e.target.value)
-                                    dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
-                                }} />}
-            
-                            </Box>
-                        </Box> */}
-
             {imageFile ? (
                 <Image
                     maxWidth={"128px"}
@@ -108,11 +90,11 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
             ) : (
                 <VStack style={{ display: "flex", alignItems: "start" }}>
                     <Box cursor="pointer"
-                        w="30%"
-                        maxW="560px"
+                        w="50%"
+                        maxW="100%"
                         border="2px dashed"
-                        borderColor={isDragActive ? "blue.500" : "gray.300"}
-                        background={isDragActive ? "blue.50" : "gray.50"}
+                        borderColor={"gray.300"}
+                        background={"gray.50"}
                         borderRadius="12px"
                         p={7}
                         transition="all 150ms ease"
@@ -120,26 +102,12 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
                         alignItems="center"
                         justifyContent="center"
                         textAlign="center"
-                        _hover={{ borderColor: isDragActive ? "blue.500" : "gray.400" }}
+                        _hover={{ borderColor: "gray.400" }}
                         onDragOver={handleDragOver}
                         onDrop={handleFileDrop}
                         onClick={handleImageUploadClick}
-                    ><FiUploadCloud size={30} /> {isDragActive ? "Datei loslassen zum Upload" : "Drag&Drop files here"}
+                    ><FiUploadCloud size={30} /> {"Drag & Drop file here or click for select a file"}
                     </Box>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        colorScheme="blue"
-                        borderRadius="8px"
-                        borderColor={isDragActive ? "blue.500" : "blue.400"}
-                        bg="white"
-                        _hover={{ bg: "blue.500", color: "white" }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        Browse Files
-                    </Button>
                 </VStack>
             )}
             <Button onClick={() => handlerUpload()}>Upload</Button>

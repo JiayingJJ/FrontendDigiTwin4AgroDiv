@@ -1,25 +1,17 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    Button,
     Box,
-    HStack,
-    VStack,
     FormControl,
-    FormLabel,
-    FormErrorMessage,
-    FormHelperText,
     Input,
-    RadioGroup,
-    Radio,
-    Select,
     NumberInput,
     NumberInputField,
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
-    Text
+    Heading
 } from '@chakra-ui/react'
+import { FaPlus, FaMinus } from "react-icons/fa";
 type Props = {
     name: string,
     hint: number,
@@ -42,7 +34,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
     }, []);
     return (
         <FormControl onMouseOver={() => { console.log() }}>
-            <Text mb='8px'>{name}</Text>
+            <Heading as='h4' size='md' padding={"15px 0px 10px 0px"}>{name}</Heading>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
                     {type === "timestamp" ? <Input type='datetime-local' placeholder={`${hint}`} defaultValue={nowLocal} onChange={(e) => {
@@ -50,7 +42,8 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                         dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
                     }} />
                         : type === "integer" ?
-                            <NumberInput allowMouseWheel size='sm' min={-1000} step={1} value={valueNum}
+                            <NumberInput allowMouseWheel size={"lg"}
+                                min={-1000} step={1} value={valueNum}
                                 height="100%"
                                 onChange={(valueString) => {
                                     console.log(valueString)
@@ -62,22 +55,21 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                                     <NumberIncrementStepper
                                         bg='green.200'
                                         _active={{ bg: 'green.300' }}
-                                        children='+'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaPlus /></NumberIncrementStepper>
                                     <NumberDecrementStepper
                                         bg='pink.200'
                                         _active={{ bg: 'pink.300' }}
-                                        children='-'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaMinus /></NumberDecrementStepper>
                                 </NumberInputStepper>
                             </NumberInput>
                             : type === "real" ?
-                                <NumberInput allowMouseWheel size='sm' min={-1000} precision={2} step={0.1} value={valueNum}
+                                <NumberInput allowMouseWheel min={-1000} precision={2} step={0.1} value={valueNum}
                                     height="100%"
+                                    size={"lg"}
                                     onChange={(valueString) => {
                                         setValueNum(valueString)
                                         dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: valueString } })
@@ -87,24 +79,25 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                                         <NumberIncrementStepper
                                             bg='green.200'
                                             _active={{ bg: 'green.300' }}
-                                            children='+'
                                             height="50%"
                                             lineHeight="1"
-                                        />
+                                        ><FaPlus /></NumberIncrementStepper>
                                         <NumberDecrementStepper
                                             bg='pink.200'
                                             _active={{ bg: 'pink.300' }}
-                                            children='-'
                                             height="50%"
                                             lineHeight="1"
-                                        />
+                                        ><FaMinus /></NumberDecrementStepper>
+
                                     </NumberInputStepper>
                                 </NumberInput>
-                                : <Input placeholder={`${hint}`} value={labelName} onChange={(e) => {
-                                    console.log(id)
-                                    setLabelName(e.target.value)
-                                    dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
-                                }} />}
+                                : <Input placeholder={`${hint}`} value={labelName}
+                                    size={"lg"}
+                                    onChange={(e) => {
+                                        console.log(id)
+                                        setLabelName(e.target.value)
+                                        dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
+                                    }} />}
 
                 </Box>
             </Box>

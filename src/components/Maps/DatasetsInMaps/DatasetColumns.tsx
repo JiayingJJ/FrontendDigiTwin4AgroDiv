@@ -16,6 +16,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
+    Heading
 } from '@chakra-ui/react'
 import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
@@ -153,7 +154,9 @@ const DatasetColumns = () => {
         <Modal closeOnOverlayClick={false} isOpen={addNewColumnsDataInGeometry && userInputColumnValues.length !== 0} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{selectedTable?.table_name}</ModalHeader>
+                <ModalHeader>
+                    <Heading as='h2' size='xl'>{selectedTable?.table_name}</Heading>
+                </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     {tableColumns.map((column: any) => renderDataset(column))}

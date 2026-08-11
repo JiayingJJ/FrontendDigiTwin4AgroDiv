@@ -25,13 +25,13 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
 } from '@chakra-ui/react'
-import { MdModeEdit } from "react-icons/md";
-import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
 import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
 import { setUserTableProjectId } from '../../api/userTables';
-import { FiPlusCircle } from "react-icons/fi";
-import { FiUploadCloud } from "react-icons/fi";
+import { MdModeEdit } from "react-icons/md";
+import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
+import { FiPlusCircle, FiUploadCloud } from "react-icons/fi";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 const TableWithColumns = () => {
     const dispatch = useDispatch()
@@ -72,7 +72,7 @@ const TableWithColumns = () => {
         switch (column.type) {
             case 'radio':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel as='legend'>{column.name}</FormLabel>
                         <RadioGroup defaultValue='Ja'>
                             <HStack spacing='24px'>
@@ -84,10 +84,10 @@ const TableWithColumns = () => {
                 );
             case 'select':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Select placeholder='auswählen'>
+                            <Select placeholder='auswählen' size="md">
                                 {column.additional_info.options.map((o: string) => {
                                     return (<option>{o}</option>)
                                 })}
@@ -102,10 +102,10 @@ const TableWithColumns = () => {
                 );
             case 'text':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} />
+                            <Input placeholder={`${column.hint}`} size="md" />
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />
@@ -116,10 +116,10 @@ const TableWithColumns = () => {
                 );
             case 'timestamp':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} type='datetime-local' />
+                            <Input placeholder={`${column.hint}`} type='datetime-local' size="md" />
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />
@@ -130,26 +130,24 @@ const TableWithColumns = () => {
                 );
             case 'real':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <NumberInput size='sm' defaultValue={0} min={-1000} precision={2} step={0.1} height="100%">
+                            <NumberInput size='md' defaultValue={0} min={-1000} precision={2} step={0.1} height="100%">
                                 <NumberInputField />
                                 <NumberInputStepper height="100%">
                                     <NumberIncrementStepper
                                         bg='green.200'
                                         _active={{ bg: 'green.300' }}
-                                        children='+'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaPlus /></NumberIncrementStepper>
                                     <NumberDecrementStepper
                                         bg='pink.200'
                                         _active={{ bg: 'pink.300' }}
-                                        children='-'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaMinus /></NumberDecrementStepper>
                                 </NumberInputStepper>
                             </NumberInput>
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
@@ -162,26 +160,24 @@ const TableWithColumns = () => {
                 );
             case 'integer':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <NumberInput size='sm' defaultValue={0} min={-1000} step={1} height="100%">
+                            <NumberInput size='md' defaultValue={0} min={-1000} step={1} height="100%">
                                 <NumberInputField />
                                 <NumberInputStepper height="100%">
                                     <NumberIncrementStepper
                                         bg='green.200'
                                         _active={{ bg: 'green.300' }}
-                                        children='+'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaPlus /></NumberIncrementStepper>
                                     <NumberDecrementStepper
                                         bg='pink.200'
                                         _active={{ bg: 'pink.300' }}
-                                        children='-'
                                         height="50%"
                                         lineHeight="1"
-                                    />
+                                    ><FaMinus /></NumberDecrementStepper>
                                 </NumberInputStepper>
                             </NumberInput>
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
@@ -194,7 +190,7 @@ const TableWithColumns = () => {
                 );
             case 'image':
                 return (
-                    <FormControl key={`${column.id}-tooltip`}>
+                    <FormControl key={`${column.id}-tooltip`} paddingTop={"15px"}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
                             <HStack style={{ display: "flex", alignItems: "center" }}>

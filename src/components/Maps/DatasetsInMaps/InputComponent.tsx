@@ -30,6 +30,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
         const dd = pad(d.getDate());
         const hh = pad(d.getHours());
         const min = pad(d.getMinutes());
+        dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: `${yyyy}-${mm}-${dd}T${hh}:${min}` } })
         return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
     }, []);
     return (
@@ -98,10 +99,8 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                                         setLabelName(e.target.value)
                                         dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
                                     }} />}
-
                 </Box>
             </Box>
-
         </FormControl>
     );
 }

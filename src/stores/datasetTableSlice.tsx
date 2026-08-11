@@ -143,6 +143,16 @@ const datasetTableSlice = createSlice({
         setNewColumns: (state, action) => {
             state.newColumns = action.payload;
         },
+        removeNewColumn: (state, action) => {
+            state.newColumns = state.newColumns.filter(
+                col => {
+                    if (col.id !== action.payload) {
+                        console.log(JSON.parse(JSON.stringify(col)))
+                    }
+                    return col.id !== action.payload
+                }
+            );
+        },
         setRemovedColumns: (state, action) => {
             state.removedColumns = action.payload;
         },

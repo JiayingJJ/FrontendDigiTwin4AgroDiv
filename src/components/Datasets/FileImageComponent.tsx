@@ -71,7 +71,7 @@ const FileImageComponent = ({ id, index, data }: Props) => {
                         }
                         setValue(e)
                         dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
-                    }} defaultValue="image">
+                    }} defaultValue={"image"}>
                         <Stack direction='row'>
                             <Radio value='image'>Bild</Radio>
                             <Radio value='file'>File</Radio>
@@ -88,6 +88,8 @@ const FileImageComponent = ({ id, index, data }: Props) => {
                 <Button style={{ paddingRight: "0px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <CiCircleRemove color="green" cursor={"pointer"} size="40" onClick={() => {
                         dispatch({ type: 'datasetTable/removeUserTableColumn', payload: id })
+                        dispatch({ type: 'datasetTable/removeNewColumn', payload: id })
+                        dispatch({ type: 'datasetTable/removeIsChangingColumns', payload: id })
                     }} />
                 </Button>
             </Box>

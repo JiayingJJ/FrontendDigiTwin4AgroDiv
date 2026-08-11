@@ -254,17 +254,11 @@ const TableWithColumns = () => {
     return (
         <HStack alignItems={"start"}>
             <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
-                {(tableColumns.length === 0 && selectedTableId !== null && (!addingColumns && !editTable)) ?
-                    <GridItem colSpan={1}>
-                        <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
-                            onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
-                    </GridItem>
-                    : (addingColumns || editTable) &&
+                {(addingColumns || editTable) &&
                     <GridItem colSpan={5}>
                         <CreateColumns />
-                    </GridItem>
-                }
-                <GridItem colSpan={addingColumns || editTable ? 2 : tableColumns.length === 0 ? 6 : 7} overflowY={"auto"} height={"90vh"}>
+                    </GridItem>}
+                <GridItem colSpan={(addingColumns || editTable) ? 2 : 7} overflowY={"auto"} height={"90vh"}>
                     <Card width={"100%"}>
                         <CardHeader>
                             <HStack spacing={".3rem"} justifyContent={"space-between"}>
@@ -301,7 +295,7 @@ const TableWithColumns = () => {
                             {sortedTableColumns?.map(column => renderFormControl(column))}
                         </CardBody>}
                         <CardFooter>
-                            {tableColumns !== null && tableColumns.length !== 0 &&
+                            {tableColumns !== null && tableColumns.length !== 0 ?
                                 <Button colorScheme="green" onClick={() => {
                                     dispatch({ type: 'datasetTable/setEditTable', payload: true })
                                     console.log(tableColumns)
@@ -309,7 +303,9 @@ const TableWithColumns = () => {
                                 }} >
                                     <Box marginRight={".5rem"}>Edit Columns</Box>
                                     <MdModeEdit color="white" cursor={"pointer"} size="25" />
-                                </Button>
+                                </Button> :
+                                <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
+                                    onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
                             }
                         </CardFooter>
                     </Card>

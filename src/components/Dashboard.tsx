@@ -19,6 +19,7 @@ import { databaseSqlite } from './sqlite/db';
 import { isZeroTimeString } from '../helpers';
 import { getTablesWithUserId } from '../api/userTables';
 import ProjectsComponent from './Projects/ProjectsComponent';
+import ModalComponent from './ModalComponent';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -86,6 +87,7 @@ const Dashboard = () => {
                 <Button width="100%" backgroundColor={activePage == "tableview" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
             </HStack>
             {rendernPage()}
+            <ModalComponent />
         </VStack>
     );
 }

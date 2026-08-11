@@ -5,6 +5,7 @@ interface ModalInfoState {
     modalHeader: string | null;
     modalBody: string | null;
     saveBtnInfo: string | null;
+    modalType: string | null;
 }
 
 const initialState: ModalInfoState = {
@@ -12,6 +13,7 @@ const initialState: ModalInfoState = {
     modalHeader: null,
     modalBody: null,
     saveBtnInfo: null,
+    modalType: null,
 }
 
 const modalInfoSlice = createSlice({
@@ -29,7 +31,10 @@ const modalInfoSlice = createSlice({
         },
         setSaveBtnInfo: (state, action) => {
             state.saveBtnInfo = action.payload;
-        }
+        },
+        setModalType: (state, action) => {
+            state.modalType = action.payload;
+        },
     }
 });
 
@@ -37,7 +42,8 @@ export const {
     setShowModal,
     setModalHeader,
     setModalBody,
-    setSaveBtnInfo
+    setSaveBtnInfo,
+    setModalType
 } = modalInfoSlice.actions;
 
 export default modalInfoSlice.reducer;

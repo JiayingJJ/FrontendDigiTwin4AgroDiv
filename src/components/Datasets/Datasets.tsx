@@ -12,7 +12,6 @@ import CreatedTables from './CreatedTables';
 import { databaseSqlite } from '../sqlite/db';
 import { isZeroTimeString } from '../../helpers';
 import { deleteTableWithId, getTablesWithUserId } from '../../api/userTables';
-import ModalComponent from '../ModalComponent';
 const Datasets = () => {
     const dispatch = useDispatch()
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
@@ -69,18 +68,6 @@ const Datasets = () => {
         fechtData()
         dispatch({ type: 'datasetTable/setUpdatedTables', payload: false })
     }, [updatedTables])
-    const clickOnSaveBtn = async () => {
-        const dataDelete = await deleteTableWithId(selectedTableId);
-        const data = await getTablesWithUserId(userInfo)
-        const filterData = data.filter((d) => {
-            if (!d.deleted_at.Valid) {
-                return d;
-            }
-        });
-        dispatch({ type: 'datasetTable/setTables', payload: filterData })
-    }
-    const clickOnCancelBtn = () => {
-    }
 
     return (
         <>
@@ -113,7 +100,6 @@ const Datasets = () => {
                     <TableWithColumns />
                 </GridItem>
             </Grid>
-            <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
             <UserCreateANewTable />
         </>
     );

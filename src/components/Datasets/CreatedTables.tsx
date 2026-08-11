@@ -50,6 +50,7 @@ const CreatedTables = () => {
         dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
         dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+        dispatch({ type: 'modalInfo/setModalType', payload: "deleteTable" })
     }
 
     return (

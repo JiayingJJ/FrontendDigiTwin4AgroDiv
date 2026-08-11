@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardBody, Box, Button, HStack, VStack } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
 import { databaseSqlite } from '../sqlite/db';
-import { deleteTableWithId, fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
+import { fetchTableWithId } from '../../api/userTables';
 const CreatedTables = () => {
     const dispatch = useDispatch()
     const tables = useSelector((state: any) => state.datasetTable.tables)

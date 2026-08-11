@@ -225,7 +225,7 @@ const TableWithColumns = () => {
         }
     }
     const handleGetProjectInfo = async () => {
-        if (selectedTable.project_id !== undefined && selectedTable.project_id.String !== '') {
+        if (selectedTable.project_id !== undefined && selectedTable.project_id !== '') {
             const data = await getProjectWithId(selectedTable.project_id)
             console.log(data[0])
             setProjectName(data[0].name)

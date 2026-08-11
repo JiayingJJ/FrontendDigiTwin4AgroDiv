@@ -19,7 +19,7 @@ const Datasets = () => {
     const addNewDataset = useSelector((state: any) => state.datasetTable.addNewDataset)
     const userInfo = useSelector((state: any) => state.user)
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
-    const [tableId, setTableId] = useState<string | null>(null);
+    const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     useEffect(() => {
         async function fechtData() {
             if (isOnLine) {
@@ -70,7 +70,7 @@ const Datasets = () => {
         dispatch({ type: 'datasetTable/setUpdatedTables', payload: false })
     }, [updatedTables])
     const clickOnSaveBtn = async () => {
-        const dataDelete = await deleteTableWithId(tableId);
+        const dataDelete = await deleteTableWithId(selectedTableId);
         const data = await getTablesWithUserId(userInfo)
         const filterData = data.filter((d) => {
             if (!d.deleted_at.Valid) {

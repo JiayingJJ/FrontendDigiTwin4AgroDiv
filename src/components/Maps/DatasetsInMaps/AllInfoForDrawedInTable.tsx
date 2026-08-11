@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
-import ModalComponent from '../../ModalComponent';
 import { getColumnWithId } from '../../../api/dataset';
 import { fetchTableWithId } from '../../../api/userTables';
 import { deleteGeoDataWithId, setGeoDataStatus } from '../../../api/geoData';
@@ -71,7 +70,6 @@ const AllInfoForDrawedInTable = () => {
                         <FiPlusCircle style={{ padding: "5px", margin: "5px"}} size="30" cursor={"pointer"} onClick={() => handlerAddNewData()} />
                     </Box>
                 </HStack>
-                <ModalComponent clickOnSaveBtn={clickOnSaveBtn} clickOnCancelBtn={clickOnCancelBtn} />
                 {allInfoInProperties?.map((geo: any) => {
                     return (
                         // <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>

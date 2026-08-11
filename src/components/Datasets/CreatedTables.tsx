@@ -10,7 +10,6 @@ const CreatedTables = () => {
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
     const userInfo = useSelector((state: any) => state.user)
-    const [tableId, setTableId] = useState<string | null>(null);
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
 
     const getTableWithId = async (t: any) => {
@@ -44,14 +43,7 @@ const CreatedTables = () => {
             dispatch({ type: 'datasetTable/setTableColumns', payload: JSON.parse(tableData[0].columns_in_table) })
         }
     }
-    const handleDeleteTable = async (t: any) => {
-        setTableId(t.id)
-        dispatch({ type: 'modalInfo/setShowModal', payload: true })
-        dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
-        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
-        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
-        dispatch({ type: 'modalInfo/setModalType', payload: "deleteTable" })
-    }
+
 
     return (
         <VStack spacing={".5rem"}>
@@ -59,7 +51,6 @@ const CreatedTables = () => {
                 return (
                     <Card width={"100%"} key={`${t.id}-created-table`}>
                         <CardBody padding={"10px"}>
-                            <HStack spacing={".3rem"} justifyContent={"space-between"}>
                                 <Button
                                     width={"100%"}
                                     textTransform='uppercase'
@@ -72,10 +63,6 @@ const CreatedTables = () => {
                                     key={`${t.id}-table-box-created`}>
                                     {t.table_name}
                                 </Button>
-                                <Box style={{ display: "flex", alignItems: "center" }}>
-                                    <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(t)} size="25" />
-                                </Box>
-                            </HStack>
                         </CardBody>
                     </Card>)
             })}

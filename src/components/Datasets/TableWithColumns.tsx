@@ -25,6 +25,7 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
 } from '@chakra-ui/react'
+import { MdDeleteForever } from "react-icons/md";
 import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
 import { setUserTableProjectId } from '../../api/userTables';
@@ -243,6 +244,13 @@ const TableWithColumns = () => {
     const handlePostProjectId = async () => {
         const data = await setUserTableProjectId(selectedTableId, projectId, "pending")
     }
+    const handleDeleteTable = async (t: any) => {
+        dispatch({ type: 'modalInfo/setShowModal', payload: true })
+        dispatch({ type: 'modalInfo/setModalHeader', payload: "Datenbank löschen" })
+        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Datenbank ${t.table_name} löschen?` })
+        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+        dispatch({ type: 'modalInfo/setModalType', payload: "deleteTable" })
+    }
     return (
         <HStack alignItems={"start"}>
             <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
@@ -259,7 +267,10 @@ const TableWithColumns = () => {
                 <GridItem colSpan={addingColumns || editTable ? 2 : tableColumns.length === 0 ? 6 : 7} overflowY={"auto"} height={"90vh"}>
                     <Card width={"100%"}>
                         <CardHeader>
-                            <Heading size={"md"}>Input preview</Heading>
+                            <HStack spacing={".3rem"} justifyContent={"space-between"}>
+                                <Heading size={"md"}>Input preview</Heading>
+                                <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(selectedTable)} size="25" />
+                            </HStack>
                         </CardHeader>
                         {selectedTable !== null && <CardBody>
                             {(selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) ? <Box>

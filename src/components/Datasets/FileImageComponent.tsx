@@ -71,24 +71,10 @@ const FileImageComponent = ({ id, index, data }: Props) => {
                         }
                         setValue(e)
                         dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
-                    }} value={value}>
+                    }} defaultValue="image">
                         <Stack direction='row'>
                             <Radio value='image'>Bild</Radio>
                             <Radio value='file'>File</Radio>
-                        </Stack>
-                    </RadioGroup>}
-                    {value === 'number' && <RadioGroup onChange={(e) => {
-                        if (e) {
-                            setIsDisabled(false)
-                        } else {
-                            setIsDisabled(true)
-                        }
-                        setValueNumber(e)
-                        dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
-                    }} value={valueNumber}>
-                        <Stack direction='row'>
-                            <Radio value='integer'>Ganzzahl</Radio>
-                            <Radio value='real'>Dezimalzahl</Radio>
                         </Stack>
                     </RadioGroup>}
                 </Box>

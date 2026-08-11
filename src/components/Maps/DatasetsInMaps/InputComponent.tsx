@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     Button,
@@ -15,7 +15,6 @@ import {
     Select,
     Text
 } from '@chakra-ui/react'
-import { getCurrentTime } from '../../../helpers';
 type Props = {
     name: string,
     hint: number,
@@ -25,20 +24,24 @@ type Props = {
 const InputComponent = ({ name, hint, id, type }: Props) => {
     const dispatch = useDispatch()
     const [labelName, setLabelName] = useState<string>("");
-    useEffect(() => {
-        if (type === "timestamp") {
-            setLabelName(getCurrentTime())
-            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: getCurrentTime() } })
-        }
-    }, [])
+
+    const nowLocal = useMemo(() => {
+        const d = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const yyyy = d.getFullYear();
+        const mm = pad(d.getMonth() + 1);
+        const dd = pad(d.getDate());
+        const hh = pad(d.getHours());
+        const min = pad(d.getMinutes());
+        return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    }, []);
+
     return (
         <FormControl onMouseOver={() => { console.log() }}>
             <Text mb='8px'>{name}</Text>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
-                    {type === "timestamp" ? <Input placeholder={`${hint}`} value={labelName} onChange={(e) => {
-                        console.log(id)
-                        console.log(e.target.value)
+                    {type === "timestamp" ? <Input type='datetime-local' placeholder={`${hint}`} defaultValue={nowLocal} onChange={(e) => {
                         setLabelName(e.target.value)
                         dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
                     }} /> : <Input placeholder={`${hint}`} value={labelName} onChange={(e) => {

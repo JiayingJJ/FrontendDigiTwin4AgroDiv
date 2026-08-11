@@ -114,7 +114,7 @@ const TableWithColumns = () => {
                     <FormControl key={`${column.id}-tooltip`}>
                         <FormLabel>{column.name}</FormLabel>
                         <Box style={{ display: "flex", flexDirection: "row" }}>
-                            <Input placeholder={`${column.hint}`} />
+                            <Input placeholder={`${column.hint}`} type='datetime-local'/>
                             <Tooltip label={`${column.hint}`} hasArrow placement='top-end'>
                                 <Box>
                                     <CiCircleInfo color="green" cursor={"pointer"} size="40" />

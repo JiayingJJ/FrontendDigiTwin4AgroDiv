@@ -72,7 +72,7 @@ const TextComponent = ({ id, index, data }: Props) => {
                         }
                         setValue(e)
                         dispatch({ type: 'datasetTable/addIsChangingColumns', payload: id })
-                    }} value={value}>
+                    }} defaultValue={"text"}>
                         <Stack direction='row'>
                             <Radio value='text'>Text</Radio>
                             <Radio value='timestamp'>Datum</Radio>

@@ -56,7 +56,7 @@ const CreatedTables = () => {
         <VStack spacing={".5rem"}>
             {tables?.map((t: any) => {
                 return (
-                    <Card width={"100%"}>
+                    <Card width={"100%"} key={`${t.id}-created-table`}>
                         <CardBody padding={"10px"}>
                             <HStack spacing={".3rem"} justifyContent={"space-between"}>
                                 <Button

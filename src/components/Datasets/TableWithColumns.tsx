@@ -273,7 +273,7 @@ const TableWithColumns = () => {
                                 <HStack style={{ display: "flex", alignItems: "end", width: "50%" }}>
                                     <FormControl>
                                         <FormLabel>Project</FormLabel>
-                                        <Select placeholder='Select project' onChange={handleSelectProject}>
+                                        <Select placeholder='Select project' onChange={handleSelectProject} key={"select-project"}>
                                             {allProjects.map((p: any) => {
                                                 return (
                                                     <option value={p.id}>{p.name}</option>

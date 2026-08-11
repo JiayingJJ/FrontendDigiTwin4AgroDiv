@@ -77,7 +77,7 @@ const UserCreateANewTable = () => {
             onClose={() =>
                 dispatch({ type: 'datasetTable/setAddNewDataset', payload: false })
             }
-            // key={`${selectedTable?.id}-render-table-modal`}
+            key={"user-create-new-table"}
             size={"5xl"}>
             <ModalOverlay />
             <ModalContent>

@@ -122,7 +122,7 @@ const ColumnsComponent = ({ }: Props) => {
         <Box>
             {userTableColumns?.map((column: ColumnType, index: number) => {
                 return (
-                    <VStack alignItems={"left"}>
+                    <VStack alignItems={"left"} key={`${index}-columns-component`}>
                         {index !== 0 && <Divider orientation='horizontal' borderColor={"red"} borderRadius={10} borderWidth={2} />}
                         {renderForm(column, index)}
                     </VStack>

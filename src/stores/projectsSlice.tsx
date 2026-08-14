@@ -4,6 +4,7 @@ interface ProjectsState {
     allProjects: [];
     selectedProject: any;
     addNewProject: boolean;
+    editProject: boolean;
     userTablesForProject: []|null;
     selectedUserTable: []|null;
 }
@@ -14,6 +15,7 @@ const initialState: ProjectsState = {
     addNewProject: false,
     userTablesForProject: null,
     selectedUserTable: null,
+    editProject: false,
 }
 
 const projectsSlice = createSlice({
@@ -28,6 +30,9 @@ const projectsSlice = createSlice({
         },
         setAddNewProject: (state, action) => {
             state.addNewProject = action.payload;
+        },
+        setEditProject: (state, action) => {
+            state.editProject = action.payload;
         },
         clearProjectState: (state, action) => {
             state.allProjects = [],
@@ -49,7 +54,8 @@ export const {
     setAddNewProject,
     clearProjectState,
     setUserTablesForProject,
-    setSelectedUserTable
+    setSelectedUserTable,
+    setEditProject
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

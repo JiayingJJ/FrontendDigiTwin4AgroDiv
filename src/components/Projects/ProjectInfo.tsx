@@ -28,26 +28,21 @@ const ProjectInfo = () => {
     const dispatch = useDispatch()
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
     const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
+    const editProject = useSelector((state: any) => state.projects.editProject)
     const [creator, setCreator] = useState<any>();
     const [members, setMembers] = useState<any>();
     const [addMember, setAddMember] = useState<boolean>(false);
     const [viewActions, setViewActions] = useState<boolean>(false);
-    const [editProject, setEditProject] = useState<boolean>(false);
     const [name, setName] = useState<string>(selectedProject?.name);
     const [description, setDescription] = useState<string>(selectedProject?.description);
     const userInfo = useSelector((state: any) => state.user)
-
     const selectedUserTable = useSelector((state: any) => state.projects.selectedUserTable)
-
-    console.log(selectedProject)
     const getCreatorInfoWithId = async (id: string) => {
         const data = await fetchUserWithId(id)
-        console.log(data)
         setCreator(data[0])
     }
     const getMemberInfo = async (ids: []) => {
         let m = [];
-        console.log(ids)
         ids.forEach(async (i: string) => {
             const data = await fetchUserWithId(i)
             console.log(data[0])
@@ -63,9 +58,7 @@ const ProjectInfo = () => {
         }
     }, [selectedProject])
     const handleAddMembersInProject = async () => {
-        console.log("add members")
         setAddMember(!addMember)
-
     }
     const handleDeleteProject = async (p: any) => {
         dispatch({ type: 'modalInfo/setShowModal', payload: true })
@@ -75,13 +68,12 @@ const ProjectInfo = () => {
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteProject" })
     }
     const handlerEditProject = () => {
-        console.log("edit")
-        setEditProject(!editProject)
+        dispatch({ type: 'projects/setEditProject', payload: !editProject })
     }
     const handlerUpdateProjectInfo = async () => {
         const data = await updateProjectInfo(selectedProject.id, name, description);
-        console.log(data)
-        setEditProject(false)
+        dispatch({ type: 'projects/setEditProject', payload: false })
+
         if (data[1] !== 200) {
         } else {
             const dataStatus = await setProjectDataStatus(selectedProject.id, "merged")
@@ -100,7 +92,7 @@ const ProjectInfo = () => {
         }
     }
     const handlerCancelEdit = () => {
-        setEditProject(false)
+        dispatch({ type: 'projects/setEditProject', payload: false })
         setName("")
         setDescription("")
     }

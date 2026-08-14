@@ -67,3 +67,13 @@ export const getAllProjectsWithShared = async (user_id: string) => {
     const data = await response.json();
     return [data, response.status];
 }
+
+export const updateProjectInfo = async (projectId: string, name: string, projectDescription: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/projects/project/update/info`, {
+        method: "POST",
+        body: JSON.stringify({ id: projectId, name: name, description: projectDescription, updated_at: time, data_status: "pending" }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}

@@ -13,14 +13,15 @@ import {
     Text,
     IconButton,
     Badge,
-    VStack
+    VStack, Input, Button
 } from '@chakra-ui/react'
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { readableTimestamp } from '../../helpers';
 import { fetchUserWithId } from '../../api/user';
 import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { getProjectWithCreatorId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
 
 
 const ProjectInfo = () => {
@@ -31,6 +32,11 @@ const ProjectInfo = () => {
     const [members, setMembers] = useState<any>();
     const [addMember, setAddMember] = useState<boolean>(false);
     const [viewActions, setViewActions] = useState<boolean>(false);
+    const [editProject, setEditProject] = useState<boolean>(false);
+    const [name, setName] = useState<string>(selectedProject?.name);
+    const [description, setDescription] = useState<string>(selectedProject?.description);
+    const userInfo = useSelector((state: any) => state.user)
+
     const selectedUserTable = useSelector((state: any) => state.projects.selectedUserTable)
 
     console.log(selectedProject)
@@ -68,27 +74,68 @@ const ProjectInfo = () => {
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteProject" })
     }
+    const handlerEditProject = () => {
+        console.log("edit")
+        setEditProject(!editProject)
+    }
+    const handlerUpdateProjectInfo = async () => {
+        const data = await updateProjectInfo(selectedProject.id, name, description);
+        console.log(data)
+        setEditProject(false)
+        if (data[1] !== 200) {
+        } else {
+            const dataStatus = await setProjectDataStatus(selectedProject.id, "merged")
+            const projectsWithCreatorId = await getProjectWithCreatorId(userInfo.id)
+            if (projectsWithCreatorId[1] !== 200) {
+            } else {
+                const notDelete = projectsWithCreatorId[0].filter((d: any) => {
+                    if (!d.deleted_at.Valid) {
+                        return d;
+                    }
+                })
+                dispatch({ type: 'projects/setAllProjects', payload: notDelete })
+                const selected = notDelete.filter((i: any) => i.id === selectedProject.id)
+                dispatch({ type: 'projects/setSelectedProject', payload: selected[0] })
+            }
+        }
+    }
+    const handlerCancelEdit = () => {
+        setEditProject(false)
+        setName("")
+        setDescription("")
+    }
+    useEffect(() => {
+        if (selectedProject !== null) {
+            setName(selectedProject.name)
+            setDescription(selectedProject?.description.Valid === true && selectedProject?.description.String)
+        }
+    }, [selectedProject])
     return (
         <HStack alignItems={"start"}>
             <Card width={"100%"}>
                 <CardHeader>
                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
                         <Heading size={"md"}>Project Info</Heading>
-                        <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />
+                        {selectedProject && <HStack>
+                            <IconButton disabled={editProject} aria-label='Delete project' icon={<MdDeleteForever cursor={editProject ? "not-allowed" : "pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />} />
+                            <IconButton disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" onClick={handlerEditProject} />} />
+                        </HStack>}
                     </HStack>
                 </CardHeader>
                 {selectedProject !== null && <CardBody>
                     <Stack divider={<StackDivider />} spacing='4'>
                         <Box>
-                            <Heading size='xs' textTransform=''>
+                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
                                 Project Name
                             </Heading>
-                            <Text pt='2' fontSize='sm'>
+                            {editProject ? <Input defaultValue={selectedProject.name} backgroundColor={"#ecf39eff"} onChange={(e) => {
+                                setName(e.target.value)
+                            }} /> : <Text pt='2' fontSize='sm'>
                                 {selectedProject.name}
-                            </Text>
+                            </Text>}
                         </Box>
                         <Box>
-                            <Heading size='xs' textTransform=''>
+                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
                                 Created At
                             </Heading>
                             <Text pt='2' fontSize='sm'>
@@ -96,24 +143,26 @@ const ProjectInfo = () => {
                             </Text>
                         </Box>
                         <Box>
-                            <Heading size='xs' textTransform=''>
+                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
                                 Creator
                             </Heading>
                             <Text pt='2' fontSize='sm'>
                                 {creator?.name}
                             </Text>
                         </Box>
-                         <Box>
-                            <Heading size='xs' textTransform=''>
+                        <Box>
+                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
                                 Description
                             </Heading>
-                            <Text pt='2' fontSize='sm'>
-                                {selectedProject?.description.Valid===true && selectedProject?.description.String}
-                            </Text>
+                            {editProject ? <Input backgroundColor={"#ecf39eff"} defaultValue={selectedProject?.description.Valid === true && selectedProject?.description.String} onChange={(e) => {
+                                setDescription(e.target.value)
+                            }} /> : <Text pt='2' fontSize='sm'>
+                                {selectedProject?.description.Valid === true && selectedProject?.description.String}
+                            </Text>}
                         </Box>
                         <Box>
                             <HStack>
-                                <Heading size='xs' textTransform='uppercase'>
+                                <Heading size='xs' textTransform='uppercase' paddingBottom={"5px"}>
                                     Members
                                 </Heading>
                                 <IconButton
@@ -134,7 +183,7 @@ const ProjectInfo = () => {
                         </Box>
                         <Box>
                             <HStack>
-                                <Heading size='xs' textTransform='uppercase'>
+                                <Heading size='xs' textTransform='uppercase' paddingBottom={"5px"}>
                                     Tables
                                 </Heading>
                             </HStack>
@@ -156,7 +205,9 @@ const ProjectInfo = () => {
                     </Stack>
                 </CardBody>}
                 <CardFooter>
-
+                    {editProject && <HStack>
+                        <Button onClick={handlerUpdateProjectInfo}>Submit</Button>
+                        <Button onClick={handlerCancelEdit}>Cancel</Button></HStack>}
                 </CardFooter>
             </Card>
         </HStack>

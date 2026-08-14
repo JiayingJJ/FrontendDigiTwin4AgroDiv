@@ -126,7 +126,7 @@ const DatasetColumns = () => {
             const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
             const geoData = { "coordinates": geometry, "type": geometryType }
             if (addDrawedInteractionInfo) {
-                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, files)
+                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
                 const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
                 dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
             }

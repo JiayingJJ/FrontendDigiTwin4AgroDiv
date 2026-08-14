@@ -10,7 +10,7 @@ import {
     FormHelperText,
     Input,
     RadioGroup,
-    Radio,
+    Textarea,
     Select
 } from '@chakra-ui/react'
 import { MdCancel } from "react-icons/md";
@@ -28,10 +28,10 @@ const AddProject = () => {
     const handleChange = (e: any) => {
         setProjectName(e.target.value)
     }
-    const clickForCreateProject = async (projectName: string, creatorId: string) => {
+    const clickForCreateProject = async (projectName: string, creatorId: string, projectDescription: string) => {
         const members = [userInfo.id]
         if (isOnLine) {
-            const data = await createProject(projectName, creatorId, members)
+            const data = await createProject(projectName, creatorId, members, projectDescription)
             console.log(data)
             if (data[1] === 500) {
                 console.log("Alert Message")
@@ -57,11 +57,23 @@ const AddProject = () => {
             }
         }
     }
+    let [projectDesc, setProjectDesc] = useState('')
+    let handleProjectDescriptionChange = (e) => {
+        let inputValue = e.target.value
+        setProjectDesc(inputValue)
+    }
     return (
         <VStack>
             <FormControl isRequired>
                 <FormLabel>Project Name</FormLabel>
                 <Input placeholder='Name' onChange={(e) => handleChange(e)} value={projectName} />
+                <FormLabel>Project describtion</FormLabel>
+                <Textarea
+                    value={projectDesc}
+                    onChange={handleProjectDescriptionChange}
+                    placeholder='Geben Sie eine Beschreibung über das Projekt'
+                    size='sm'
+                />
             </FormControl>
             <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
                 dispatch({ type: 'projects/setAddNewProject', payload: false })
@@ -70,7 +82,7 @@ const AddProject = () => {
                 Abbrechen
             </Button>
             <Button disabled={projectName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
-                clickForCreateProject(projectName, userInfo.id)
+                clickForCreateProject(projectName, userInfo.id, projectDesc)
             }}>
                 Create project
             </Button>

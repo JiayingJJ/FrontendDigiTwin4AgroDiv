@@ -8,12 +8,12 @@ export const getAllProjects = async () => {
     const data = await response.json();
     return [data, response.status];
 }
-export const createProject = async (name: string, creatorId: string, members:any) => {
+export const createProject = async (name: string, creatorId: string, members: any, projectDescription: string) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/projects/project`, {
-            method: "POST",
-            body: JSON.stringify({ name: name, creator_id: creatorId, members: members, created_at: time, updated_at: time, data_status: "pending" }),
-        })
+        method: "POST",
+        body: JSON.stringify({ name: name, creator_id: creatorId, members: members, description: projectDescription, created_at: time, updated_at: time, data_status: "pending" }),
+    })
     const data = await response.json();
     return [data, response.status];
 }

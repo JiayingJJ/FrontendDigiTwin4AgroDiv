@@ -103,6 +103,14 @@ const ProjectInfo = () => {
                                 {creator?.name}
                             </Text>
                         </Box>
+                         <Box>
+                            <Heading size='xs' textTransform=''>
+                                Description
+                            </Heading>
+                            <Text pt='2' fontSize='sm'>
+                                {selectedProject?.description.Valid===true && selectedProject?.description.String}
+                            </Text>
+                        </Box>
                         <Box>
                             <HStack>
                                 <Heading size='xs' textTransform='uppercase'>

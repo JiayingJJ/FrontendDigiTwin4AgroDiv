@@ -90,7 +90,7 @@ const DatasetsTable = () => {
                                     </HStack>
                                     {isSelected ? <VStack marginTop={".5rem"} spacing={".5rem"} justifyContent={"left"} width={"100%"}>
                                         <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => setDescriptionOpen(!descriptionOpen)}>{descriptionOpen ? "Hide description" : "Show description"}</Button>
-                                        <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button>
+                                        {/* <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => console.log("TODO: Show Map view with this data seleted")}>{"Show on map"}</Button> */}
                                     </VStack> : null}
                                 </CardBody>
                             </Card>

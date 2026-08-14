@@ -9,6 +9,7 @@ import {
     Td,
     TableCaption,
     TableContainer,
+    Box
 } from '@chakra-ui/react'
 import { readableTimestamp } from '../../helpers';
 import ImageView from './ImageView';
@@ -40,10 +41,11 @@ function Tables() {
                                 selectedTable !== null && selectedTable?.columns_in_table?.RawMessage.map((t: any) => {
                                     const field = t.name.toLowerCase().replaceAll(" ", "_");
                                     return (
-                                        <Td>{t.type === "timestamp" ? readableTimestamp(d[field]) : t.type === "image" ?
-
-                                            d[field] !== "" && <ImageView url={d[field]} />
-                                            : d[field]}</Td>
+                                        <Td overflowY={"clip"} maxHeight={"50px"}>
+                                            {t.type === "timestamp" ? readableTimestamp(d[field]) : t.type === "image" ?
+                                                d[field] !== "" &&
+                                                <ImageView url={d[field]} />
+                                                : d[field]}</Td>
                                     )
                                 })
                             }

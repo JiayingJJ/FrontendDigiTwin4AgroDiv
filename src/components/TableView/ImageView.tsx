@@ -11,7 +11,9 @@ import {
     PopoverCloseButton,
     PopoverAnchor,
     Button,
-    Image
+    Image,
+    Text,
+    Box
 } from '@chakra-ui/react'
 import { downloadImage } from '../../api/file';
 type Props = {
@@ -33,14 +35,30 @@ const ImageView = ({ url }: Props) => {
     return (
         <Popover>
             <PopoverTrigger>
-                <Image width="10%" height="10%" src={imageUrl}/>
+                <Image 
+                    border="1px solid"
+                    borderColor="blackAlpha.800"
+                    maxWidth={"64px"}
+                    maxHeight={"64px"}
+                    src={imageUrl} 
+                    cursor={"zoom-in"}
+                />
             </PopoverTrigger>
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverCloseButton />
                 {/* <PopoverHeader></PopoverHeader> */}
-                <PopoverBody marginTop={"20px"}>
-                    <Image width="100%" height="100%" src={imageUrl}/>
+                <PopoverBody 
+                    minWidth="128px" minHeight="128px" 
+                    marginTop={"20px"} 
+                    display="flex" 
+                    alignItems={"center"}
+                    >
+                    <Image
+                        border="1px solid"
+                        borderColor="blackAlpha.800"
+                        src={imageUrl}
+                    />
                 </PopoverBody>
             </PopoverContent>
         </Popover>

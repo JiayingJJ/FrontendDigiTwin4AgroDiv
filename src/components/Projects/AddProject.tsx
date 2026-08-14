@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import {
     Button,
-    Box,
-    HStack,
-    VStack,
     FormControl,
     FormLabel,
-    FormErrorMessage,
-    FormHelperText,
     Input,
-    RadioGroup,
     Textarea,
-    Select
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
 } from '@chakra-ui/react'
 import { MdCancel } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
@@ -21,8 +21,10 @@ import { useSelector, useDispatch } from 'react-redux';
 const AddProject = () => {
     const dispatch = useDispatch()
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+    const addNewProject = useSelector((state: any) => state.projects.addNewProject)
 
     const [projectName, setProjectName] = useState<string>("");
+    const [projectDesc, setProjectDesc] = useState('')
     const userInfo = useSelector((state: any) => state.user)
 
     const handleChange = (e: any) => {
@@ -32,7 +34,6 @@ const AddProject = () => {
         const members = [userInfo.id]
         if (isOnLine) {
             const data = await createProject(projectName, creatorId, members, projectDescription)
-            console.log(data)
             if (data[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
@@ -56,37 +57,54 @@ const AddProject = () => {
                 }
             }
         }
+        setProjectName("")
+        setProjectDesc("")
     }
-    let [projectDesc, setProjectDesc] = useState('')
     let handleProjectDescriptionChange = (e) => {
         let inputValue = e.target.value
         setProjectDesc(inputValue)
     }
     return (
-        <VStack>
-            <FormControl isRequired>
-                <FormLabel>Project Name</FormLabel>
-                <Input placeholder='Name' onChange={(e) => handleChange(e)} value={projectName} />
-                <FormLabel>Project describtion</FormLabel>
-                <Textarea
-                    value={projectDesc}
-                    onChange={handleProjectDescriptionChange}
-                    placeholder='Geben Sie eine Beschreibung über das Projekt'
-                    size='sm'
-                />
-            </FormControl>
-            <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+        <Modal closeOnOverlayClick={false}
+            isOpen={addNewProject}
+            onClose={() =>
                 dispatch({ type: 'projects/setAddNewProject', payload: false })
-
-            }}>
-                Abbrechen
-            </Button>
-            <Button disabled={projectName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
-                clickForCreateProject(projectName, userInfo.id, projectDesc)
-            }}>
-                Create project
-            </Button>
-        </VStack>
+            }
+            key={"user-create-new-table"}
+            size={"5xl"}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Add new project</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                    <FormControl isRequired>
+                        <FormLabel>Project Name</FormLabel>
+                        <Input placeholder='Name' onChange={(e) => handleChange(e)} value={projectName} />
+                    </FormControl>
+                    <FormControl >
+                        <FormLabel>Project describtion</FormLabel>
+                        <Textarea
+                            value={projectDesc}
+                            onChange={handleProjectDescriptionChange}
+                            placeholder='Geben Sie eine Beschreibung über das Projekt'
+                            size='sm'
+                        />
+                    </FormControl>
+                </ModalBody>
+                <ModalFooter>
+                    <Button width="400px" rightIcon={<MdCancel />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                        dispatch({ type: 'projects/setAddNewProject', payload: false })
+                    }}>
+                        Abbrechen
+                    </Button>
+                    <Button disabled={projectName === ""} width="400px" rightIcon={<FaCheck />} backgroundColor={"#E8871E"} color="white" onClick={() => {
+                        clickForCreateProject(projectName, userInfo.id, projectDesc)
+                    }}>
+                        Create project
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }
 

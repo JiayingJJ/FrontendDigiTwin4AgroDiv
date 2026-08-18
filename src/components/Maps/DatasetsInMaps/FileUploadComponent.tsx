@@ -20,8 +20,6 @@ type Props = {
     type: string
 }
 const FileUploadComponent = ({ name, hint, id, type }: Props) => {
-    console.log(name)
-    console.log(hint)
     const dispatch = useDispatch()
 
     const fileInputRef = useRef(null);
@@ -29,7 +27,6 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     const updateImage = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-
             const lastDotIndex = file.name.lastIndexOf(".");
             let uniqueFileName;
             if (lastDotIndex === -1) {

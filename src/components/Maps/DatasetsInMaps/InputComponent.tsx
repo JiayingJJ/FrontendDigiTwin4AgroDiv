@@ -30,9 +30,15 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
         const dd = pad(d.getDate());
         const hh = pad(d.getHours());
         const min = pad(d.getMinutes());
-        dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: `${yyyy}-${mm}-${dd}T${hh}:${min}` } })
         return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
     }, []);
+    useEffect(() => {
+        if (type === "timestamp") {
+            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: nowLocal } })
+        } else if (type === "integer" || type === "real") {
+            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: "number_as_null" } })
+        }
+    }, [])
     return (
         <FormControl onMouseOver={() => { console.log() }}>
             <Heading as='h4' size='md' padding={"15px 0px 10px 0px"}>{name}</Heading>
@@ -44,7 +50,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                     }} />
                         : type === "integer" ?
                             <NumberInput allowMouseWheel size={"lg"}
-                                min={-1000} step={1} value={valueNum}
+                                min={-1000} step={1}
                                 height="100%"
                                 onChange={(valueString) => {
                                     console.log(valueString)
@@ -92,7 +98,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
 
                                     </NumberInputStepper>
                                 </NumberInput>
-                                : <Input placeholder={`${hint}`} value={labelName}
+                                : <Input placeholder={`${hint}`}
                                     size={"lg"}
                                     onChange={(e) => {
                                         console.log(id)

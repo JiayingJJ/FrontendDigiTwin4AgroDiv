@@ -27,6 +27,7 @@ interface OpenLayersState {
     allInfoInProperties: [];
     getUpdateFromDatabase: boolean;
     files: [];
+    removeDrawedFeature: boolean;
 }
 
 const initialState: OpenLayersState = {
@@ -55,6 +56,7 @@ const initialState: OpenLayersState = {
     allInfoInProperties: [],
     getUpdateFromDatabase: false,
     files: [],
+    removeDrawedFeature: false,
 }
 
 const openLayersSlice = createSlice({
@@ -94,6 +96,9 @@ const openLayersSlice = createSlice({
         setRendernDataInfo: (state, action) => {
             state.rendernDataInfo = action.payload;
         },
+        setRemoveDrawedFeature: (state, action) => {
+            state.removeDrawedFeature = action.payload;
+        },
         setColumnInfo: (state, action) => {
             state.columnInfo = action.payload;
         },
@@ -120,12 +125,13 @@ const openLayersSlice = createSlice({
         },
         clearReduxForGeoData: (state, action) => {
             state.columnInfo = null;
+            state.geometry=null;
+            state.geometryType=null;
             state.rendernDataInfo = false;
             state.selectedGeoData = null;
             state.selectedGeoInfo = null;
             state.selectedGeometryDataFromDatabase = null;
             state.selectedPropertiesFromDatabase = [];
-            state.feature = null;
             state.columnIdForDrawed = null;
             state.userSelectedColor = null;
             state.colorPicker = false;

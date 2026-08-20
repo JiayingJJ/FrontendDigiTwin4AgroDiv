@@ -25,6 +25,7 @@ const ColorPicker = () => {
         if (data[1] !== 200) {
 
         } else {
+            dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
             const dataStatus = await setGeoDataStatus(data[0].id, "merged")
             dispatch({ type: 'openLayers/setColorPicker', payload: false })
             setAlert("success", "Color changed", "Color has successful changed", true)

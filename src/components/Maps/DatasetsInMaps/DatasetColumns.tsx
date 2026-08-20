@@ -129,6 +129,7 @@ const DatasetColumns = () => {
                 const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
                 const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
                 dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
+                dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
             }
             else {
                 const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }

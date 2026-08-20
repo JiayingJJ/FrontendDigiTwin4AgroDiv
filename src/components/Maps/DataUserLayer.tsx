@@ -24,12 +24,10 @@ const DataUserLayer = () => {
     const geometryType = useSelector((state: any) => state.openLayers.geometryType)
     const showUserDataLayer = useSelector((state: any) => state.openLayers.showUserDataLayer)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
-    const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
-    const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const colorPicker = useSelector((state: any) => state.openLayers.colorPicker)
 
     const showGeoJSON = () => {
@@ -65,6 +63,7 @@ const DataUserLayer = () => {
             const dataStatus = await setGeoDataStatus(data[0].id, "merged")
             dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
             dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+            dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
             handlerOnCloseDrawer()
         }
     }

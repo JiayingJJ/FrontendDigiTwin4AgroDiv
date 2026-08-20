@@ -40,12 +40,8 @@ const OpenLayersMap = () => {
     const geoDataFromRedux = useSelector((state: any) => state.openLayers.geoData)
     const userInfo = useSelector((state: any) => state.user)
     const selectedGeometryDataFromDatabase = useSelector((state: any) => state.openLayers.selectedGeometryDataFromDatabase)
-    const geoData = useSelector((state: any) => state.openLayers.geoData)
     const showUserDataLayer = useSelector((state: any) => state.openLayers.showUserDataLayer)
     const layerType = useSelector((state: any) => state.openLayers.layerType)
-    const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
-    const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
-    const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedPropertiesFromDatabase = useSelector((state: any) => state.openLayers.selectedPropertiesFromDatabase)
     const geometryFromRedux = useSelector((state: any) => state.openLayers.geometry)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
@@ -82,7 +78,6 @@ const OpenLayersMap = () => {
 
     const statusForUserDataLayer = () => {
         if (!olMap) return;
-
         if (showUserDataLayer) {
             const layers = olMap.getLayers().getArray();
             const exists = layers.includes(vectorLayerUserData.current);
@@ -93,7 +88,6 @@ const OpenLayersMap = () => {
             olMap?.removeLayer(vectorLayerUserData.current);
         }
     }
-
 
     const fetchDataForDrawed = async (id: string) => {
         const geoId = geoDataFromRedux.filter((i: any) => i.id === id)
@@ -183,8 +177,8 @@ const OpenLayersMap = () => {
                     dispatch({ type: 'openLayers/setGeometry', payload: feature.getGeometry().getCoordinates() })
                     dispatch({ type: 'openLayers/setGeometryType', payload: feature.getGeometry()?.getType() })
                     if (dataId === undefined || dataId.Valid === false) {
-                        if (geoData.length !== 0) {
-                            geoData.forEach((gd: any) => {
+                        if (geoDataFromRedux.length !== 0) {
+                            geoDataFromRedux.forEach((gd: any) => {
                                 const rawCoords = gd.geometry_data.RawMessage.coordinates;
                                 const dbCoords = geometryFromRedux;
                                 if (
@@ -196,7 +190,7 @@ const OpenLayersMap = () => {
                                 } else {
                                     dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
                                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
-
+                                    dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
                                 }
                             });
                         } else {
@@ -305,15 +299,15 @@ const OpenLayersMap = () => {
     }, [])
     useEffect(() => {
         statusForUserDataLayer()
-    }, [layerType, showUserDataLayer])
+    }, [layerType, showUserDataLayer, getUpdateFromDatabase])
     useEffect(() => {
         let userColor;
         const features = vectorSourceUserData.current.getFeatures();
         resetFeatures(features)
         if (colorRedux === undefined || colorRedux === "" || colorRedux === null) {
             userColor = "#fff";
-        }else{
-            userColor= colorRedux
+        } else {
+            userColor = colorRedux
         }
         if (featureRedux !== null) {
             if (featureRedux.getGeometry()?.getType() === "Point") {
@@ -361,8 +355,8 @@ const OpenLayersMap = () => {
         const features = vectorSourceUserData.current.getFeatures();
         if (colorRedux === undefined || colorRedux === "" || colorRedux === null) {
             userColor = "#fff";
-        }else{
-            userColor=colorRedux;
+        } else {
+            userColor = colorRedux;
         }
         resetFeatures(features)
         if (featureRedux !== null) {
@@ -414,11 +408,15 @@ const OpenLayersMap = () => {
 
     useEffect(() => {
         if (getUpdateFromDatabase) {
-            dispatch({ type: 'openLayers/clearReduxForGeoData', payload: null })
-            // fetchUserGeoData();
-            if (selectedGeoData !== null && selectedGeoData.id !== null)
+            fetchUserGeoData();
+            if (selectedGeoData !== null && selectedGeoData.id !== null) {
                 fetchDataForDrawed(selectedGeoData.id);
+            }
             getDataInProperties()
+            const features = vectorSourceUserData.current.getFeatures();
+            resetFeatures(features)
+            dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
+            dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: false })
         }
     }, [getUpdateFromDatabase])
 

@@ -20,6 +20,7 @@ import { isZeroTimeString } from '../helpers';
 import { getTablesWithUserId } from '../api/userTables';
 import ProjectsComponent from './Projects/ProjectsComponent';
 import ModalComponent from './ModalComponent';
+import { getAllProjectsWithShared } from '../api/projects';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -48,11 +49,18 @@ const Dashboard = () => {
         async function fechtData() {
             if (isOnLine) {
                 const data = await getTablesWithUserId(userInfo)
+                const projectData = await getAllProjectsWithShared(userInfo.id)
                 const filterData = data.filter((d: any) => {
                     if (!d.deleted_at.Valid) {
                         return d;
                     }
                 });
+                 const notDelete = projectData[0].filter((d: any) => {
+                if (!d.deleted_at.Valid) {
+                    return d;
+                }
+            })
+            dispatch({ type: 'projects/setAllProjects', payload: notDelete })
                 dispatch({ type: 'datasetTable/setTables', payload: filterData })
             } else {
                 await databaseSqlite.initDb();

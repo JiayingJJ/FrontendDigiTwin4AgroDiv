@@ -52,6 +52,8 @@ const Datasets = () => {
                         return d;
                     }
                 });
+                const selected = filterData.filter((i: any) => i.id === selectedTableId)
+                dispatch({ type: 'datasetTable/setSelectedTable', payload: selected[0] })
                 dispatch({ type: 'datasetTable/setTables', payload: filterData })
             } else {
                 await databaseSqlite.initDb();

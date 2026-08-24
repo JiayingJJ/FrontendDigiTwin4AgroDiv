@@ -38,8 +38,8 @@ const ProjectsComponent = () => {
         }
     }
     useEffect(() => {
-        handlerGetAllProjects()
         dispatch({ type: 'projects/clearProjectState', payload: null })
+        handlerGetAllProjects()
     }, [])
     return (
         <Grid templateColumns={`repeat(7, 1fr)`} gap={3} width={"95vw"} height={"90vh"} padding={"0 0 2vh 0"}>

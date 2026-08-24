@@ -162,6 +162,7 @@ const openLayersSlice = createSlice({
             state.userSelectedColor = action.payload;
         },
         setFeature: (state, action) => {
+            console.log("set feature")
             state.feature = action.payload;
         },
         setColorPicker: (state, action) => {

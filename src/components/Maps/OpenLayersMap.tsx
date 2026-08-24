@@ -49,6 +49,7 @@ const OpenLayersMap = () => {
     const isDrawing = useSelector((state: any) => state.openLayers.drawingInteraction)
     const getUpdateFromDatabase = useSelector((state: any) => state.openLayers.getUpdateFromDatabase)
     const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
+    const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const isDrawingRef = useRef(isDrawing);
     const cardPadding = "0.4rem";
     const strockeColor = "#fff";
@@ -192,6 +193,7 @@ const OpenLayersMap = () => {
                                     dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: true })
                                     dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
                                 }
+                                dispatch({ type: 'openLayers/setRendernGeoDataList', payload: true })
                             });
                         } else {
                             dispatch({ type: 'openLayers/setSelectedGeoInfo', payload: { id: null, data_status: "pending" } })
@@ -214,10 +216,10 @@ const OpenLayersMap = () => {
     }, [isDrawing]);
     const resetFeatures = (features: any) => {
         features.forEach((feature) => {
-            let userColor;
-            let stroke;
             const data = feature.values_.ids
             if (data !== undefined && data.Valid === true) {
+                let userColor;
+                let stroke;
                 const raw = data?.RawMessage;
                 userColor =
                     Array.isArray(raw)
@@ -228,17 +230,16 @@ const OpenLayersMap = () => {
                     stroke = missedStrockeColor;
                 } else {
                     stroke = strockeColor;
-
                 }
                 if (feature.getGeometry()?.getType() === "Point") {
                     feature.setStyle(
-                        [new Style({
+                        new Style({
                             image: new CircleStyle({
                                 radius: 10,
                                 fill: new Fill({ color: userColor }),
                                 stroke: new Stroke({ color: stroke, width: 2 }),
                             }),
-                        })]
+                        })
                     );
                 } else if (feature.getGeometry()?.getType() === "Polygon") {
                     feature.setStyle(
@@ -248,9 +249,9 @@ const OpenLayersMap = () => {
                         })
                     );
                 }
-
+            } else {
+                feature.setStyle(null)
             }
-
         })
     }
     const fetchUserGeoData = async () => {
@@ -347,8 +348,9 @@ const OpenLayersMap = () => {
                     ]
                 );
             }
+        } else {
+            fetchUserGeoData()
         }
-
     }, [featureRedux])
     useEffect(() => {
         let userColor;
@@ -400,6 +402,16 @@ const OpenLayersMap = () => {
         }
 
     }, [colorRedux])
+
+    useEffect(() => {
+        if (!rendernGeoDataList) {
+            console.log(featureRedux)
+            if (featureRedux !== null) {
+                resetFeatures([featureRedux])
+            }
+            dispatch({ type: 'openLayers/setFeature', payload: null })
+        }
+    }, [rendernGeoDataList])
     useEffect(() => {
         if (selectedGeometryDataFromDatabase !== null) {
             getDataInProperties()

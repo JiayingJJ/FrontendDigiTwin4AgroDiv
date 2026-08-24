@@ -23,7 +23,6 @@ import TablesActionForView from './TablesActionForView';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { getProjectWithCreatorId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
 
-
 const ProjectInfo = () => {
     const dispatch = useDispatch()
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
@@ -47,7 +46,6 @@ const ProjectInfo = () => {
             const data = await fetchUserWithId(i)
             console.log(data[0])
             m.push(data[0].name)
-
         });
         setMembers(m)
     }

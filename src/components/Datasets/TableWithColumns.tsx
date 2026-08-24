@@ -24,11 +24,12 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
+    IconButton
 } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
 import CreateColumns from './CreateColumns';
 import { getProjectWithId } from '../../api/projects';
-import { setUserTableProjectId } from '../../api/userTables';
+import { setUserTableProjectAsNull, setUserTableProjectId } from '../../api/userTables';
 import { MdModeEdit } from "react-icons/md";
 import { CiCircleCheck, CiCircleInfo } from "react-icons/ci";
 import { FiPlusCircle, FiUploadCloud } from "react-icons/fi";
@@ -38,7 +39,6 @@ const TableWithColumns = () => {
     const dispatch = useDispatch()
     const editTable = useSelector((state: any) => state.datasetTable.editTable)
     const addingColumns = useSelector((state: any) => state.datasetTable.addingColumns)
-
     const userTableColumns = useSelector((state: any) => state.datasetTable.userTableColumns)
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
     const [sortedTableColumns, setSortedTableColumns] = useState<any>();
@@ -51,6 +51,7 @@ const TableWithColumns = () => {
     const projectId = useSelector((state: any) => state.datasetTable.projectId)
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
+    const [editProject, setEditProject] = useState<boolean>(false);
 
     useEffect(() => {
         if (tableColumns === undefined || tableColumns === null) return;
@@ -242,7 +243,13 @@ const TableWithColumns = () => {
         dispatch({ type: 'datasetTable/setProjectId', payload: e.target.value })
     }
     const handlePostProjectId = async () => {
-        const data = await setUserTableProjectId(selectedTableId, projectId, "pending")
+        if (projectId === "" || projectId === null) {
+            const data = await setUserTableProjectAsNull(selectedTableId, "pending")
+        } else {
+            const data = await setUserTableProjectId(selectedTableId, projectId, "pending")
+        }
+        dispatch({ type: 'datasetTable/setUpdatedTables', payload: true })
+        setEditProject(false)
     }
     const handleDeleteTable = async (t: any) => {
         dispatch({ type: 'modalInfo/setShowModal', payload: true })
@@ -251,6 +258,13 @@ const TableWithColumns = () => {
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteTable" })
     }
+    useEffect(() => {
+        if(selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null){
+            setEditProject(false)
+        }else{
+            setEditProject(true)
+        }
+    }, [selectedTable])
     return (
         <HStack alignItems={"start"}>
             <Grid templateColumns={`repeat(7, 1fr)`} gap={3} height={"100%"} width={"-webkit-fill-available"}>
@@ -263,22 +277,26 @@ const TableWithColumns = () => {
                         <CardHeader>
                             <HStack spacing={".3rem"} justifyContent={"space-between"}>
                                 <Heading size={"md"}>Input preview</Heading>
-                                <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(selectedTable)} size="25" />
+                                {selectedTable !== null && <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(selectedTable)} size="25" />}
                             </HStack>
                         </CardHeader>
-                        {selectedTable !== null && <CardBody>
-                            {(selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) ? <Box>
+                        {selectedTable !== undefined && selectedTable !== null && <CardBody>
+                            {(selectedTable.project_id !== undefined && selectedTable.project_id !== null && !editProject) && <Box>
                                 <Heading size='xs' textTransform=''>
                                     Project Name
                                 </Heading>
-                                <Text pt='2' fontSize='sm'>
-                                    {projectName}
-                                </Text>
-                            </Box> :
-                                <HStack style={{ display: "flex", alignItems: "end", width: "50%" }}>
+                                <HStack style={{ display: "flex", justifyContent: "flex-start", alignItems: "baseline" }}>
+                                    <Text pt='2' fontSize='sm'>
+                                        {projectName}
+                                    </Text>
+                                    <IconButton aria-label='Search database' icon={<MdModeEdit />} onClick={() => setEditProject(true)}/>
+                                </HStack>
+                            </Box>
+                            }
+                            {editProject && <HStack style={{ display: "flex", alignItems: "end", width: "50%" }}>
                                     <FormControl>
                                         <FormLabel>Project</FormLabel>
-                                        <Select placeholder='Select project' onChange={handleSelectProject} key={"select-project"}>
+                                        <Select placeholder='Select project' defaultValue={selectedTable.project_id} onChange={handleSelectProject} key={"select-project"}>
                                             {allProjects.map((p: any) => {
                                                 return (
                                                     <option value={p.id}>{p.name}</option>
@@ -290,8 +308,8 @@ const TableWithColumns = () => {
                                         cursor={projectId === null ? "not-allowed" : "pointer"}
                                         size="40" onClick={() => handlePostProjectId()
                                         } />
-                                </HStack>
-                            }
+
+                                </HStack>}
                             {sortedTableColumns?.map(column => renderFormControl(column))}
                         </CardBody>}
                         <CardFooter>
@@ -310,7 +328,6 @@ const TableWithColumns = () => {
                         </CardFooter>
                     </Card>
                 </GridItem>
-
             </Grid>
         </HStack>
     );

@@ -70,3 +70,12 @@ export const getUserTablesWithProjectId = async (projectId: any) => {
     console.log(data)
     return data;
 }
+export const setUserTableProjectAsNull = async (id: string, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/usertable/table/project/setnull`, {
+        method: "DELETE",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time }),
+    })
+    const data = await response.json();
+    return data;
+}

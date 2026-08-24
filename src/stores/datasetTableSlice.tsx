@@ -191,6 +191,18 @@ const datasetTableSlice = createSlice({
             state.selectedTable=null;
             state.createColumnsButton=false;
         },
+        updateInfoFromADatabase: (state, action) => {
+            state.tableColumns = [];
+            state.userTableColumns = [];
+            state.editTable = false;
+            state.isChangingColumns = [];
+            state.newColumns = [];
+            state.editedColumns = [];
+            state.removedColumns = [];
+            state.projectId = null;
+            state.selectedTable=null;
+            state.createColumnsButton=false;
+        },
         setProjectId: (state, action) => {
             state.projectId = action.payload
         },

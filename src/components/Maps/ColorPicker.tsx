@@ -20,7 +20,7 @@ const ColorPicker = () => {
     useEffect(() => {
         dispatch({ type: 'openLayers/setUserSelectedColor', payload: color })
     }, [color])
-    const handlerChangeColor = async () => {
+    const handleChangeColor = async () => {
         const data = await updateGeoDataColor(selectedGeoInfo.id, color, "pending")
         if (data[1] !== 200) {
 
@@ -34,7 +34,7 @@ const ColorPicker = () => {
     return (
         <HStack style={{ display: "flex", alignItems: "end" }}>
             <HexColorPicker color={color} onChange={setColor} />
-            <CiCircleCheck color="green" size="40" onClick={() => handlerChangeColor()} cursor={"pointer"} />
+            <CiCircleCheck color="green" size="40" onClick={() => handleChangeColor()} cursor={"pointer"} />
         </HStack>
 
     );

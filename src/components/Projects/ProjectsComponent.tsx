@@ -22,7 +22,7 @@ const ProjectsComponent = () => {
     const addNewProject = useSelector((state: any) => state.projects.addNewProject)
     const userInfo = useSelector((state: any) => state.user)
 
-    const handlerGetAllProjects = async () => {
+    const handleGetAllProjects = async () => {
         const data = await getAllProjects();
         const projectsWithShared = await getAllProjectsWithShared(userInfo.id)
         const dataWithCreatorId = await getProjectWithCreatorId(userInfo.id)
@@ -39,7 +39,7 @@ const ProjectsComponent = () => {
     }
     useEffect(() => {
         dispatch({ type: 'projects/clearProjectState', payload: null })
-        handlerGetAllProjects()
+        handleGetAllProjects()
     }, [])
     return (
         <Grid templateColumns={`repeat(7, 1fr)`} gap={3} width={"95vw"} height={"90vh"} padding={"0 0 2vh 0"}>

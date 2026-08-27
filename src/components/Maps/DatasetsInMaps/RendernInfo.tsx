@@ -31,17 +31,18 @@ const RendernInfo = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
+    const editColumn = useSelector((state: any) => state.openLayers.editColumn)
     const [userEmail, setUserEmail] = useState<String>("");
     const shouldShow = ["data_status", "user_id"]
     const userInfo = useSelector((state: any) => state.user)
     const [image, setImage] = useState<any[]>([])
     const [largeImage, setLargeImage] = useState<any>(null);
-    const handlerGetUserEmail = async (value: string) => {
+    const handleGetUserEmail = async (value: string) => {
         const data = await fetchUserWithId(value)
         setUserEmail(data[0].email)
     }
     useEffect(() => {
-        handlerGetUserEmail(userInfo.id)
+        handleGetUserEmail(userInfo.id)
     }, [])
     useEffect(() => {
         const run = async () => {

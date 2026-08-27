@@ -64,10 +64,10 @@ const DataUserLayer = () => {
             dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
             dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
             dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
-            handlerOnCloseDrawer()
+            handleOnCloseDrawer()
         }
     }
-    const handlerOnCloseDrawer = () => {
+    const handleOnCloseDrawer = () => {
         dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
         dispatch({ type: 'openLayers/setRendernGeoDataList', payload: false })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
@@ -83,7 +83,7 @@ const DataUserLayer = () => {
             <Drawer
                 isOpen={rendernGeoDataList || addDrawedInteractionInfo || addNewColumnsDataInGeometry}
                 placement='right'
-                onClose={() => handlerOnCloseDrawer()}
+                onClose={() => handleOnCloseDrawer()}
                 size="sm"
             >
                 <DrawerOverlay />

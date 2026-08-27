@@ -65,10 +65,10 @@ const ProjectInfo = () => {
         dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteProject" })
     }
-    const handlerEditProject = () => {
+    const handleEditProject = () => {
         dispatch({ type: 'projects/setEditProject', payload: !editProject })
     }
-    const handlerUpdateProjectInfo = async () => {
+    const handleUpdateProjectInfo = async () => {
         const data = await updateProjectInfo(selectedProject.id, name, description);
         dispatch({ type: 'projects/setEditProject', payload: false })
 
@@ -89,7 +89,7 @@ const ProjectInfo = () => {
             }
         }
     }
-    const handlerCancelEdit = () => {
+    const handleCancelEdit = () => {
         dispatch({ type: 'projects/setEditProject', payload: false })
         setName("")
         setDescription("")
@@ -108,7 +108,7 @@ const ProjectInfo = () => {
                         <Heading size={"md"}>Project Info</Heading>
                         {selectedProject && <HStack>
                             <IconButton disabled={editProject} aria-label='Delete project' icon={<MdDeleteForever cursor={editProject ? "not-allowed" : "pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />} />
-                            <IconButton disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" onClick={handlerEditProject} />} />
+                            <IconButton disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" onClick={handleEditProject} />} />
                         </HStack>}
                     </HStack>
                 </CardHeader>
@@ -196,8 +196,8 @@ const ProjectInfo = () => {
                 </CardBody>}
                 <CardFooter>
                     {editProject && <HStack>
-                        <Button onClick={handlerUpdateProjectInfo}>Submit</Button>
-                        <Button onClick={handlerCancelEdit}>Cancel</Button></HStack>}
+                        <Button onClick={handleUpdateProjectInfo}>Submit</Button>
+                        <Button onClick={handleCancelEdit}>Cancel</Button></HStack>}
                 </CardFooter>
             </Card>
         </HStack>

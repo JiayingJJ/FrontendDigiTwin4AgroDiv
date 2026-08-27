@@ -12,7 +12,7 @@ const CreatedProjects = () => {
     const addNewProject = useSelector((state: any) => state.projects.addNewProject)
     const editProject = useSelector((state: any) => state.projects.editProject)
 
-    const handlerGetProjectWithId = async (p: any) => {
+    const handleGetProjectWithId = async (p: any) => {
         const data = await getProjectWithId(p.id)
         dispatch({ type: 'projects/setSelectedProject', payload: data[0] })
         const userTablesData = await getUserTablesWithProjectId(data[0].id)
@@ -47,7 +47,7 @@ const CreatedProjects = () => {
                                         whiteSpace={"wrap"}
                                         backgroundColor={selectedProject !== null && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
-                                            handlerGetProjectWithId(p)
+                                            handleGetProjectWithId(p)
                                         }} cursor={"pointer"}
                                         key={`${p.id}-table-box-project`}>
                                         <Heading size='xs' textTransform='uppercase' padding={"10px"}>

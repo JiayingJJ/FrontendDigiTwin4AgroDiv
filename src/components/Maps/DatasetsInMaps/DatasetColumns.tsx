@@ -109,7 +109,7 @@ const DatasetColumns = () => {
                 return <div>Unbekannter Feldtyp: {column.type}</div>;
         }
     }
-    const handlerUpload = async () => {
+    const handleUpload = async () => {
         await Promise.all(files.map(async (f: any) => {
             const data = await uploadImage(f.name, f.file, userInfo.id)
             dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: f.id, value: data[1] } })
@@ -117,7 +117,7 @@ const DatasetColumns = () => {
     }
 
     const handleSubmit = async () => {
-        await handlerUpload();
+        await handleUpload();
         let dataInserGeoData: any;
         const data = await addValueInColumns(selectedTableId, getColumnValues())
         if (data[0] === 200) {

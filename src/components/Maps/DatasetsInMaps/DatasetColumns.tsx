@@ -18,7 +18,7 @@ import {
     ModalCloseButton,
     Heading
 } from '@chakra-ui/react'
-import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus } from "../../../api/dataset";
+import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus, updateValueInColumns } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
 import { getCurrentTime } from "../../../helpers";
 import { getGeoData, insertGeoData, setGeoDataStatus, updateGeoDataProperties } from "../../../api/geoData";
@@ -42,6 +42,9 @@ const DatasetColumns = () => {
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const files = useSelector((state: any) => state.openLayers.files)
+    const editColumn = useSelector((state: any) => state.openLayers.editColumn)
+    const selectedColumnId = useSelector((state: any) => state.openLayers.selectedColumnId)
+
     const getColumnValues = () => {
         const states = store.getState();
         let columns = [];
@@ -51,7 +54,9 @@ const DatasetColumns = () => {
         })
         const time = getCurrentTime()
         columns.push({ name: "user_id", value: userInfo.id })
-        columns.push({ name: "created_at", value: time })
+        if (!editColumn) {
+            columns.push({ name: "created_at", value: time })
+        }
         columns.push({ name: "updated_at", value: time })
         columns.push({ name: "data_status", value: "pending" })
         return columns;
@@ -117,54 +122,65 @@ const DatasetColumns = () => {
     }
 
     const handleSubmit = async () => {
-        await handleUpload();
         let dataInserGeoData: any;
-        const data = await addValueInColumns(selectedTableId, getColumnValues())
-        if (data[0] === 200) {
-            const status = 'merged'
-            const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
-            const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-            const geoData = { "coordinates": geometry, "type": geometryType }
-            if (addDrawedInteractionInfo) {
-                const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
-                const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
-                dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
-                dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
-            }
-            else {
-                const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }
-                dataInserGeoData = await updateGeoDataProperties(selectedGeoInfo.id, properties, "pending")
-            }
-            dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
-            if (dataInserGeoData[1] === 500) {
-                console.log("Alert Message")
-                dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
-                dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
-                dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
-                dispatch({ type: 'alertInfo/setShowAlert', payload: true })
-            } else {
-                const geoData = await getGeoData();
-                const validData = geoData.filter((d: any) => {
-                    if (!d.deleted_at.Valid) {
-                        return d;
-                    }
-                })
-                dispatch({ type: 'openLayers/updateGeoDataAfterChange', payload: { geoData: validData, id: dataInserGeoData[0].id } })
-                dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
-                const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
-            }
+        if (!editColumn) {
+            await handleUpload();
+            const data = await addValueInColumns(selectedTableId, getColumnValues())
+            if (data[0] === 200) {
+                const status = 'merged'
+                const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
+                const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
+                const geoData = { "coordinates": geometry, "type": geometryType }
+                if (addDrawedInteractionInfo) {
+                    const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+                    const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
+                    dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
+                    dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
+                }
+                else {
+                    const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }
+                    dataInserGeoData = await updateGeoDataProperties(selectedGeoInfo.id, properties, "pending")
+                }
+                dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
+                if (dataInserGeoData[1] === 500) {
+                    console.log("Alert Message")
+                    dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+                    dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+                    dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+                    dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+                } else {
+                    const geoData = await getGeoData();
+                    const validData = geoData.filter((d: any) => {
+                        if (!d.deleted_at.Valid) {
+                            return d;
+                        }
+                    })
+                    dispatch({ type: 'openLayers/updateGeoDataAfterChange', payload: { geoData: validData, id: dataInserGeoData[0].id } })
+                    dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+                    const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
+                }
 
+            }
+        } else {
+            await handleUpload();
+            const data = await updateValueInColumns(selectedTableId, getColumnValues(), selectedColumnId)
         }
+
+        dispatch({ type: 'openLayers/setEditColumn', payload: false })
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
+        dispatch({ type: 'datasetTable/clearInfoForASelectedTable', payload: null })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
+        dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+
     }
     const handleCancel = async () => {
+        dispatch({ type: 'openLayers/setEditColumn', payload: false })
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
         dispatch({ type: 'openLayers/clearFiles', payload: null })
     }
     return (
-        <Modal closeOnOverlayClick={false} isOpen={addNewColumnsDataInGeometry && userInputColumnValues.length !== 0} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
+        <Modal closeOnOverlayClick={false} isOpen={editColumn || (addNewColumnsDataInGeometry && userInputColumnValues.length !== 0)} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>

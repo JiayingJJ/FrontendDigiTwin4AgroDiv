@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, Grid, GridItem, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
 import { deleteProjectWithId, getProjectWithCreatorId, getProjectWithId } from '../../api/projects';
 import { getUserTablesWithProjectId } from '../../api/userTables';
+import { fetchUserWithId } from '../../api/user';
 
 const CreatedProjects = () => {
     const dispatch = useDispatch()
@@ -13,13 +14,20 @@ const CreatedProjects = () => {
     const editProject = useSelector((state: any) => state.projects.editProject)
 
     const handleGetProjectWithId = async (p: any) => {
+        dispatch({ type: 'projects/clearMembersForRedux', payload: null })
         const data = await getProjectWithId(p.id)
         dispatch({ type: 'projects/setSelectedProject', payload: data[0] })
         dispatch({ type: 'projects/setSelectedProjectId', payload: data[0].id })
         const userTablesData = await getUserTablesWithProjectId(data[0].id)
         dispatch({ type: 'projects/setUserTablesForProject', payload: userTablesData })
+        await getMemberInfo(data[0].members.RawMessage)
     }
-
+    const getMemberInfo = async (ids: []) => {
+        ids.forEach(async (i: string) => {
+            const data = await fetchUserWithId(i)
+            dispatch({ type: 'projects/addMembersForRedux', payload: { id: data[0].id, name: data[0].name, email: data[0].email } })
+        });
+    }
     return (
         <Grid templateRows={`repeat(15, 1fr)`} height={"90vh"} width={"100%"}>
             <GridItem rowSpan={0.5} paddingBottom={"2px"}>
@@ -46,7 +54,7 @@ const CreatedProjects = () => {
                                         width={"100%"}
                                         border={"10px"} borderRadius={"10px"}
                                         whiteSpace={"wrap"}
-                                        backgroundColor={selectedProject !== null && selectedProject !== undefined &&selectedProject.id === p.id ? "#ba2d0bff" : "white"}
+                                        backgroundColor={selectedProject !== null && selectedProject !== undefined && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             handleGetProjectWithId(p)
                                         }} cursor={"pointer"}

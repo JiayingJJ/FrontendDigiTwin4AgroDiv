@@ -29,9 +29,9 @@ const ProjectInfo = () => {
     const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
     const editProject = useSelector((state: any) => state.projects.editProject)
     const addMember = useSelector((state: any) => state.projects.addMember)
+    const membersForRedux = useSelector((state: any) => state.projects.membersForRedux)
 
     const [creator, setCreator] = useState<any>();
-    const [members, setMembers] = useState<any>();
     const [viewActions, setViewActions] = useState<boolean>(false);
     const [name, setName] = useState<string>(selectedProject?.name);
     const [description, setDescription] = useState<string>(selectedProject?.description);
@@ -41,21 +41,11 @@ const ProjectInfo = () => {
         const data = await fetchUserWithId(id)
         setCreator(data[0])
     }
-    const getMemberInfo = async (ids: []) => {
-        let m = [];
-        ids.forEach(async (i: string) => {
-            const data = await fetchUserWithId(i)
-            console.log(data[0])
-            m.push(data[0].name)
-        });
-        setMembers(m)
-    }
     useEffect(() => {
         if (selectedProject !== null && selectedProject !== undefined) {
             getCreatorInfoWithId(selectedProject?.creator_id)
-            getMemberInfo(selectedProject?.members.RawMessage)
         }
-    }, [selectedProject])
+    }, [])
     const handleAddMembersInProject = async () => {
         dispatch({ type: 'projects/setAddMember', payload: true })
     }
@@ -165,9 +155,9 @@ const ProjectInfo = () => {
                             </HStack>
                             {addMember && <AddMember />}
                             <Stack direction='row' paddingTop={"10px"}>
-                                {members?.map((m: string) => {
+                                {membersForRedux?.map((m: any) => {
                                     return (
-                                        <Badge colorScheme='green' textTransform=''>{m}</Badge>
+                                        <Badge colorScheme='green' textTransform=''>{m.name}</Badge>
                                     )
                                 })}
                             </Stack>

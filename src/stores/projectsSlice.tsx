@@ -10,7 +10,7 @@ interface ProjectsState {
     getUpdateFromDatabase: boolean;
     selectedProjectId: string | null;
     addMember: boolean;
-
+    membersForRedux: [];
 }
 
 const initialState: ProjectsState = {
@@ -23,6 +23,7 @@ const initialState: ProjectsState = {
     getUpdateFromDatabase: false,
     selectedProjectId: null,
     addMember: false,
+    membersForRedux: [],
 }
 
 const projectsSlice = createSlice({
@@ -60,6 +61,17 @@ const projectsSlice = createSlice({
         },
         setAddMember: (state, action) => {
             state.addMember = action.payload;
+        },
+        setMembersForRedux: (state, action) => {
+            state.membersForRedux = action.payload;
+        },
+        clearMembersForRedux: (state, action) => {
+            state.membersForRedux = [];
+        },
+        addMembersForRedux: (state, action) => {
+            console.log(JSON.parse(JSON.stringify(action.payload)))
+            state.membersForRedux.push(action.payload);
+
         },
     }
 });

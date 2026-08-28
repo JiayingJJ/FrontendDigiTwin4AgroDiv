@@ -63,6 +63,15 @@ export const addValueInColumns = async (table_id: string, columns: any) => {
     return [response.status, data]
 }
 
+export const updateValueInColumns = async (table_id: string, columns: any, columnId:string) => {
+    const response = await fetch(`${apiUrl}/usertable/columns/updateValue`, {
+        method: "POST",
+        body: JSON.stringify({ table_id: table_id, columns: columns, column_id: columnId }),
+    })
+    const data = await response.json();
+    return [response.status, data]
+}
+
 export const setUserTableColumnDataStatus = async (id: string, tableId: string, dataStatus: string) => {
     const response = await fetch(`${apiUrl}/usertable/column/setDataStatus`, {
         method: "PUT",

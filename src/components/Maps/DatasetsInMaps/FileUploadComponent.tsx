@@ -8,9 +8,9 @@ import {
     FormControl,
     Heading
 } from "@chakra-ui/react";
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import { uploadImage } from "../../../api/file";
+import { downloadImage } from "../../../api/file";
 import { useSelector, useDispatch } from 'react-redux';
 
 type Props = {
@@ -21,7 +21,8 @@ type Props = {
 }
 const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     const dispatch = useDispatch()
-
+    const editColumn = useSelector((state: any) => state.openLayers.editColumn)
+    const userInputColumnValues = useSelector((state: any) => state.datasetTable.userInputColumnValues)
     const fileInputRef = useRef(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const updateImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +56,18 @@ const FileUploadComponent = ({ name, hint, id, type }: Props) => {
     const handleImageUploadClick = () => {
         fileInputRef.current?.click();
     };
+    useEffect(() => {
+        const run = async () => {
+            const blob: any[] = [];
+            const data = userInputColumnValues.filter((i: any) => i.id === id)
+            const imageData = await downloadImage(data[0].value)
+            blob.push({ colName: name, data: imageData });
+            setImageFile(blob[0].data);
+        };
+        if (editColumn) {
+            run();
+        }
+    }, [])
     return (
         <FormControl onMouseOver={() => { console.log() }}>
             <Heading as='h4' size='md' padding={"15px 0px 10px 0px"}>{name}</Heading>

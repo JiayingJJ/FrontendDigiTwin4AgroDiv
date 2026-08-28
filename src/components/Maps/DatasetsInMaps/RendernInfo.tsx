@@ -31,7 +31,6 @@ const RendernInfo = () => {
     const rendernDataInfo = useSelector((state: any) => state.openLayers.rendernDataInfo)
     const columnInfo = useSelector((state: any) => state.openLayers.columnInfo)
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
-    const editColumn = useSelector((state: any) => state.openLayers.editColumn)
     const [userEmail, setUserEmail] = useState<String>("");
     const shouldShow = ["data_status", "user_id"]
     const userInfo = useSelector((state: any) => state.user)
@@ -120,7 +119,6 @@ const RendernInfo = () => {
                                         {raw.type === "image" ?
                                             <>
                                                 {Object.entries(image).map((key) => {
-                                                    console.log(key)
                                                     console.log(key[1])
                                                     if (key[1].colName === raw.name.toLowerCase().replaceAll(" ", "_")) {
                                                         return (

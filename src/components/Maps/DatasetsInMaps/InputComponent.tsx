@@ -22,6 +22,9 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
     const dispatch = useDispatch()
     const [labelName, setLabelName] = useState<string>("");
     const [valueNum, setValueNum] = useState("");
+    const editColumn = useSelector((state: any) => state.openLayers.editColumn)
+    const userInputColumnValues = useSelector((state: any) => state.datasetTable.userInputColumnValues)
+
     const nowLocal = useMemo(() => {
         const d = new Date();
         const pad = (n) => String(n).padStart(2, "0");
@@ -33,10 +36,26 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
         return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
     }, []);
     useEffect(() => {
-        if (type === "timestamp") {
-            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: nowLocal } })
-        } else if (type === "integer" || type === "real") {
-            dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: "number_as_null" } })
+        if (editColumn) {
+            const data = userInputColumnValues.filter((i: any) => i.id === id)
+            if (type === "integer" || type === "real") {
+                if (data[0].value !== "number_as_null") {
+                    setValueNum(data[0].value)
+                } else {
+                    setValueNum("0")
+                }
+            } else if (type === "timestamp") {
+                const result = data[0].value.slice(0, 16);
+                setLabelName(result)
+            } else {
+                setLabelName(data[0].value)
+            }
+        } else {
+            if (type === "timestamp") {
+                dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: nowLocal } })
+            } else if (type === "integer" || type === "real") {
+                dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: "number_as_null" } })
+            }
         }
     }, [])
     return (
@@ -44,7 +63,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
             <Heading as='h4' size='md' padding={"15px 0px 10px 0px"}>{name}</Heading>
             <Box style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Box style={{ display: "flex", flexDirection: "column" }}>
-                    {type === "timestamp" ? <Input type='datetime-local' placeholder={`${hint}`} defaultValue={nowLocal} onChange={(e) => {
+                    {type === "timestamp" ? <Input type='datetime-local' placeholder={`${hint}`} defaultValue={editColumn ? labelName : nowLocal} onChange={(e) => {
                         setLabelName(e.target.value)
                         dispatch({ type: 'datasetTable/updateUserInputColumnValues', payload: { id: id, value: e.target.value } })
                     }} />
@@ -52,6 +71,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                             <NumberInput allowMouseWheel size={"lg"}
                                 min={-1000} step={1}
                                 height="100%"
+                                value={valueNum}
                                 onChange={(valueString) => {
                                     console.log(valueString)
                                     setValueNum(valueString)
@@ -99,6 +119,7 @@ const InputComponent = ({ name, hint, id, type }: Props) => {
                                     </NumberInputStepper>
                                 </NumberInput>
                                 : <Input placeholder={`${hint}`}
+                                    defaultValue={labelName}
                                     size={"lg"}
                                     onChange={(e) => {
                                         console.log(id)

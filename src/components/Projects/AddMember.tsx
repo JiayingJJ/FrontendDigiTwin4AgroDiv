@@ -42,6 +42,7 @@ const AddMember = () => {
             } else {
                 const addMemberData = await updateProjectMembers(selectedProject.id, data[0].id, "pending")
                 dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: true })
+                dispatch({ type: 'projects/setAddMember', payload: false })
             }
         }
     }

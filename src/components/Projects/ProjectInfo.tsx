@@ -28,9 +28,10 @@ const ProjectInfo = () => {
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
     const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
     const editProject = useSelector((state: any) => state.projects.editProject)
+    const addMember = useSelector((state: any) => state.projects.addMember)
+
     const [creator, setCreator] = useState<any>();
     const [members, setMembers] = useState<any>();
-    const [addMember, setAddMember] = useState<boolean>(false);
     const [viewActions, setViewActions] = useState<boolean>(false);
     const [name, setName] = useState<string>(selectedProject?.name);
     const [description, setDescription] = useState<string>(selectedProject?.description);
@@ -56,7 +57,7 @@ const ProjectInfo = () => {
         }
     }, [selectedProject])
     const handleAddMembersInProject = async () => {
-        setAddMember(!addMember)
+        dispatch({ type: 'projects/setAddMember', payload: true })
     }
     const handleDeleteProject = async (p: any) => {
         dispatch({ type: 'modalInfo/setShowModal', payload: true })

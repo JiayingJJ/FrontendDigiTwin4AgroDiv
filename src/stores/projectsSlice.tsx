@@ -9,6 +9,8 @@ interface ProjectsState {
     selectedUserTable: [] | null;
     getUpdateFromDatabase: boolean;
     selectedProjectId: string | null;
+    addMember: boolean;
+
 }
 
 const initialState: ProjectsState = {
@@ -20,6 +22,7 @@ const initialState: ProjectsState = {
     editProject: false,
     getUpdateFromDatabase: false,
     selectedProjectId: null,
+    addMember: false,
 }
 
 const projectsSlice = createSlice({
@@ -55,7 +58,9 @@ const projectsSlice = createSlice({
         setSelectedProjectId: (state, action) => {
             state.selectedProjectId = action.payload;
         },
-
+        setAddMember: (state, action) => {
+            state.addMember = action.payload;
+        },
     }
 });
 

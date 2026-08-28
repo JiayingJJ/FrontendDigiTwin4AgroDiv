@@ -17,13 +17,19 @@ import { getAllProjects, getAllProjectsWithShared, getProjectWithCreatorId } fro
 import AddProject from './AddProject';
 import CreatedProjects from './CreatedProjects';
 import ProjectInfo from './ProjectInfo';
+import { fetchUserWithId } from '../../api/user';
 const ProjectsComponent = () => {
     const dispatch = useDispatch()
     const addNewProject = useSelector((state: any) => state.projects.addNewProject)
     const userInfo = useSelector((state: any) => state.user)
     const getUpdateFromDatabase = useSelector((state: any) => state.projects.getUpdateFromDatabase)
     const selectedProjectId = useSelector((state: any) => state.projects.selectedProjectId)
-
+    const getMemberInfo = async (ids: []) => {
+        ids.forEach(async (i: string) => {
+            const data = await fetchUserWithId(i)
+            dispatch({ type: 'projects/addMembersForRedux', payload: { id: data[0].id, name: data[0].name, email: data[0].email } })
+        });
+    }
     const handleGetAllProjects = async () => {
         const data = await getAllProjects();
         const projectsWithShared = await getAllProjectsWithShared(userInfo.id)
@@ -39,19 +45,27 @@ const ProjectsComponent = () => {
             const selected = notDelete.filter((i: any) => i.id === selectedProjectId)
             dispatch({ type: 'projects/setSelectedProject', payload: selected[0] })
             dispatch({ type: 'projects/setAllProjects', payload: notDelete })
+            await getMemberInfo(selected[0].members.RawMessage)
         }
     }
     useEffect(() => {
-        dispatch({ type: 'projects/clearProjectState', payload: null })
-        handleGetAllProjects()
+        const run = async () => {
+            dispatch({ type: 'projects/clearProjectState', payload: null })
+            await handleGetAllProjects()
+        }
+        run()
     }, [])
 
     useEffect(() => {
-        if (getUpdateFromDatabase) {
-            dispatch({ type: 'projects/clearProjectState', payload: null })
-            handleGetAllProjects()
-            dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: false })
+        const run = async () => {
+            if (getUpdateFromDatabase) {
+                dispatch({ type: 'projects/clearProjectState', payload: null })
+                dispatch({ type: 'projects/clearMembersForRedux', payload: null })
+                await handleGetAllProjects()
+                dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: false })
+            }
         }
+        run()
     }, [getUpdateFromDatabase])
 
     return (

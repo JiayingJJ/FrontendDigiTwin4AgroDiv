@@ -13,6 +13,7 @@ import {
     Text,
     IconButton,
     Badge,
+    Tooltip,
     VStack, Input, Button
 } from '@chakra-ui/react'
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
@@ -21,18 +22,19 @@ import { fetchUserWithId } from '../../api/user';
 import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
-import { getProjectWithCreatorId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
+import { getProjectWithCreatorId, removeProjectMemberWithUserId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
 
 const ProjectInfo = () => {
     const dispatch = useDispatch()
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
+    const selectedProjectId = useSelector((state: any) => state.projects.selectedProjectId)
     const userTablesForProject = useSelector((state: any) => state.projects.userTablesForProject)
     const editProject = useSelector((state: any) => state.projects.editProject)
     const addMember = useSelector((state: any) => state.projects.addMember)
     const membersForRedux = useSelector((state: any) => state.projects.membersForRedux)
-
     const [creator, setCreator] = useState<any>();
     const [viewActions, setViewActions] = useState<boolean>(false);
+    const [memberActions, setMemberActions] = useState<boolean>(false);
     const [name, setName] = useState<string>(selectedProject?.name);
     const [description, setDescription] = useState<string>(selectedProject?.description);
     const userInfo = useSelector((state: any) => state.user)
@@ -91,6 +93,16 @@ const ProjectInfo = () => {
             setDescription(selectedProject?.description.Valid === true && selectedProject?.description.String)
         }
     }, [selectedProject])
+
+    const handleRemoveMemberFromAProject = async (userInfo: any) => {
+        const data = await removeProjectMemberWithUserId(selectedProjectId, userInfo.id)
+        if (data[1] !== 200) {
+
+        } else {
+            const statusData = await setProjectDataStatus(selectedProjectId, "merged")
+            dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: true })
+        }
+    }
     return (
         <HStack alignItems={"start"}>
             <Card width={"100%"}>
@@ -157,7 +169,12 @@ const ProjectInfo = () => {
                             <Stack direction='row' paddingTop={"10px"}>
                                 {membersForRedux?.map((m: any) => {
                                     return (
-                                        <Badge colorScheme='green' textTransform=''>{m.name}</Badge>
+                                        <VStack>
+                                            <Badge colorScheme='green' textTransform='' cursor={"pointer"} onClick={() => setMemberActions(!memberActions)}>{m.name}</Badge>
+                                            {memberActions &&
+                                                <IconButton aria-label='Remove member' icon={<MdDeleteForever cursor={"pointer"} onClick={() => handleRemoveMemberFromAProject(m)} size="25" />} />
+                                            }
+                                        </VStack>
                                     )
                                 })}
                             </Stack>

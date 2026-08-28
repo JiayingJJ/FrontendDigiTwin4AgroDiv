@@ -60,6 +60,17 @@ export const updateProjectMembers = async (id: string, members: any, dataStatus:
     const data = await response.json();
     return [data, response.status];
 }
+
+export const removeProjectMemberWithUserId = async (projectId: string, memberId: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/projects/project/remove/member`, {
+        method: "PUT",
+        body: JSON.stringify({ project_id: projectId, member_id: memberId, data_status: "pending", updated_at: time }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}
+
 export const getAllProjectsWithShared = async (user_id: string) => {
     const response = await fetch(`${apiUrl}/projects/all/${user_id}`, {
         method: "GET",

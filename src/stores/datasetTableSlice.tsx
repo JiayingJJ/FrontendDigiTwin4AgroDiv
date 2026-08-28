@@ -27,8 +27,8 @@ interface DatasetTableState {
     removedColumns: [];
     hasChanged: boolean;
     isChangingColumns: [];
-    projectId: string|null;
-    selectedTable: []|null;
+    projectId: string | null;
+    selectedTable: [] | null;
 }
 
 const initialState: DatasetTableState = {
@@ -130,6 +130,13 @@ const datasetTableSlice = createSlice({
                 }
             })
         },
+        updateUserInputColumnValuesWithName: (state, action) => {
+            state.userInputColumnValues.filter((c: any) => {
+                if (c.name === action.payload.name) {
+                    c.value = action.payload.value
+                }
+            })
+        },
         clearUserInputColumnValues: (state, action) => {
             console.log(action.payload)
             state.userInputColumnValues = [];
@@ -188,8 +195,14 @@ const datasetTableSlice = createSlice({
             state.removedColumns = [];
             state.projectId = null;
             state.selectedTableId = null;
-            state.selectedTable=null;
-            state.createColumnsButton=false;
+            state.selectedTable = null;
+            state.createColumnsButton = false;
+        },
+        clearInfoForASelectedTable: (state, action) => {
+            state.selectedTable = null;
+            state.selectedTableId = null;
+            state.tableColumns = [];
+            state.userInputColumnValues = [];
         },
         updateInfoFromADatabase: (state, action) => {
             state.tableColumns = [];
@@ -200,8 +213,8 @@ const datasetTableSlice = createSlice({
             state.editedColumns = [];
             state.removedColumns = [];
             state.projectId = null;
-            state.selectedTable=null;
-            state.createColumnsButton=false;
+            state.selectedTable = null;
+            state.createColumnsButton = false;
         },
         setProjectId: (state, action) => {
             state.projectId = action.payload

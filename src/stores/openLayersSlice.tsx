@@ -28,6 +28,8 @@ interface OpenLayersState {
     getUpdateFromDatabase: boolean;
     files: [];
     removeDrawedFeature: boolean;
+    editColumn: boolean;
+    selectedColumnId:string|null;
 }
 
 const initialState: OpenLayersState = {
@@ -57,6 +59,8 @@ const initialState: OpenLayersState = {
     getUpdateFromDatabase: false,
     files: [],
     removeDrawedFeature: false,
+    editColumn: false,
+    selectedColumnId:null,
 }
 
 const openLayersSlice = createSlice({
@@ -189,7 +193,14 @@ const openLayersSlice = createSlice({
         },
         clearFiles: (state, action) => {
             state.files=[]
-        }
+        },
+        setEditColumn: (state, action) => {
+            state.editColumn = action.payload;
+        },
+         setSelectedColumnId: (state, action) => {
+            state.selectedColumnId = action.payload;
+        },
+        
     }
 });
 

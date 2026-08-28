@@ -21,6 +21,8 @@ const ProjectsComponent = () => {
     const dispatch = useDispatch()
     const addNewProject = useSelector((state: any) => state.projects.addNewProject)
     const userInfo = useSelector((state: any) => state.user)
+    const getUpdateFromDatabase = useSelector((state: any) => state.projects.getUpdateFromDatabase)
+    const selectedProjectId = useSelector((state: any) => state.projects.selectedProjectId)
 
     const handleGetAllProjects = async () => {
         const data = await getAllProjects();
@@ -34,6 +36,8 @@ const ProjectsComponent = () => {
                     return d;
                 }
             })
+            const selected = notDelete.filter((i: any) => i.id === selectedProjectId)
+            dispatch({ type: 'projects/setSelectedProject', payload: selected[0] })
             dispatch({ type: 'projects/setAllProjects', payload: notDelete })
         }
     }
@@ -41,6 +45,15 @@ const ProjectsComponent = () => {
         dispatch({ type: 'projects/clearProjectState', payload: null })
         handleGetAllProjects()
     }, [])
+
+    useEffect(() => {
+        if (getUpdateFromDatabase) {
+            dispatch({ type: 'projects/clearProjectState', payload: null })
+            handleGetAllProjects()
+            dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: false })
+        }
+    }, [getUpdateFromDatabase])
+
     return (
         <Grid templateColumns={`repeat(7, 1fr)`} gap={3} width={"95vw"} height={"90vh"} padding={"0 0 2vh 0"}>
             <GridItem colSpan={2} h='100%' w="100%">

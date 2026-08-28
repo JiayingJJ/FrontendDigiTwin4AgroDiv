@@ -50,9 +50,9 @@ const ProjectInfo = () => {
         setMembers(m)
     }
     useEffect(() => {
-        if (selectedProject !== null) {
-            getCreatorInfoWithId(selectedProject.creator_id)
-            getMemberInfo(selectedProject.members.RawMessage)
+        if (selectedProject !== null && selectedProject !== undefined) {
+            getCreatorInfoWithId(selectedProject?.creator_id)
+            getMemberInfo(selectedProject?.members.RawMessage)
         }
     }, [selectedProject])
     const handleAddMembersInProject = async () => {
@@ -95,7 +95,7 @@ const ProjectInfo = () => {
         setDescription("")
     }
     useEffect(() => {
-        if (selectedProject !== null) {
+        if (selectedProject !== null && selectedProject !== undefined) {
             setName(selectedProject.name)
             setDescription(selectedProject?.description.Valid === true && selectedProject?.description.String)
         }
@@ -112,7 +112,7 @@ const ProjectInfo = () => {
                         </HStack>}
                     </HStack>
                 </CardHeader>
-                {selectedProject !== null && <CardBody>
+                {selectedProject !== null && selectedProject !== undefined && <CardBody>
                     <Stack divider={<StackDivider />} spacing='4'>
                         <Box>
                             <Heading size='xs' textTransform='' paddingBottom={"5px"}>

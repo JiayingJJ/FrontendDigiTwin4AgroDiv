@@ -41,6 +41,7 @@ const AddMember = () => {
                 setAlert("warning", "Check the input", "User already exist in the Project", true)
             } else {
                 const addMemberData = await updateProjectMembers(selectedProject.id, data[0].id, "pending")
+                dispatch({ type: 'projects/setGetUpdateFromDatabase', payload: true })
             }
         }
     }

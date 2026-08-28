@@ -15,6 +15,7 @@ const CreatedProjects = () => {
     const handleGetProjectWithId = async (p: any) => {
         const data = await getProjectWithId(p.id)
         dispatch({ type: 'projects/setSelectedProject', payload: data[0] })
+        dispatch({ type: 'projects/setSelectedProjectId', payload: data[0].id })
         const userTablesData = await getUserTablesWithProjectId(data[0].id)
         dispatch({ type: 'projects/setUserTablesForProject', payload: userTablesData })
     }
@@ -45,7 +46,7 @@ const CreatedProjects = () => {
                                         width={"100%"}
                                         border={"10px"} borderRadius={"10px"}
                                         whiteSpace={"wrap"}
-                                        backgroundColor={selectedProject !== null && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
+                                        backgroundColor={selectedProject !== null && selectedProject !== undefined &&selectedProject.id === p.id ? "#ba2d0bff" : "white"}
                                         onClick={() => {
                                             handleGetProjectWithId(p)
                                         }} cursor={"pointer"}

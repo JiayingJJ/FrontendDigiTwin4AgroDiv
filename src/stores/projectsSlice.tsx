@@ -5,8 +5,10 @@ interface ProjectsState {
     selectedProject: any;
     addNewProject: boolean;
     editProject: boolean;
-    userTablesForProject: []|null;
-    selectedUserTable: []|null;
+    userTablesForProject: [] | null;
+    selectedUserTable: [] | null;
+    getUpdateFromDatabase: boolean;
+    selectedProjectId: string | null;
 }
 
 const initialState: ProjectsState = {
@@ -16,6 +18,8 @@ const initialState: ProjectsState = {
     userTablesForProject: null,
     selectedUserTable: null,
     editProject: false,
+    getUpdateFromDatabase: false,
+    selectedProjectId: null,
 }
 
 const projectsSlice = createSlice({
@@ -36,8 +40,8 @@ const projectsSlice = createSlice({
         },
         clearProjectState: (state, action) => {
             state.allProjects = [],
-            state.selectedProject = null,
-            state.addNewProject = false
+                state.selectedProject = null,
+                state.addNewProject = false
         },
         setUserTablesForProject: (state, action) => {
             state.userTablesForProject = action.payload;
@@ -45,6 +49,13 @@ const projectsSlice = createSlice({
         setSelectedUserTable: (state, action) => {
             state.selectedUserTable = action.payload;
         },
+        setGetUpdateFromDatabase: (state, action) => {
+            state.getUpdateFromDatabase = action.payload;
+        },
+        setSelectedProjectId: (state, action) => {
+            state.selectedProjectId = action.payload;
+        },
+
     }
 });
 

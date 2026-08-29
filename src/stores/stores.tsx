@@ -9,6 +9,7 @@ import ModalInfoReducer from '../stores/modalInfoSlice';
 import DatasetTableViewReducer from '../stores/datasetTableViewSlice';
 import InternetReducer from '../stores/internetSlice';
 import ProjectsReducer from '../stores/projectsSlice';
+import HelpComponentReducer from '../stores/helpComponentSlice';
 const store = configureStore({
     reducer: {
         user: UserReducer,
@@ -20,7 +21,8 @@ const store = configureStore({
         datasetTable: DatasetTableReducer,
         datasetTableView: DatasetTableViewReducer,
         internet: InternetReducer,
-        projects:ProjectsReducer
+        projects:ProjectsReducer,
+        helpComponent: HelpComponentReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

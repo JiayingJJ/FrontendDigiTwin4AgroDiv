@@ -31,13 +31,21 @@ const ProjectsComponent = () => {
         });
     }
     const handleGetAllProjects = async () => {
-        const data = await getAllProjects();
+        let allProject: any = []
         const projectsWithShared = await getAllProjectsWithShared(userInfo.id)
         const dataWithCreatorId = await getProjectWithCreatorId(userInfo.id)
-        if (projectsWithShared[1] !== 200) {
+        projectsWithShared[0].forEach((e: any) => {
+            console.log(e)
+            allProject.push(e)
+        });
+        dataWithCreatorId[0].forEach((e: any) => {
+            console.log(e)
+            allProject.push(e)
+        });
+        if (dataWithCreatorId[1] !== 200) {
 
         } else {
-            const notDelete = projectsWithShared[0].filter((d: any) => {
+            const notDelete = allProject?.filter((d: any) => {
                 if (!d.deleted_at.Valid) {
                     return d;
                 }
@@ -45,7 +53,9 @@ const ProjectsComponent = () => {
             const selected = notDelete.filter((i: any) => i.id === selectedProjectId)
             dispatch({ type: 'projects/setSelectedProject', payload: selected[0] })
             dispatch({ type: 'projects/setAllProjects', payload: notDelete })
-            await getMemberInfo(selected[0].members.RawMessage)
+            if (selected.length !== 0) {
+                await getMemberInfo(selected[0].members.RawMessage)
+            }
         }
     }
     useEffect(() => {

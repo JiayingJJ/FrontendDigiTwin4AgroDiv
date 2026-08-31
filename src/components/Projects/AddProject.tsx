@@ -31,9 +31,8 @@ const AddProject = () => {
         setProjectName(e.target.value)
     }
     const clickForCreateProject = async (projectName: string, creatorId: string, projectDescription: string) => {
-        const members = [userInfo.id]
         if (isOnLine) {
-            const data = await createProject(projectName, creatorId, members, projectDescription)
+            const data = await createProject(projectName, creatorId, [], projectDescription)
             if (data[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

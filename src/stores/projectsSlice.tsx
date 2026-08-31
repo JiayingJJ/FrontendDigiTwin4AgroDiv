@@ -11,6 +11,8 @@ interface ProjectsState {
     selectedProjectId: string | null;
     addMember: boolean;
     membersForRedux: [];
+    ownedProjects: [];
+    sharedProjects: [];
 }
 
 const initialState: ProjectsState = {
@@ -24,6 +26,8 @@ const initialState: ProjectsState = {
     selectedProjectId: null,
     addMember: false,
     membersForRedux: [],
+    ownedProjects: [],
+    sharedProjects: [],
 }
 
 const projectsSlice = createSlice({
@@ -72,6 +76,12 @@ const projectsSlice = createSlice({
             console.log(JSON.parse(JSON.stringify(action.payload)))
             state.membersForRedux.push(action.payload);
 
+        },
+        setOwnedProjects: (state, action) => {
+            state.ownedProjects = action.payload;
+        },
+        setSharedProjects: (state, action) => {
+            state.sharedProjects = action.payload;
         },
     }
 });

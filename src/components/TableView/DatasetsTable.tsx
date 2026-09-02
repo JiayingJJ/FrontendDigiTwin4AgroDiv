@@ -11,6 +11,7 @@ import { getAllColumnsWithTableId, getColumnWithId } from '../../api/dataset';
 import Tables from './Tables';
 import { databaseSqlite } from '../sqlite/db';
 import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
+import TableViewActions from './TableViewActions';
 // @flow
 type Props = {
 
@@ -113,6 +114,7 @@ const DatasetsTable = () => {
                 <Card minWidth={"100%"} height={"100%"}>
                     <CardHeader>
                         <Heading size='md'>Beschreibung</Heading>
+                        {descriptionOpen && <TableViewActions/>}
                     </CardHeader>
                 </Card>
             </GridItem>

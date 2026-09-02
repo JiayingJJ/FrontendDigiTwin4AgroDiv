@@ -25,6 +25,7 @@ import { getGeoData, insertGeoData, setGeoDataStatus, updateGeoDataProperties } 
 import FileUploadComponent from "./FileUploadComponent";
 import { uploadImage } from "../../../api/file";
 import store from "../../../stores/stores";
+import { updateGeoDataIdInUserTableId } from "../../../api/userTableId";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -133,11 +134,14 @@ const DatasetColumns = () => {
                 const geoData = { "coordinates": geometry, "type": geometryType }
                 if (addDrawedInteractionInfo) {
                     const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+                    console.log(geometryInserGeoData[0].id)
+                    const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, geometryInserGeoData[0].id, data[1].id)
                     const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
                     dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
                     dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
                 }
                 else {
+                    const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, selectedGeoInfo.id, data[1].id)
                     const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }
                     dataInserGeoData = await updateGeoDataProperties(selectedGeoInfo.id, properties, "pending")
                 }

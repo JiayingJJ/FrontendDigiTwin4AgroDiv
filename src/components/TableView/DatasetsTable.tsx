@@ -12,6 +12,7 @@ import Tables from './Tables';
 import { databaseSqlite } from '../sqlite/db';
 import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 import TableViewActions from './TableViewActions';
+import SelectColumn from './SelectColumn';
 // @flow
 type Props = {
 
@@ -25,9 +26,8 @@ const DatasetsTable = () => {
     const renderTable = useSelector((state: any) => state.datasetTableView.renderTable)
     const selected = useSelector((state: any) => state.datasetTableView.tableID)
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
-
+    const selectedTable = useSelector((state: any) => state.datasetTableView.selectedTable)
     const userInfo = useSelector((state: any) => state.user)
-
     const getAllDataSets = async () => {
         let data;
         if (isOnLine) {
@@ -43,8 +43,16 @@ const DatasetsTable = () => {
         return data;
     }
     useEffect(() => {
+        dispatch({ type: 'datasetTableView/clearDatasetTableView', payload: null })
         getAllDataSets()
     }, [])
+    useEffect(() => {
+        if (selectedTable !== null && selectedTable.columns_in_table.RawMessage !== null) {
+            selectedTable.columns_in_table.RawMessage.map((c: any) => {
+                dispatch({ type: 'datasetTableView/addAllColumnsName', payload: c.name })
+            })
+        }
+    }, [selectedTable])
     const handleRenderView = async (t: any) => {
         close()
         const dataColumns = await fetchTableWithId(t.id)
@@ -66,12 +74,7 @@ const DatasetsTable = () => {
     }
     const close = async () => {
         setDescriptionOpen(false)
-        dispatch({ type: 'datasetTableView/setColumns', payload: [] })
-        dispatch({ type: 'datasetTableView/setData', payload: null })
-        dispatch({ type: 'datasetTableView/setTableName', payload: null })
-        dispatch({ type: 'datasetTableView/setRenderTable', payload: false })
-        dispatch({ type: 'datasetTableView/setTableID', payload: null })
-        dispatch({ type: 'datasetTableView/setSelectedTable', payload: null })
+        dispatch({ type: 'datasetTableView/clearTableInfo', payload: null })
     }
 
     const [descriptionOpen, setDescriptionOpen] = useState(false);
@@ -79,7 +82,7 @@ const DatasetsTable = () => {
     return (
         <Grid templateColumns={`repeat(6, 1fr)`} gap={6} width={"95vw"} height={"90vh"} padding={"0 0 2vh 0"}>
             <GridItem h='90vh' w="100%" overflowY={"auto"}>
-                <VStack spacing={".5rem"} overflowX={"hidden"} height={"100%"} width={"100%"}>
+                <VStack spacing={".5rem"} overflowX={"hidden"} height={"90vh"} width={"100%"}>
                     {tables !== null && tables.length != 0 && tables.map((t: any) => {
                         const isSelected = t.id === selected;
                         return (
@@ -100,21 +103,21 @@ const DatasetsTable = () => {
                 </VStack>
             </GridItem>
 
-            <GridItem colSpan={descriptionOpen ? 4 : 5} h='100%'>
+            <GridItem colSpan={descriptionOpen ? 4 : 5} h='90vh'>
                 {renderTable
                     ? <Tables />
-                    : <Box color="gray" height="100%" alignContent={"center"} textAlign={"center"}>
+                    : <Box color="gray" height="90vh" alignContent={"center"} textAlign={"center"}>
                         {tables !== null && tables.length != 0 ? "Select a table on the left side to view it here." : "No tables created. Create your first table inside the 'Database' section"}
                     </Box>
                 }
-
+                <SelectColumn />
             </GridItem>
 
             <GridItem display={descriptionOpen ? "block" : "none"}>
-                <Card minWidth={"100%"} height={"100%"}>
+                <Card minWidth={"100%"} height={"90%"}>
                     <CardHeader>
                         <Heading size='md'>Beschreibung</Heading>
-                        {descriptionOpen && <TableViewActions/>}
+                        {descriptionOpen && <TableViewActions />}
                     </CardHeader>
                 </Card>
             </GridItem>

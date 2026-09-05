@@ -9,6 +9,9 @@ interface DatasetTableViewState {
     tableName: string | null,
     tableID: string | null,
     selectedTable: [] | null,
+    redernSelectColumn: boolean,
+    selecedColumns: [],
+    allColumnsName: [],
 }
 
 const initialState: DatasetTableViewState = {
@@ -18,7 +21,10 @@ const initialState: DatasetTableViewState = {
     data: null,
     tableName: null,
     tableID: null,
-    selectedTable: null
+    selectedTable: null,
+    redernSelectColumn: false,
+    selecedColumns: [],
+    allColumnsName: []
 }
 
 const datasetTableViewSlice = createSlice({
@@ -33,11 +39,9 @@ const datasetTableViewSlice = createSlice({
         },
         setColumns: (state, action) => {
             state.columns = action.payload;
-
         },
         setData: (state, action) => {
             state.data = action.payload;
-
         },
         setTableName: (state, action) => {
             state.tableName = action.payload;
@@ -46,9 +50,47 @@ const datasetTableViewSlice = createSlice({
         setTableID: (state, action) => {
             state.tableID = action.payload;
         },
-        setSelectedTable: (state, action) =>{
+        setSelectedTable: (state, action) => {
             state.selectedTable = action.payload;
-        }
+        },
+        setRedernSelectColumn: (state, action) => {
+            state.redernSelectColumn = action.payload;
+        },
+        clearDatasetTableView: (state, action) => {
+            state.tables = [];
+            state.renderTable = false;
+            state.columns = [];
+            state.data = null;
+            state.tableName = null;
+            state.tableID = null;
+            state.selectedTable = null;
+            state.redernSelectColumn = false;
+            state.selecedColumns = [],
+            state.allColumnsName = []
+        },
+        clearTableInfo: (state, action) => {
+            state.columns = [];
+            state.data = null;
+            state.tableName = null;
+            state.renderTable = false;
+            state.tableID = null;
+            state.selectedTable = null;
+            state.redernSelectColumn = false;
+            state.selecedColumns = [],
+            state.allColumnsName = []
+        },
+        setSelecedColumns: (state, action) => {
+            state.selecedColumns = action.payload;
+        },
+        addSelectedColumns: (state, action) => {
+            state.selecedColumns.push(action.payload)
+        },
+        setAllColumnsName: (state, action) => {
+            state.allColumnsName = action.payload;
+        },
+        addAllColumnsName: (state, action) => {
+            state.allColumnsName.push(action.payload)
+        },
     }
 });
 

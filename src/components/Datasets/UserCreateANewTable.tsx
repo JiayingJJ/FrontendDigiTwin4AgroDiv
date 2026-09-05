@@ -80,7 +80,7 @@ const UserCreateANewTable = () => {
             key={"user-create-new-table"}
             size={"5xl"}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent maxHeight="80vh">
                 <ModalHeader>Add new Dataset</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>

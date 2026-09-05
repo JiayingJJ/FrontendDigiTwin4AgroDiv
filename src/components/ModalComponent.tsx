@@ -63,7 +63,7 @@ const ModalComponent = () => {
 
         <Modal closeOnOverlayClick={false} isOpen={showModal} onClose={() => dispatch({ type: 'modalInfo/setShowModal', payload: false })}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent maxHeight="80vh">
                 <ModalHeader>{modalHeader}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>

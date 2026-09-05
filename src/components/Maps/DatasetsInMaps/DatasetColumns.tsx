@@ -186,7 +186,7 @@ const DatasetColumns = () => {
     return (
         <Modal closeOnOverlayClick={false} isOpen={editColumn || (addNewColumnsDataInGeometry && userInputColumnValues.length !== 0)} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent maxHeight="80vh">
                 <ModalHeader>
                     <Heading as='h2' size='xl'>{selectedTable?.table_name}</Heading>
                 </ModalHeader>

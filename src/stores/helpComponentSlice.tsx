@@ -1,25 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface HelpComponetState {
-   watchType: string|null;
+interface HelpComponentState {
+    rendernHelpComponent: boolean;
+    watchType: string | null;
+    isRunning: boolean;
 }
 
-const initialState: HelpComponetState = {
-   watchType: null,
+const initialState: HelpComponentState = {
+    watchType: null,
+    rendernHelpComponent: false,
+    isRunning: false,
 }
 
-const helpComponetSlice = createSlice({
-    name: 'helpComponet',
+const helpComponentSlice = createSlice({
+    name: 'helpComponent',
     initialState,
     reducers: {
         setWatchType: (state, action) => {
             state.watchType = action.payload;
         },
+        setRendernHelpComponent: (state, action) => {
+            state.rendernHelpComponent = action.payload;
+        },
+        setIsRunning: (state, action) => {
+            state.isRunning = action.payload;
+        },
     }
 });
 
 export const {
-   
-} = helpComponetSlice.actions;
 
-export default helpComponetSlice.reducer;
+} = helpComponentSlice.actions;
+
+export default helpComponentSlice.reducer;

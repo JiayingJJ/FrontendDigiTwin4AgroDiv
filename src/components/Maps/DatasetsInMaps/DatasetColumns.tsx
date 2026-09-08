@@ -16,7 +16,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    Heading
+    Heading,
 } from '@chakra-ui/react'
 import { addValueInColumns, getColumnWithId, setUserTableColumnDataStatus, updateValueInColumns } from "../../../api/dataset";
 import SelectComponent from "./SelectComponent";
@@ -26,6 +26,7 @@ import FileUploadComponent from "./FileUploadComponent";
 import { uploadImage } from "../../../api/file";
 import store from "../../../stores/stores";
 import { updateGeoDataIdInUserTableId } from "../../../api/userTableId";
+import Helps from "../../HelpComponent/Helps";
 const DatasetColumns = () => {
     const dispatch = useDispatch()
     const tableColumns = useSelector((state: any) => state.datasetTable.tableColumns)
@@ -191,7 +192,8 @@ const DatasetColumns = () => {
                     <Heading as='h2' size='xl'>{selectedTable?.table_name}</Heading>
                 </ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalBody pb={6} overflowY={"auto"}>
+                    <Helps />
                     {tableColumns.map((column: any) => renderDataset(column))}
                 </ModalBody>
                 <ModalFooter>

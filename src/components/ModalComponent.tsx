@@ -66,7 +66,7 @@ const ModalComponent = () => {
             <ModalContent maxHeight="80vh">
                 <ModalHeader>{modalHeader}</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalBody pb={6} overflowY={"auto"}>
                     {modalBody}
                 </ModalBody>
 

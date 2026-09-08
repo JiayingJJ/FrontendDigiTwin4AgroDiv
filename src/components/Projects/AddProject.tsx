@@ -64,7 +64,7 @@ const AddProject = () => {
             <ModalContent maxHeight="80vh">
                 <ModalHeader>Add new project</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalBody pb={6} overflowY={"auto"}>
                     <FormControl isRequired>
                         <FormLabel>Project Name</FormLabel>
                         <Input placeholder='Name' onChange={(e) => handleChange(e)} value={projectName} />

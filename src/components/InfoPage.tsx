@@ -19,7 +19,6 @@ const InfoPage = () => {
 
     return ( 
         <>
-        Start
         </>
     );
 }

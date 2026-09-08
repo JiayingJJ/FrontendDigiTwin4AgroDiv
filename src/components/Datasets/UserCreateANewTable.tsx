@@ -83,7 +83,7 @@ const UserCreateANewTable = () => {
             <ModalContent maxHeight="80vh">
                 <ModalHeader>Add new Dataset</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalBody pb={6} overflowY={"auto"}>
                     <FormControl>
                         <FormLabel>User Name</FormLabel>
                         <Input placeholder='Name' defaultValue={userInfo.name} />

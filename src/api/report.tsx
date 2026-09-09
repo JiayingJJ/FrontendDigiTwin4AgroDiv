@@ -1,10 +1,10 @@
 import { getCurrentTime } from "../helpers";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const getReport = async (user_table_id: string, notSelectedColumns: any) => {
+export const getReport = async (user_table_id: string, notSelectedColumns: any, geoInfo: string) => {
     const response = await fetch(`${apiUrl}/report/${user_table_id}`, {
         method: "POST",
-        body: JSON.stringify({not_selected_columns: notSelectedColumns})
+        body: JSON.stringify({not_selected_columns: notSelectedColumns, add_geo_info: geoInfo})
     })
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);

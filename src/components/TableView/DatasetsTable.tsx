@@ -28,6 +28,7 @@ const DatasetsTable = () => {
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
     const selectedTable = useSelector((state: any) => state.datasetTableView.selectedTable)
     const userInfo = useSelector((state: any) => state.user)
+    const databaseColumns = ["id", "user_id", "geo_data_id", "data_status", "created_at", "deleted_at", "updated_at"]
     const getAllDataSets = async () => {
         let data;
         if (isOnLine) {
@@ -50,6 +51,9 @@ const DatasetsTable = () => {
         if (selectedTable !== null && selectedTable.columns_in_table.RawMessage !== null) {
             selectedTable.columns_in_table.RawMessage.map((c: any) => {
                 dispatch({ type: 'datasetTableView/addAllColumnsName', payload: c.name })
+            })
+            databaseColumns.map((c: string) => {
+                dispatch({ type: 'datasetTableView/addAllColumnsName', payload: c })
             })
         }
     }, [selectedTable])

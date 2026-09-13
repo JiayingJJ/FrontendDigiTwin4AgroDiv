@@ -138,7 +138,6 @@ const datasetTableSlice = createSlice({
             })
         },
         clearUserInputColumnValues: (state, action) => {
-            console.log(action.payload)
             state.userInputColumnValues = [];
         },
         setEditTable: (state, action) => {

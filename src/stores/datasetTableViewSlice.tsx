@@ -13,6 +13,7 @@ interface DatasetTableViewState {
     selecedColumns: [],
     allColumnsName: [],
     addNewColumnsDataInDatasetTableView: boolean;
+    getUpdateFromDatabase: boolean;
 }
 
 const initialState: DatasetTableViewState = {
@@ -26,7 +27,8 @@ const initialState: DatasetTableViewState = {
     redernSelectColumn: false,
     selecedColumns: [],
     allColumnsName: [],
-    addNewColumnsDataInDatasetTableView: false
+    addNewColumnsDataInDatasetTableView: false,
+    getUpdateFromDatabase: false,
 }
 
 const datasetTableViewSlice = createSlice({
@@ -67,8 +69,8 @@ const datasetTableViewSlice = createSlice({
             state.tableID = null;
             state.selectedTable = null;
             state.redernSelectColumn = false;
-            state.selecedColumns = [],
-                state.allColumnsName = []
+            state.selecedColumns = [];
+            state.allColumnsName = []
         },
         clearTableInfo: (state, action) => {
             state.columns = [];
@@ -78,8 +80,8 @@ const datasetTableViewSlice = createSlice({
             state.tableID = null;
             state.selectedTable = null;
             state.redernSelectColumn = false;
-            state.selecedColumns = [],
-                state.allColumnsName = []
+            state.selecedColumns = [];
+            state.allColumnsName = [];
         },
         setSelecedColumns: (state, action) => {
             state.selecedColumns = action.payload;
@@ -96,7 +98,13 @@ const datasetTableViewSlice = createSlice({
         setAddNewColumnsDataInDatasetTableView: (state, action) => {
             state.addNewColumnsDataInDatasetTableView = action.payload;
         },
+        setGetUpdateFromDatabase: (state, action) => {
+            state.getUpdateFromDatabase = action.payload;
+        },
+        clearForGetUpdate: (state, action) => {
+            state.data = null;
 
+        }
     }
 });
 

@@ -21,24 +21,24 @@ const SelectColumn = () => {
 
     const redernSelectColumn = useSelector((state: any) => state.datasetTableView.redernSelectColumn)
     const selectedTable = useSelector((state: any) => state.datasetTableView.selectedTable)
-    const selecedColumns = useSelector((state: any) => state.datasetTableView.selecedColumns)
+    const selectedColumns = useSelector((state: any) => state.datasetTableView.selectedColumns)
     const allColumnsName = useSelector((state: any) => state.datasetTableView.allColumnsName)
     const handleOnClose = () => {
         dispatch({ type: 'datasetTableView/setRedernSelectColumn', payload: false })
     }
 
     const handleOnChange = (e: any) => {
-        dispatch({ type: 'datasetTableView/addSelectedColumns', payload: e })
+        dispatch({ type: 'datasetTableView/manageSelectedColumns', payload: e })
     }
     const handleDownload = async () => {
-        const notSelectedColumns = allColumnsName.filter((n: string) => !selecedColumns.includes(n))
+        const notSelectedColumns = allColumnsName.filter((n: string) => !selectedColumns.includes(n))
         let formatedColumns: any = [];
         notSelectedColumns.map((v: any) => {
             let string = v.replace(/[^a-zA-Z0-9]/g, '_');
             formatedColumns.push(string.toLowerCase())
         })
         const data = await getReport(selectedTable.id, formatedColumns, addGeoInfo)
-        dispatch({ type: 'datasetTableView/setSelecedColumns', payload: [] })
+        dispatch({ type: 'datasetTableView/setSelectedColumns', payload: [] })
         dispatch({ type: 'datasetTableView/setRedernSelectColumn', payload: false })
     }
     return (
@@ -63,7 +63,7 @@ const SelectColumn = () => {
                         {allColumnsName !== null && allColumnsName.map((c: any) => {
                             return (
                                 <Text fontSize='2xl'><Checkbox key={c}
-                                    isChecked={selecedColumns.includes(c)}
+                                    isChecked={selectedColumns.includes(c)}
                                     onChange={() => handleOnChange(c)} value={c}>{c}</Checkbox></Text>
                             )
                         })}

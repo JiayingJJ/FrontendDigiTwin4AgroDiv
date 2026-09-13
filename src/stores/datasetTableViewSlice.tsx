@@ -10,7 +10,7 @@ interface DatasetTableViewState {
     tableID: string | null,
     selectedTable: [] | null,
     redernSelectColumn: boolean,
-    selecedColumns: [],
+    selectedColumns: [],
     allColumnsName: [],
     addNewColumnsDataInDatasetTableView: boolean;
     getUpdateFromDatabase: boolean;
@@ -25,7 +25,7 @@ const initialState: DatasetTableViewState = {
     tableID: null,
     selectedTable: null,
     redernSelectColumn: false,
-    selecedColumns: [],
+    selectedColumns: [],
     allColumnsName: [],
     addNewColumnsDataInDatasetTableView: false,
     getUpdateFromDatabase: false,
@@ -69,7 +69,7 @@ const datasetTableViewSlice = createSlice({
             state.tableID = null;
             state.selectedTable = null;
             state.redernSelectColumn = false;
-            state.selecedColumns = [];
+            state.selectedColumns = [];
             state.allColumnsName = []
         },
         clearTableInfo: (state, action) => {
@@ -80,14 +80,20 @@ const datasetTableViewSlice = createSlice({
             state.tableID = null;
             state.selectedTable = null;
             state.redernSelectColumn = false;
-            state.selecedColumns = [];
+            state.selectedColumns = [];
             state.allColumnsName = [];
         },
-        setSelecedColumns: (state, action) => {
-            state.selecedColumns = action.payload;
+        setSelectedColumns: (state, action) => {
+            state.selectedColumns = action.payload;
         },
-        addSelectedColumns: (state, action) => {
-            state.selecedColumns.push(action.payload)
+        manageSelectedColumns: (state, action) => {
+            const index = state.selectedColumns.indexOf(action.payload);
+            if (index !== -1) {
+                state.selectedColumns.splice(index, 1);
+            }
+            else {
+                state.selectedColumns.push(action.payload)
+            }
         },
         setAllColumnsName: (state, action) => {
             state.allColumnsName = action.payload;

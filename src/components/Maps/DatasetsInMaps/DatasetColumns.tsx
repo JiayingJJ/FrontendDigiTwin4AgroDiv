@@ -179,7 +179,7 @@ const DatasetColumns = () => {
         dispatch({ type: 'datasetTable/clearInfoForASelectedTable', payload: null })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
         dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
-
+        dispatch({ type: 'datasetTableView/setAddNewColumnsDataInDatasetTableView', payload: false })
     }
     const handleCancel = async () => {
         dispatch({ type: 'openLayers/setEditColumn', payload: false })

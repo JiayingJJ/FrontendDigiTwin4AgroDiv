@@ -65,7 +65,6 @@ const DatasetColumns = () => {
         return columns;
     }
     const renderDataset = (column: any) => {
-        console.log(column)
         switch (column.type) {
             case 'radio':
                 return (
@@ -132,8 +131,8 @@ const DatasetColumns = () => {
             if (data[0] === 200) {
                 const status = 'merged'
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
-                const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
                 if (!addNewColumnsDataInDatasetTableView) {
+                    const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
                     const geoData = { "coordinates": geometry, "type": geometryType }
                     if (addDrawedInteractionInfo) {
                         const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
@@ -166,6 +165,8 @@ const DatasetColumns = () => {
                         dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
                         const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
                     }
+                } else {
+                    dispatch({ type: 'datasetTableView/setGetUpdateFromDatabase', payload: true })
                 }
 
             }

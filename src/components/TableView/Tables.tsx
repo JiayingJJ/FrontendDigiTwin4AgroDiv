@@ -31,7 +31,7 @@ function Tables() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {data.error === undefined && data.map((d: any) => {
+                    {data !== null && data.error === undefined && data.map((d: any) => {
                         return (<Tr>
                             {
                                 selectedTable !== null && selectedTable?.columns_in_table?.RawMessage.map((t: any) => {

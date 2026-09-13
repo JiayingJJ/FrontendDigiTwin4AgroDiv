@@ -215,7 +215,7 @@ const OpenLayersMap = () => {
         isDrawingRef.current = isDrawing;
     }, [isDrawing]);
     const resetFeatures = (features: any) => {
-        features.forEach((feature) => {
+        features.forEach((feature: any) => {
             const data = feature.values_.ids
             if (data !== undefined && data.Valid === true) {
                 let userColor;
@@ -246,6 +246,12 @@ const OpenLayersMap = () => {
                         new Style({
                             stroke: new Stroke({ color: stroke, width: 2 }),
                             fill: new Fill({ color: userColor }),
+                        })
+                    );
+                } else if (feature.getGeometry()?.getType() === "LineString") {
+                    feature.setStyle(
+                        new Style({
+                            stroke: new Stroke({ color: userColor, width: 2, lineDash: [30, 10] }),
                         })
                     );
                 }
@@ -333,7 +339,6 @@ const OpenLayersMap = () => {
             } else if (featureRedux.getGeometry()?.getType() === "Polygon") {
                 featureRedux.setStyle(
                     [new Style({
-
                         stroke: new Stroke({ color: strockeColor, width: 2 }),
                         fill: new Fill({ color: userColor }),
                     }),
@@ -344,6 +349,21 @@ const OpenLayersMap = () => {
                             anchor: [0.5, 1],
                         }),
                         geometry: featureRedux => featureRedux.getGeometry().getInteriorPoint(),
+                    })
+                    ]
+                );
+            } else if (featureRedux.getGeometry()?.getType() === "LineString") {
+                featureRedux.setStyle(
+                    [new Style({
+                        stroke: new Stroke({ color: userColor, width: 2, lineDash: [30, 10] }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        }),
+                        geometry: new Point(featureRedux.getGeometry().getCoordinateAt(0.5)),
                     })
                     ]
                 );
@@ -395,6 +415,21 @@ const OpenLayersMap = () => {
                             anchor: [0.5, 1],
                         }),
                         geometry: featureRedux => featureRedux.getGeometry().getInteriorPoint(),
+                    })
+                    ]
+                );
+            } else if (featureRedux.getGeometry()?.getType() === "LineString") {
+                featureRedux.setStyle(
+                    [new Style({
+                        stroke: new Stroke({ color: userColor, width: 2, lineDash: [3, 10] }),
+                    }),
+                    new Style({
+                        image: new Icon({
+                            src: dataUrl,
+                            scale: 1,
+                            anchor: [0.5, 1],
+                        }),
+                        geometry: new Point(featureRedux.getGeometry().getCoordinateAt(0.5)),
                     })
                     ]
                 );

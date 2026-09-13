@@ -17,8 +17,7 @@ import { MdCancel } from "react-icons/md";
 import Snap from 'ol/interaction/Snap.js';
 import { useRef, useState } from 'react';
 import { BiShapePolygon } from "react-icons/bi";
-import { TbPoint } from "react-icons/tb";
-
+import { TbPoint, TbVectorSpline } from "react-icons/tb";
 type Props = {
   olMap: Map
 };
@@ -160,6 +159,11 @@ const MapActions = ({ olMap }: Props) => {
           <Tooltip label={"Ein Polygon hinzufügen"} hasArrow >
             <Button variant={"unstyled"}>
               <BiShapePolygon style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('Polygon')} />
+            </Button>
+          </Tooltip>
+          <Tooltip label={"Ein Linien hinzufügen (Rechtsklick für die Bestätigung)"} hasArrow >
+            <Button variant={"unstyled"}>
+              <TbVectorSpline style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => addInteractionInMap('LineString')} />
             </Button>
           </Tooltip>
           <Tooltip label={"Abbrechen"} hasArrow >

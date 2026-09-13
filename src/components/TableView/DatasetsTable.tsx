@@ -13,6 +13,7 @@ import { databaseSqlite } from '../sqlite/db';
 import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 import TableViewActions from './TableViewActions';
 import SelectColumn from './SelectColumn';
+import DatasetColumns from '../Maps/DatasetsInMaps/DatasetColumns';
 // @flow
 type Props = {
 
@@ -55,6 +56,10 @@ const DatasetsTable = () => {
             databaseColumns.map((c: string) => {
                 dispatch({ type: 'datasetTableView/addAllColumnsName', payload: c })
             })
+            dispatch({ type: 'datasetTable/setSelectedTableId', payload: selectedTable.id })
+            dispatch({ type: 'datasetTable/setSelectedTable', payload: selectedTable })
+            dispatch({ type: 'datasetTable/setTableColumns', payload: selectedTable.columns_in_table.RawMessage })
+            dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: selectedTable.columns_in_table.RawMessage })
         }
     }, [selectedTable])
     const handleRenderView = async (t: any) => {
@@ -122,6 +127,7 @@ const DatasetsTable = () => {
                     <CardHeader>
                         <Heading size='md'>Beschreibung</Heading>
                         {descriptionOpen && <TableViewActions />}
+                        <DatasetColumns />
                     </CardHeader>
                 </Card>
             </GridItem>

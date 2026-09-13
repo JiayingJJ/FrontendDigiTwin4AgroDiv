@@ -12,6 +12,7 @@ interface DatasetTableViewState {
     redernSelectColumn: boolean,
     selecedColumns: [],
     allColumnsName: [],
+    addNewColumnsDataInDatasetTableView: boolean;
 }
 
 const initialState: DatasetTableViewState = {
@@ -24,7 +25,8 @@ const initialState: DatasetTableViewState = {
     selectedTable: null,
     redernSelectColumn: false,
     selecedColumns: [],
-    allColumnsName: []
+    allColumnsName: [],
+    addNewColumnsDataInDatasetTableView: false
 }
 
 const datasetTableViewSlice = createSlice({
@@ -66,7 +68,7 @@ const datasetTableViewSlice = createSlice({
             state.selectedTable = null;
             state.redernSelectColumn = false;
             state.selecedColumns = [],
-            state.allColumnsName = []
+                state.allColumnsName = []
         },
         clearTableInfo: (state, action) => {
             state.columns = [];
@@ -77,7 +79,7 @@ const datasetTableViewSlice = createSlice({
             state.selectedTable = null;
             state.redernSelectColumn = false;
             state.selecedColumns = [],
-            state.allColumnsName = []
+                state.allColumnsName = []
         },
         setSelecedColumns: (state, action) => {
             state.selecedColumns = action.payload;
@@ -91,6 +93,10 @@ const datasetTableViewSlice = createSlice({
         addAllColumnsName: (state, action) => {
             state.allColumnsName.push(action.payload)
         },
+        setAddNewColumnsDataInDatasetTableView: (state, action) => {
+            state.addNewColumnsDataInDatasetTableView = action.payload;
+        },
+
     }
 });
 

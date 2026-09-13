@@ -46,6 +46,7 @@ const DatasetColumns = () => {
     const files = useSelector((state: any) => state.openLayers.files)
     const editColumn = useSelector((state: any) => state.openLayers.editColumn)
     const selectedColumnId = useSelector((state: any) => state.openLayers.selectedColumnId)
+    const addNewColumnsDataInDatasetTableView = useSelector((state: any) => state.datasetTableView.addNewColumnsDataInDatasetTableView)
 
     const getColumnValues = () => {
         const states = store.getState();
@@ -132,37 +133,39 @@ const DatasetColumns = () => {
                 const status = 'merged'
                 const dataStatus = await setUserTableColumnDataStatus(data[1][0], selectedTableId, status);
                 const dataColumn = await getColumnWithId(selectedTableId, data[1].id);
-                const geoData = { "coordinates": geometry, "type": geometryType }
-                if (addDrawedInteractionInfo) {
-                    const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
-                    console.log(geometryInserGeoData[0].id)
-                    const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, geometryInserGeoData[0].id, data[1].id)
-                    const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
-                    dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
-                    dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
-                }
-                else {
-                    const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, selectedGeoInfo.id, data[1].id)
-                    const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }
-                    dataInserGeoData = await updateGeoDataProperties(selectedGeoInfo.id, properties, "pending")
-                }
-                dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
-                if (dataInserGeoData[1] === 500) {
-                    console.log("Alert Message")
-                    dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
-                    dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
-                    dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
-                    dispatch({ type: 'alertInfo/setShowAlert', payload: true })
-                } else {
-                    const geoData = await getGeoData();
-                    const validData = geoData.filter((d: any) => {
-                        if (!d.deleted_at.Valid) {
-                            return d;
-                        }
-                    })
-                    dispatch({ type: 'openLayers/updateGeoDataAfterChange', payload: { geoData: validData, id: dataInserGeoData[0].id } })
-                    dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
-                    const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
+                if (!addNewColumnsDataInDatasetTableView) {
+                    const geoData = { "coordinates": geometry, "type": geometryType }
+                    if (addDrawedInteractionInfo) {
+                        const geometryInserGeoData = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+                        console.log(geometryInserGeoData[0].id)
+                        const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, geometryInserGeoData[0].id, data[1].id)
+                        const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": geometryInserGeoData[0].id }
+                        dataInserGeoData = await updateGeoDataProperties(geometryInserGeoData[0].id, properties, "pending")
+                        dispatch({ type: 'openLayers/setRemoveDrawedFeature', payload: true })
+                    }
+                    else {
+                        const postGeodataIdInUserTableId = await updateGeoDataIdInUserTableId(selectedTableId, selectedGeoInfo.id, data[1].id)
+                        const properties = { "column_id": data[1].id, "table_id": data[1].user_table_id, "id": selectedGeoInfo.id }
+                        dataInserGeoData = await updateGeoDataProperties(selectedGeoInfo.id, properties, "pending")
+                    }
+                    dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
+                    if (dataInserGeoData[1] === 500) {
+                        console.log("Alert Message")
+                        dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+                        dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+                        dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+                        dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+                    } else {
+                        const geoData = await getGeoData();
+                        const validData = geoData.filter((d: any) => {
+                            if (!d.deleted_at.Valid) {
+                                return d;
+                            }
+                        })
+                        dispatch({ type: 'openLayers/updateGeoDataAfterChange', payload: { geoData: validData, id: dataInserGeoData[0].id } })
+                        dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+                        const dataStatus = await setGeoDataStatus(dataInserGeoData[0].id, "merged")
+                    }
                 }
 
             }
@@ -183,9 +186,12 @@ const DatasetColumns = () => {
         dispatch({ type: 'datasetTable/setTableColumns', payload: [] })
         dispatch({ type: 'datasetTable/clearUserInputColumnValues', payload: null })
         dispatch({ type: 'openLayers/clearFiles', payload: null })
+        if (addNewColumnsDataInDatasetTableView) {
+            dispatch({ type: 'datasetTableView/setAddNewColumnsDataInDatasetTableView', payload: false })
+        }
     }
     return (
-        <Modal closeOnOverlayClick={false} isOpen={editColumn || (addNewColumnsDataInGeometry && userInputColumnValues.length !== 0)} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
+        <Modal closeOnOverlayClick={false} isOpen={editColumn || (addNewColumnsDataInGeometry && userInputColumnValues.length !== 0) || addNewColumnsDataInDatasetTableView} onClose={() => handleCancel()} key={`${selectedTable?.id}-render-table-modal`} size={"6xl"}>
             <ModalOverlay />
             <ModalContent maxHeight="80vh">
                 <ModalHeader>

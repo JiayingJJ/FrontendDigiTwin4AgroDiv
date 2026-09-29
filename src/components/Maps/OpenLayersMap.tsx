@@ -70,7 +70,6 @@ const OpenLayersMap = () => {
                 geometry: item.geometry_data.RawMessage,
                 properties: { ids: item.properties }
             }));
-
         return {
             type: "FeatureCollection",
             features: features
@@ -156,7 +155,7 @@ const OpenLayersMap = () => {
             );
         }
     };
-    olMap?.on('click', (e) => {
+    olMap?.on('singleclick', (e) => {
         if (isDrawingRef.current === true) {
             return
         }

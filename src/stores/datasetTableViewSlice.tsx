@@ -14,6 +14,8 @@ interface DatasetTableViewState {
     allColumnsName: [],
     addNewColumnsDataInDatasetTableView: boolean;
     getUpdateFromDatabase: boolean;
+    editData: boolean;
+    deleteData: boolean;
 }
 
 const initialState: DatasetTableViewState = {
@@ -29,6 +31,8 @@ const initialState: DatasetTableViewState = {
     allColumnsName: [],
     addNewColumnsDataInDatasetTableView: false,
     getUpdateFromDatabase: false,
+    editData: false,
+    deleteData: false
 }
 
 const datasetTableViewSlice = createSlice({
@@ -110,6 +114,12 @@ const datasetTableViewSlice = createSlice({
         clearForGetUpdate: (state, action) => {
             state.data = null;
 
+        },
+        setEditData: (state, action) => {
+            state.editData = action.payload;
+        },
+        setDeleteData: (state, action) => {
+            state.deleteData = action.payload;
         }
     }
 });

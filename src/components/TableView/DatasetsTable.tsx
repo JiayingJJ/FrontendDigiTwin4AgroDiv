@@ -72,14 +72,19 @@ const DatasetsTable = () => {
             // dispatch({ type: 'datasetTable/setUserInputColumnValues', payload: selectedTable.columns_in_table.RawMessage })
         }
     }, [selectedTable])
-    const handleRenderView = async (t: String) => {
+    const handleRenderView = async (t: string) => {
         const dataColumns = await fetchTableWithId(t)
         const dataValues = await getAllColumnsWithTableId(t);
+        const validData = dataValues[0].filter((d: any) => {
+            if (!d.deleted_at) {
+                return d;
+            }
+        })
         //  && dataValues[1] === 200
         if (dataColumns[1] === 200) {
             dispatch({ type: 'datasetTableView/setSelectedTable', payload: dataColumns[0] })
             dispatch({ type: 'datasetTableView/setColumns', payload: dataColumns[0].columns_in_table.RawMessage })
-            dispatch({ type: 'datasetTableView/setData', payload: dataValues[0] })
+            dispatch({ type: 'datasetTableView/setData', payload: validData })
             dispatch({ type: 'datasetTableView/setTableName', payload: dataColumns[0].table_name })
             dispatch({ type: 'datasetTableView/setRenderTable', payload: true })
             dispatch({ type: 'datasetTableView/setTableID', payload: t })

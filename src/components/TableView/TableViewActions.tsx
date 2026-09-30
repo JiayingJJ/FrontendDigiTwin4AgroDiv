@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    Button
+    VStack, Button,
 } from '@chakra-ui/react'
+import {
+    FiDownload, FiPlus, FiEdit, FiTrash2,
+} from "react-icons/fi";
 const TableViewActions = () => {
     const dispatch = useDispatch()
     const addNewColumnsDataInDatasetTableView = useSelector((state: any) => state.datasetTableView.addNewColumnsDataInDatasetTableView)
@@ -32,12 +35,71 @@ const TableViewActions = () => {
         dispatch({ type: 'datasetTableView/setDeleteData', payload: true })
     }
     return (
-        <>
-            <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => handleClickDownload()} disabled={editData||deleteData}>Download</Button>
-            <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => handleClickAddData()} disabled={editData||deleteData}>Add Data</Button>
-            <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => handleClickEditData()} disabled={deleteData}>Edit Data</Button>
-            <Button size="sm" _hover={{ backgroundColor: "#ecf39eff" }} width={"100%"} onClick={() => handleClickDeleteData()} disabled={editData}>Delete Data</Button>
-        </>
+        <VStack spacing={2} width="100%">
+            <Button
+                size="sm"
+                width="100%"
+                leftIcon={<FiDownload />}
+                colorScheme="blue"
+                variant="outline"
+                onClick={handleClickDownload}
+                isDisabled={editData || deleteData}
+                _hover={{
+                    bg: "blue.50",
+                    transform: "translateY(-1px)",
+                }}
+            >
+                Download
+            </Button>
+
+            <Button
+                size="sm"
+                width="100%"
+                leftIcon={<FiPlus />}
+                colorScheme="green"
+                variant="outline"
+                onClick={handleClickAddData}
+                isDisabled={editData || deleteData}
+                _hover={{
+                    bg: "green.50",
+                    transform: "translateY(-1px)",
+                }}
+            >
+                Add Data
+            </Button>
+
+            <Button
+                size="sm"
+                width="100%"
+                leftIcon={<FiEdit />}
+                colorScheme="orange"
+                variant="outline"
+                onClick={handleClickEditData}
+                isDisabled={deleteData}
+                _hover={{
+                    bg: "orange.50",
+                    transform: "translateY(-1px)",
+                }}
+            >
+                Edit Data
+            </Button>
+
+            <Button
+                size="sm"
+                width="100%"
+                leftIcon={<FiTrash2 />}
+                colorScheme="red"
+                variant="outline"
+                onClick={handleClickDeleteData}
+                isDisabled={editData}
+                _hover={{
+                    bg: "red.50",
+                    transform: "translateY(-1px)",
+                }}
+            >
+                Delete Data
+            </Button>
+        </VStack>
     );
 }
 

@@ -6,6 +6,7 @@ import {
 import { readableTimestamp } from "../../helpers";
 import ImageView from "./ImageView";
 import { MdDeleteForever, MdModeEdit, MdCancel } from "react-icons/md";
+import { removeDataFromUserTablesId } from "../../api/userTableId";
 
 function Tables() {
     const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function Tables() {
     const tableName = useSelector((state: any) => state.datasetTableView.tableName);
     const selectedTable = useSelector((state: any) => state.datasetTableView.selectedTable);
     const deleteData = useSelector((state: any) => state.datasetTableView.deleteData);
+    const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
 
     const handleEditData = async (d: any) => {
         dispatch({ type: "openLayers/setEditColumn", payload: true });
@@ -33,6 +35,12 @@ function Tables() {
             });
         });
     };
+
+    const handleDeleteData = async(d: any) => {
+        const deleteUserTableIdColumn = await removeDataFromUserTablesId(d.id, selectedTableId);
+        dispatch({ type: 'datasetTableView/setDeleteData', payload: false })
+        dispatch({ type: 'datasetTableView/setGetUpdateFromDatabase', payload: true })
+    }
     return (
         <TableContainer overflowY={"auto"} maxHeight={"90vh"}>
             <Table variant="striped" colorScheme="gray">
@@ -74,7 +82,7 @@ function Tables() {
                                                         size="sm"
                                                         colorScheme="green"
                                                         variant="outline"
-                                                        onClick={() => console.log(d)}
+                                                        onClick={() => handleDeleteData(d)}
                                                     />
                                                 )}
                                                 <IconButton

@@ -11,7 +11,7 @@ import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import { databaseSqlite } from '../sqlite/db';
 import { isZeroTimeString } from '../../helpers';
-import { deleteTableWithId, getTablesWithUserId } from '../../api/userTables';
+import { getCreatedAndSharedInfo } from '../sqlite/helper';
 const Datasets = () => {
     const dispatch = useDispatch()
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
@@ -22,39 +22,10 @@ const Datasets = () => {
     useEffect(() => {
         async function fechtData() {
             if (isOnLine) {
-                const data = await getTablesWithUserId(userInfo)
-                const filterData = data.filter((d: any) => {
-                    if (!d.deleted_at.Valid) {
-                        return d;
-                    }
-                });
-                dispatch({ type: 'datasetTable/setTables', payload: filterData })
-            } else {
-                await databaseSqlite.initDb();
-                const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
-                const filterData = data?.filter((d: any) => {
-                    const notDelete = isZeroTimeString(d.deleted_at)
-                    if (notDelete) {
-                        return d;
-                    }
-                })
-                dispatch({ type: 'datasetTable/setTables', payload: filterData })
-            }
-        }
-        fechtData()
-    }, [])
-    useEffect(() => {
-        async function fechtData() {
-            if (isOnLine) {
-                const data = await getTablesWithUserId(userInfo)
-                const filterData = data.filter((d: any) => {
-                    if (!d.deleted_at.Valid) {
-                        return d;
-                    }
-                });
-                const selected = filterData.filter((i: any) => i.id === selectedTableId)
+                const data = await getCreatedAndSharedInfo(userInfo.id)
+                const selected = data.allUserTables.filter((i: any) => i.id === selectedTableId)
                 dispatch({ type: 'datasetTable/setSelectedTable', payload: selected[0] })
-                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+                dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
             } else {
                 await databaseSqlite.initDb();
                 const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)

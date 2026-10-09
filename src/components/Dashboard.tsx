@@ -1,14 +1,8 @@
 import React, { useEffect } from 'react';
 import {
     Button,
-    Box,
     HStack,
     VStack,
-    Alert,
-    AlertTitle,
-    AlertDescription,
-    AlertIcon,
-    CloseButton
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux';
 import OpenLayersMap from "./Maps/OpenLayersMap";
@@ -17,10 +11,9 @@ import Datasets from './Datasets/Datasets';
 import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
 import { isZeroTimeString } from '../helpers';
-import { getTablesWithUserId, getUserTablesWithProjectId } from '../api/userTables';
 import ProjectsComponent from './Projects/ProjectsComponent';
 import ModalComponent from './ModalComponent';
-import { getAllProjectsWithShared, getProjectWithCreatorId } from '../api/projects';
+import { getCreatedAndSharedInfo } from './sqlite/helper';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -47,40 +40,10 @@ const Dashboard = () => {
 
     useEffect(() => {
         async function fechtData() {
-            let allProjects: any = [];
-            let allUserTables: any = [];
             if (isOnLine) {
-                // get projects with user as creator
-                const projectData = await getProjectWithCreatorId(userInfo.id)
-                projectData[0].map((d: any) => {
-                    if (!d.deleted_at.Valid) {
-                        allProjects.push(d);
-                    }
-                })
-                // get user_tables with user as creator
-                const data = await getTablesWithUserId(userInfo)
-                data.map((d: any) => {
-                    if (!d.deleted_at.Valid) {
-                        allUserTables.push(d);
-                    }
-                });
-                // get projects and user_tables with user as member
-                const projectDataShared = await getAllProjectsWithShared(userInfo.id)
-                await Promise.all(projectDataShared[0].map(async (d: any) => {
-                    // projects
-                    if (!d.deleted_at.Valid) {
-                        allProjects.push(d);
-                    }
-                    // user_tables
-                    const getUserTablesWithSharedProjects = await getUserTablesWithProjectId(d.id)
-                    console.log(getUserTablesWithSharedProjects)
-                    getUserTablesWithSharedProjects.map((sharedUT: any) => {
-                        allUserTables.push(sharedUT);
-                    })
-
-                }))
-                dispatch({ type: 'projects/setAllProjects', payload: allProjects })
-                dispatch({ type: 'datasetTable/setTables', payload: allUserTables })
+                const data = await getCreatedAndSharedInfo(userInfo.id)
+                dispatch({ type: 'projects/setAllProjects', payload: data.allProjects })
+                dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
             } else {
                 await databaseSqlite.initDb();
                 const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)

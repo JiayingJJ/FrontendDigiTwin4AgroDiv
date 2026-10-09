@@ -17,6 +17,7 @@ function Tables() {
     const selectedTable = useSelector((state: any) => state.datasetTableView.selectedTable);
     const deleteData = useSelector((state: any) => state.datasetTableView.deleteData);
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
+    const userInfo = useSelector((state: any) => state.user)
 
     const handleEditData = async (d: any) => {
         dispatch({ type: "openLayers/setEditColumn", payload: true });
@@ -60,12 +61,13 @@ function Tables() {
                     {data !== null &&
                         data.error === undefined &&
                         data.map((d: any) => {
+                            console.log(d)
                             return (
                                 <Tr>
                                     {(editData || deleteData) && (
                                         <Td textAlign="right">
                                             <HStack paddingRight={"20px"}>
-                                                {editData && (
+                                                {editData && userInfo.id === d.user_id && (
                                                     <IconButton
                                                         aria-label={`edit`}
                                                         icon={<MdModeEdit />}
@@ -75,7 +77,7 @@ function Tables() {
                                                         onClick={() => handleEditData(d)}
                                                     />
                                                 )}
-                                                {deleteData && (
+                                                {deleteData && userInfo.id === d.user_id && (
                                                     <IconButton
                                                         aria-label={`delete`}
                                                         icon={<MdDeleteForever />}

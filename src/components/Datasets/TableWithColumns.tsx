@@ -52,6 +52,7 @@ const TableWithColumns = () => {
     const selectedTableId = useSelector((state: any) => state.datasetTable.selectedTableId)
     const editedColumns = useSelector((state: any) => state.datasetTable.editedColumns)
     const [editProject, setEditProject] = useState<boolean>(false);
+    const userInfo = useSelector((state: any) => state.user)
 
     useEffect(() => {
         if (tableColumns === undefined || tableColumns === null) return;
@@ -235,7 +236,7 @@ const TableWithColumns = () => {
     }
     useEffect(() => {
         setProjectName('')
-        if (selectedTable !== null&&selectedTable !== undefined) {
+        if (selectedTable !== null && selectedTable !== undefined) {
             handleGetProjectInfo()
         }
     }, [selectedTable])
@@ -259,9 +260,9 @@ const TableWithColumns = () => {
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteTable" })
     }
     useEffect(() => {
-        if(selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null){
+        if (selectedTable !== undefined && selectedTable !== null && selectedTable.project_id !== undefined && selectedTable.project_id !== null) {
             setEditProject(false)
-        }else{
+        } else {
             setEditProject(true)
         }
     }, [selectedTable])
@@ -277,7 +278,7 @@ const TableWithColumns = () => {
                         <CardHeader>
                             <HStack spacing={".3rem"} justifyContent={"space-between"}>
                                 <Heading size={"md"}>Input preview</Heading>
-                                {selectedTable !== null && <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(selectedTable)} size="25" />}
+                                {selectedTable?.user_id === userInfo.id && selectedTable !== null && <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteTable(selectedTable)} size="25" />}
                             </HStack>
                         </CardHeader>
                         {selectedTable !== undefined && selectedTable !== null && <CardBody>
@@ -289,34 +290,33 @@ const TableWithColumns = () => {
                                     <Text pt='2' fontSize='sm'>
                                         {projectName}
                                     </Text>
-                                    <IconButton aria-label='Search database' icon={<MdModeEdit />} onClick={() => setEditProject(true)}/>
+                                    {selectedTable?.user_id === userInfo.id && <IconButton aria-label='Search database' icon={<MdModeEdit />} onClick={() => setEditProject(true)} />}
                                 </HStack>
                             </Box>
                             }
                             {editProject && <HStack style={{ display: "flex", alignItems: "end", width: "50%" }}>
-                                    <FormControl>
-                                        <FormLabel>Project</FormLabel>
-                                        <Select placeholder='Select project' defaultValue={selectedTable.project_id} onChange={handleSelectProject} key={"select-project"}>
-                                            {allProjects.map((p: any) => {
-                                                return (
-                                                    <option value={p.id}>{p.name}</option>
-                                                )
-                                            })}
-                                        </Select>
-                                    </FormControl>
-                                    <CiCircleCheck color="green"
-                                        cursor={projectId === null ? "not-allowed" : "pointer"}
-                                        size="40" onClick={() => handlePostProjectId()
-                                        } />
+                                <FormControl>
+                                    <FormLabel>Project</FormLabel>
+                                    <Select placeholder='Select project' defaultValue={selectedTable.project_id} onChange={handleSelectProject} key={"select-project"}>
+                                        {allProjects.map((p: any) => {
+                                            return (
+                                                <option value={p.id}>{p.name}</option>
+                                            )
+                                        })}
+                                    </Select>
+                                </FormControl>
+                                <CiCircleCheck color="green"
+                                    cursor={projectId === null ? "not-allowed" : "pointer"}
+                                    size="40" onClick={() => handlePostProjectId()
+                                    } />
 
-                                </HStack>}
+                            </HStack>}
                             {sortedTableColumns?.map(column => renderFormControl(column))}
                         </CardBody>}
-                        <CardFooter>
+                        {selectedTable?.user_id === userInfo.id && <CardFooter>
                             {tableColumns !== null && tableColumns.length !== 0 ?
                                 <Button colorScheme="green" onClick={() => {
                                     dispatch({ type: 'datasetTable/setEditTable', payload: true })
-                                    console.log(tableColumns)
                                     dispatch({ type: 'datasetTable/setUserTableColumns', payload: tableColumns })
                                 }} >
                                     <Box marginRight={".5rem"}>Edit Columns</Box>
@@ -325,7 +325,7 @@ const TableWithColumns = () => {
                                 <FiPlusCircle style={{ padding: "5px", margin: "5px", zIndex: "1000" }} size="30" cursor={"pointer"}
                                     onClick={() => dispatch({ type: 'datasetTable/setAddingColumns', payload: true })} />
                             }
-                        </CardFooter>
+                        </CardFooter>}
                     </Card>
                 </GridItem>
             </Grid>

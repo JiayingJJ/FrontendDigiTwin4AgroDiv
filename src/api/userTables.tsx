@@ -1,12 +1,11 @@
 import { getCurrentTime } from "../helpers";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export const getTablesWithUserId = async (userInfo: any) => {
-    const response = await fetch(`${apiUrl}/usertables/user/${userInfo.id}`, {
+export const getTablesWithUserId = async (userId: any) => {
+    const response = await fetch(`${apiUrl}/usertables/user/${userId}`, {
         method: "GET"
     })
     const data = await response.json();
-    console.log(data)
     return data;
 }
 

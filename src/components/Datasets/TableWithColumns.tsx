@@ -235,7 +235,7 @@ const TableWithColumns = () => {
     }
     useEffect(() => {
         setProjectName('')
-        if (selectedTable !== null) {
+        if (selectedTable !== null&&selectedTable !== undefined) {
             handleGetProjectInfo()
         }
     }, [selectedTable])

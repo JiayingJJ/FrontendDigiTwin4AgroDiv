@@ -70,6 +70,19 @@ export class Database {
     data_status TEXT
 );
   `);
+        this.db.exec(`
+    CREATE TABLE IF NOT EXISTS projects (
+      id    TEXT PRIMARY KEY,
+      name  TEXT,
+      creator_id TEXT,
+      members TEXT,
+      description TEXT,
+      created_at TEXT,
+      updated_at TEXT,
+      deleted_at TEXT,
+      data_status TEXT
+    )
+  `);
     }
 
     query(sql: string, params: any[] = []): any[] {
@@ -88,9 +101,11 @@ export class Database {
 
     insertUser(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        this.db.exec({ sql: "INSERT OR IGNORE INTO users (id, name, email, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?)", bind: [data.ID, data.Name, data.Email, data.CreatedAt, data.UpdatedAt,
-                data.DeletedAt.Time,
-                typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String] });
+        this.db.exec({
+            sql: "INSERT OR IGNORE INTO users (id, name, email, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?)", bind: [data.ID, data.Name, data.Email, data.CreatedAt, data.UpdatedAt,
+            data.DeletedAt.Time,
+            typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
+        });
     }
 
     getUserWithEmail(email: string): User | null {
@@ -138,6 +153,17 @@ export class Database {
         this.db.exec({
             sql: "UPDATE user_tables SET columns_in_table = ?, updated_at = ?, data_status= ? WHERE id = ?",
             bind: [JSON.stringify(userTableColumns), time, "pending", tableId],
+        });
+    }
+    // projects
+    insertProjects(data: any): void {
+        if (!this.db) throw new Error("Database not initialized");
+        console.log(data)
+        this.db.exec({
+            sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
+            data.DeletedAt.Time,
+            typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
         });
     }
     // geo_data

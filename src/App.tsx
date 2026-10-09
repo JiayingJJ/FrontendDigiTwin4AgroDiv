@@ -2,13 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import Login from "./components/Login"
 import store from "./stores/stores"
 /* 
-003E1F deep forest
-14342B evergreen
-60935D sage green
-FB3640 strawberry
-EDB458 honey bronze
-E8871E amber earth
-F7EDE2 linen
+--twilight-indigo: #29335cff;
+--hunter-green: #31572cff;
+--brick-ember: #ba2d0bff;
+--palm-leaf: #90a955ff;
+--lime-cream: #ecf39eff;
 */
 import {
   Box,
@@ -84,6 +82,7 @@ function App() {
       list.forEach(l => {
         if (l.value !== null) {
           if (l.key === "user") {
+            console.log(l)
             l.value.forEach(v => {
               databaseSqlite.insertUser(v)
             });
@@ -93,9 +92,14 @@ function App() {
             });
           } else if (l.key === "geo_data") {
             l.value.forEach(v => {
+              console.log(v)
               if (v.data_geo !== null) {
                 databaseSqlite.insertGeoData(v.data_geo)
               }
+            });
+          }else if (l.key === "projects") {
+            l.value.forEach(v => {
+                databaseSqlite.insertProjects(v)
             });
           }
         }
@@ -111,7 +115,7 @@ function App() {
   }, [userInfo])
 
   useEffect(() => {
-    // deleteFileFromOPFS('mydb.sqlite3')
+    deleteFileFromOPFS('mydb.sqlite3')
   }, [])
   return (
     <VStack style={{ backgroundColor: "#f8f1e3", width: "100vw", height: "100vh" }}>

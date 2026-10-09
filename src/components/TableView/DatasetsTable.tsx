@@ -14,6 +14,7 @@ import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 import TableViewActions from './TableViewActions';
 import SelectColumn from './SelectColumn';
 import DatasetColumns from '../Maps/DatasetsInMaps/DatasetColumns';
+import { getCreatedAndSharedInfo } from '../sqlite/helper';
 // @flow
 type Props = {
 
@@ -35,9 +36,8 @@ const DatasetsTable = () => {
     const getAllDataSets = async () => {
         let data;
         if (isOnLine) {
-            data = await getTablesWithUserId(userInfo)
-            console.log(data)
-            dispatch({ type: 'datasetTableView/setTables', payload: data })
+            data = await getCreatedAndSharedInfo(userInfo.id)
+            dispatch({ type: 'datasetTableView/setTables', payload: data.allUserTables })
         } else {
             await databaseSqlite.initDb();
             data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)

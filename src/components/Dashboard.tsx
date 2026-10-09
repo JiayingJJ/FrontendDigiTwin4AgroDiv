@@ -44,6 +44,7 @@ const Dashboard = () => {
                 const data = await getCreatedAndSharedInfo(userInfo.id)
                 dispatch({ type: 'projects/setAllProjects', payload: data.allProjects })
                 dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
+                dispatch({ type: 'datasetTableView/setTables', payload: data.allUserTables })
             } else {
                 await databaseSqlite.initDb();
                 const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)

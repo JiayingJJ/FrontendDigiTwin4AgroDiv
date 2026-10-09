@@ -67,7 +67,6 @@ export const getUserTablesWithProjectId = async (projectId: any) => {
         method: "GET"
     })
     const data = await response.json();
-    console.log(data)
     return data;
 }
 export const setUserTableProjectAsNull = async (id: string, dataStatus: string) => {

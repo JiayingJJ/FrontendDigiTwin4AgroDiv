@@ -17,10 +17,10 @@ import Datasets from './Datasets/Datasets';
 import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
 import { isZeroTimeString } from '../helpers';
-import { getTablesWithUserId } from '../api/userTables';
+import { getTablesWithUserId, getUserTablesWithProjectId } from '../api/userTables';
 import ProjectsComponent from './Projects/ProjectsComponent';
 import ModalComponent from './ModalComponent';
-import { getAllProjectsWithShared } from '../api/projects';
+import { getAllProjectsWithShared, getProjectWithCreatorId } from '../api/projects';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)
@@ -37,31 +37,50 @@ const Dashboard = () => {
                 return <InfoPage />
             case "tableview":
                 return <DatasetsTable />
-                case "projects":
+            case "projects":
                 return <ProjectsComponent />
             default:
                 return <InfoPage />
         }
     }
 
-    
+
     useEffect(() => {
         async function fechtData() {
+            let allProjects: any = [];
+            let allUserTables: any = [];
             if (isOnLine) {
-                const data = await getTablesWithUserId(userInfo)
-                const projectData = await getAllProjectsWithShared(userInfo.id)
-                const filterData = data.filter((d: any) => {
+                // get projects with user as creator
+                const projectData = await getProjectWithCreatorId(userInfo.id)
+                projectData[0].map((d: any) => {
                     if (!d.deleted_at.Valid) {
-                        return d;
+                        allProjects.push(d);
+                    }
+                })
+                // get user_tables with user as creator
+                const data = await getTablesWithUserId(userInfo)
+                data.map((d: any) => {
+                    if (!d.deleted_at.Valid) {
+                        allUserTables.push(d);
                     }
                 });
-                 const notDelete = projectData[0].filter((d: any) => {
-                if (!d.deleted_at.Valid) {
-                    return d;
-                }
-            })
-            dispatch({ type: 'projects/setAllProjects', payload: notDelete })
-                dispatch({ type: 'datasetTable/setTables', payload: filterData })
+                // get projects and user_tables with user as member
+                const projectDataShared = await getAllProjectsWithShared(userInfo.id)
+                await Promise.all(projectDataShared[0].map(async (d: any) => {
+                    // projects
+                    if (!d.deleted_at.Valid) {
+                        allProjects.push(d);
+                    }
+                    // user_tables
+                    const getUserTablesWithSharedProjects = await getUserTablesWithProjectId(d.id)
+                    console.log(getUserTablesWithSharedProjects)
+                    getUserTablesWithSharedProjects.map((sharedUT: any) => {
+                        allUserTables.push(sharedUT);
+                    })
+
+                }))
+                dispatch({ type: 'projects/setAllProjects', payload: allProjects })
+                dispatch({ type: 'datasetTable/setTables', payload: allUserTables })
             } else {
                 await databaseSqlite.initDb();
                 const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)

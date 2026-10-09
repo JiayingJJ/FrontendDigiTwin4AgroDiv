@@ -4,12 +4,6 @@ export type WorkerMessage = {
     type: WorkerAction;
 }
 
-export interface User {
-  id:    string;
-  name:  string;
-  email: string;
-}
-
 export interface WorkerRequest {
   id:      number;
   action:  WorkerAction;
@@ -29,6 +23,15 @@ export interface WorkerResponse {
 
 // Query Ergebnis
 export type QueryResult<T = Record<string, unknown>> = T[];
+export interface User {
+  id:    string;
+  name:  string;
+  email: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  data_status: string;
+}
 
 export interface UserTable {
     ID: string;

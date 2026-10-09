@@ -6,11 +6,11 @@ export interface Task {
     id: number;
     text: string;
 }
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-}
+// export interface User {
+//     id: string;
+//     name: string;
+//     email: string;
+// }
 
 
 export class Database {
@@ -36,13 +36,18 @@ export class Database {
     CREATE TABLE IF NOT EXISTS users (
       id    TEXT PRIMARY KEY,
       name  TEXT,
-      email TEXT
+      email TEXT,
+      created_at TEXT,
+      updated_at TEXT,
+      deleted_at TEXT,
+      data_status TEXT
     )
   `);
         this.db.exec(`
     CREATE TABLE IF NOT EXISTS user_tables (
       id    TEXT PRIMARY KEY,
       user_id  TEXT,
+      project_id  TEXT,
       table_name TEXT,
       columns_in_table TEXT,
       created_at TEXT,
@@ -55,16 +60,15 @@ export class Database {
         this.db.exec(`
     CREATE TABLE IF NOT EXISTS geo_data (
     id TEXT PRIMARY KEY,
-    table_id TEXT,
-    column_id TEXT,
+    user_id  TEXT,
     properties TEXT,
+    color TEXT,
     geometry_data TEXT,
     created_at TEXT,
     updated_at TEXT,
     deleted_at TEXT,
     data_status TEXT
 );
-
   `);
     }
 
@@ -84,7 +88,9 @@ export class Database {
 
     insertUser(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        this.db.exec({ sql: "INSERT OR IGNORE INTO users (id, name, email) VALUES (?, ?, ?)", bind: [data.ID, data.Name, data.Email] });
+        this.db.exec({ sql: "INSERT OR IGNORE INTO users (id, name, email, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?)", bind: [data.ID, data.Name, data.Email, data.CreatedAt, data.UpdatedAt,
+                data.DeletedAt.Time,
+                typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String] });
     }
 
     getUserWithEmail(email: string): User | null {

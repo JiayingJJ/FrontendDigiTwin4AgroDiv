@@ -14,7 +14,8 @@ import {
     DrawerCloseButton,
 } from '@chakra-ui/react'
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { getGeoData, insertGeoData, setGeoDataStatus } from '../../api/geoData';
+import { MdDeleteForever } from "react-icons/md";
+import { deleteGeoDataWithId, getGeoData, insertGeoData, setGeoDataStatus } from '../../api/geoData';
 import ColorPicker from './ColorPicker';
 import { IoIosColorPalette } from "react-icons/io";
 const DataUserLayer = () => {
@@ -26,6 +27,7 @@ const DataUserLayer = () => {
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
     const rendernGeoDataList = useSelector((state: any) => state.openLayers.rendernGeoDataList)
     const selectedGeoInfo = useSelector((state: any) => state.openLayers.selectedGeoInfo)
+    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
     const colorPicker = useSelector((state: any) => state.openLayers.colorPicker)
@@ -73,6 +75,20 @@ const DataUserLayer = () => {
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: false })
         dispatch({ type: 'openLayers/setAddDrawedInteractionInfo', payload: false })
     }
+    const handleDeleteGeoData = async () => {
+        const data = await deleteGeoDataWithId(selectedGeoInfo.id)
+        if (data[1] === 500) {
+            console.log("Alert Message")
+            dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })
+            dispatch({ type: 'alertInfo/setAlertTitle', payload: "Error Message" })
+            dispatch({ type: 'alertInfo/setAlertMessage', payload: "Error daten" })
+            dispatch({ type: 'alertInfo/setShowAlert', payload: true })
+        } else {
+            const dataStatus = await setGeoDataStatus(data[0].id, "merged")
+            dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+        }
+    }
+
     return (
         <HStack width={"100%"} justifyContent={"space-between"}>
             <Card borderRadius={"0.5rem"} pointerEvents={"auto"} opacity="0.9">
@@ -90,19 +106,24 @@ const DataUserLayer = () => {
                 <DrawerContent opacity={0.9}>
                     <DrawerCloseButton />
                     <DrawerHeader>
-                        {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) && <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
-                            <Button variant={"unstyled"}>
-                                <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
-                            </Button>
-                        </Tooltip>}
-                        {selectedGeoInfo !== null &&
-                            <Button variant={"unstyled"}>
-                                <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
-                                    console.log(colorPicker)
-                                    console.log(selectedGeoInfo)
-                                    dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })
-                                }} />
-                            </Button>}
+                        {selectedGeoData?.user_id === userInfo.id &&
+                            <HStack>
+                                {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                                    <Button variant={"unstyled"}>
+                                        <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
+                                    </Button>
+                                </Tooltip> :
+                                    <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteGeoData()} size="25" />
+                                }
+                                {selectedGeoInfo !== null &&
+                                    <Button variant={"unstyled"}>
+                                        <IoIosColorPalette style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => {
+                                            console.log(colorPicker)
+                                            console.log(selectedGeoInfo)
+                                            dispatch({ type: 'openLayers/setColorPicker', payload: !colorPicker })
+                                        }} />
+                                    </Button>}
+                            </HStack>}
                         {colorPicker && <ColorPicker />}
                     </DrawerHeader>
                     <DrawerBody>

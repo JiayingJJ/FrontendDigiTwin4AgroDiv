@@ -149,7 +149,9 @@ const OpenLayersMap = () => {
                 selectedPropertiesFromDatabase.map(async (proper: any) => {
                     if (proper.table_id !== undefined) {
                         const data = await getColumnWithId(proper.table_id, proper.column_id);
-                        dispatch({ type: 'openLayers/addAllInfoInProperties', payload: data });
+                        if(data.deleted_at === null){
+                            dispatch({ type: 'openLayers/addAllInfoInProperties', payload: data });
+                        }
                     }
                 })
             );

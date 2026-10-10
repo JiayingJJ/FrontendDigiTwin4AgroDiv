@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, B
 import { MdDeleteForever } from "react-icons/md";
 import { getColumnWithId } from '../../../api/dataset';
 import { fetchTableWithId } from '../../../api/userTables';
-import { deleteGeoDataWithId, setGeoDataStatus } from '../../../api/geoData';
+import { deleteGeoDataWithId, removeColumnInGeoDataProperties, setGeoDataStatus } from '../../../api/geoData';
 import { FiPlusCircle } from "react-icons/fi";
 import { MdModeEdit } from "react-icons/md";
 import { removeDataFromUserTablesId } from '../../../api/userTableId';
@@ -51,6 +51,12 @@ const AllInfoForDrawedInTable = () => {
         await getGeoData(column)
         const deleteUserTableIdColumn = await removeDataFromUserTablesId(columnInfo?.id, tableInfo?.id)
         dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
+        if(column.geo_data_id&&column.geo_data_id!==null&&column.geo_data_id!==undefined){
+            const removeColumnFronProperties = await removeColumnInGeoDataProperties(columnInfo?.id, column.geo_data_id, tableInfo?.id)
+            if(removeColumnFronProperties[1] === 200){
+                const dataStatus = await setGeoDataStatus(column.geo_data_id, "merged");
+            }
+        }
     }
     const handleUpdateGeoDataAndColumn = async (column: any) => {
         await getGeoData(column)

@@ -7,6 +7,7 @@ import { readableTimestamp } from "../../helpers";
 import ImageView from "./ImageView";
 import { MdDeleteForever, MdModeEdit, MdCancel } from "react-icons/md";
 import { removeDataFromUserTablesId } from "../../api/userTableId";
+import { removeColumnInGeoDataProperties, setGeoDataStatus } from "../../api/geoData";
 
 function Tables() {
     const dispatch = useDispatch();
@@ -39,6 +40,12 @@ function Tables() {
 
     const handleDeleteData = async(d: any) => {
         const deleteUserTableIdColumn = await removeDataFromUserTablesId(d.id, selectedTableId);
+        if(d.geo_data_id&&d.geo_data_id!==null&&d.geo_data_id!==undefined){
+            const removeColumnFronProperties = await removeColumnInGeoDataProperties(d?.id, d.geo_data_id, selectedTableId)
+            if(removeColumnFronProperties[1] === 200){
+                const dataStatus = await setGeoDataStatus(d.geo_data_id, "merged");
+            }
+        }
         dispatch({ type: 'datasetTableView/setDeleteData', payload: false })
         dispatch({ type: 'datasetTableView/setGetUpdateFromDatabase', payload: true })
     }

@@ -63,3 +63,15 @@ export const updateGeoDataColor = async (id: string, color: string, dataStatus: 
     const data = await response.json();
     return [data, response.status];
 }
+
+export const removeColumnInGeoDataProperties = async (columnId: string, geoDataId: string, tableId:string) => {
+    const time = getCurrentTime();
+    
+     const response = await fetch(`${apiUrl}/geodata/properties/remove`, {
+        method: "PUT",
+        body: JSON.stringify({ column_id: columnId, geo_data_id: geoDataId, table_id: tableId, data_status: "pending", deleted_at: time }),
+    })
+    console.log(response)
+    const data = await response.json();
+    return [data, response.status];
+}

@@ -5,7 +5,7 @@ export const removeDataFromUserTablesId = async (id: string, tableId: string) =>
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertablesid/remove`, {
         method: "DELETE",
-        body: JSON.stringify({ id: id, table_id: tableId, deleted_at: time }),
+        body: JSON.stringify({ id: id, table_id: tableId, deleted_at: time, data_status: "pending"}),
     })
     const data = await response.json();
     return [data, response.status];

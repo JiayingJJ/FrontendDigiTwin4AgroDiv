@@ -109,7 +109,7 @@ const ProjectInfo = () => {
                 <CardHeader>
                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
                         <Heading size={"md"}>Project Info</Heading>
-                        {selectedProject && <HStack>
+                        {selectedProject && userInfo.id === selectedProject.creator_id && <HStack>
                             <IconButton disabled={editProject} aria-label='Delete project' icon={<MdDeleteForever cursor={editProject ? "not-allowed" : "pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />} />
                             <IconButton disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" onClick={handleEditProject} />} />
                         </HStack>}
@@ -158,12 +158,12 @@ const ProjectInfo = () => {
                                 <Heading size='xs' textTransform='uppercase' paddingBottom={"5px"}>
                                     Members
                                 </Heading>
-                                <IconButton
+                                {userInfo.id === selectedProject.creator_id && <IconButton
                                     color='#003569'
                                     aria-label='Search database'
                                     icon={<AiOutlineUsergroupAdd />}
                                     onClick={() => handleAddMembersInProject()}
-                                />
+                                />}
                             </HStack>
                             {addMember && <AddMember />}
                             <Stack direction='row' paddingTop={"10px"}>
@@ -171,7 +171,7 @@ const ProjectInfo = () => {
                                     return (
                                         <VStack>
                                             <Badge colorScheme='green' textTransform='' cursor={"pointer"} onClick={() => setMemberActions(!memberActions)}>{m.name}</Badge>
-                                            {memberActions &&
+                                            {memberActions && userInfo.id === selectedProject.creator_id &&
                                                 <IconButton aria-label='Remove member' icon={<MdDeleteForever cursor={"pointer"} onClick={() => handleRemoveMemberFromAProject(m)} size="25" />} />
                                             }
                                         </VStack>

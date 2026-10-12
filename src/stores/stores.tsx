@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import OpenLayersMapReducer from '../stores/openLayersSlice';
-import PlantInfoReducer from '../stores/plantInfoSlice';
 import AlertInfoReducer from '../stores/alertInfoSlice';
 import UserReducer from '../stores/userSlice';
 import PageReducer from '../stores/pageSlice';
@@ -15,7 +14,6 @@ const store = configureStore({
         user: UserReducer,
         page: PageReducer,
         openLayers: OpenLayersMapReducer,
-        plantInfo: PlantInfoReducer,
         alertInfo: AlertInfoReducer,
         modalInfo: ModalInfoReducer,
         datasetTable: DatasetTableReducer,

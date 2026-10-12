@@ -69,7 +69,7 @@ export const removeColumnInGeoDataProperties = async (columnId: string, geoDataI
     
      const response = await fetch(`${apiUrl}/geodata/properties/remove`, {
         method: "PUT",
-        body: JSON.stringify({ column_id: columnId, geo_data_id: geoDataId, table_id: tableId, data_status: "pending", deleted_at: time }),
+        body: JSON.stringify({ column_id: columnId, geo_data_id: geoDataId, table_id: tableId, data_status: "pending", updated_at: time }),
     })
     console.log(response)
     const data = await response.json();

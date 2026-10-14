@@ -34,8 +34,8 @@ export const createTable = async (userInfo: any, tableName: string, projectId: s
 
 export const deleteTableWithId = async (table_id: any) => {
     const time = getCurrentTime()
-    const response = await fetch(`${apiUrl}/usertable/delete/${table_id}`, {
-        method: "POST",
+    const response = await fetch(`${apiUrl}/usertable/${table_id}`, {
+        method: "DELETE",
         body: JSON.stringify({ deleted_at: time, table_id: table_id, data_status: "pending" }),
     })
     const data = await response.json();

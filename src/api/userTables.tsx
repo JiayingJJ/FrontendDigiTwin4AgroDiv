@@ -18,7 +18,7 @@ export const fetchTableWithId = async (t: any) => {
     //     return [data[0], 500]
     // }
     // else {
-        return [data[0], response.status]
+        return [data, response.status]
     // }
 }
 

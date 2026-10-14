@@ -12,6 +12,7 @@ import CreatedTables from './CreatedTables';
 import { databaseSqlite } from '../sqlite/db';
 import { isZeroTimeString } from '../../helpers';
 import { getCreatedAndSharedInfo } from '../sqlite/helper';
+import { buttonStyle, titleStyle } from '../Dashboard';
 const Datasets = () => {
     const dispatch = useDispatch()
     const updatedTables = useSelector((state: any) => state.datasetTable.updatedTables)
@@ -48,7 +49,7 @@ const Datasets = () => {
                 <GridItem colSpan={2} overflowY={"auto"}>
                     <Grid templateRows={`repeat(15, 1fr)`} height={"90vh"}>
                         <GridItem rowSpan={0.5} paddingBottom={"2px"}>
-                            <Heading size='md' width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"} backgroundColor={"lavender"} height={"100%"} alignContent={"center"}>
+                            <Heading {...titleStyle} size='md' width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"} height={"100%"} alignContent={"center"}>
                                 Angelegte Datenbanken
                             </Heading>
                         </GridItem>
@@ -57,7 +58,7 @@ const Datasets = () => {
                                 width={"100%"}
                                 border={"10px"} borderRadius={"10px"}
                                 whiteSpace={"wrap"}
-                                disabled={addNewDataset} backgroundColor='#ecf39eff' onClick={() => {
+                                disabled={addNewDataset} {...buttonStyle} onClick={() => {
                                     dispatch({ type: 'datasetTable/setAddNewDataset', payload: true })
                                     dispatch({ type: 'datasetTable/clearInfoFromADatabase', payload: null })
                                 }}>

@@ -23,6 +23,7 @@ import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { getProjectWithCreatorId, removeProjectMemberWithUserId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
+import { buttonCancelStyle, buttonSubmitStyle } from '../Dashboard';
 
 const ProjectInfo = () => {
     const dispatch = useDispatch()
@@ -204,8 +205,9 @@ const ProjectInfo = () => {
                 </CardBody>}
                 <CardFooter>
                     {editProject && <HStack>
-                        <Button onClick={handleUpdateProjectInfo}>Submit</Button>
-                        <Button onClick={handleCancelEdit}>Cancel</Button></HStack>}
+                        <Button {...buttonSubmitStyle} onClick={handleUpdateProjectInfo}>Submit</Button>
+                        <Button {...buttonCancelStyle} onClick={handleCancelEdit}>Cancel</Button>
+                    </HStack>}
                 </CardFooter>
             </Card>
         </HStack>

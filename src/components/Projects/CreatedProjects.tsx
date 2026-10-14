@@ -4,6 +4,7 @@ import { Card, Grid, GridItem, CardBody, CardFooter, Heading, StackDivider, Stac
 import { deleteProjectWithId, getProjectWithCreatorId, getProjectWithId } from '../../api/projects';
 import { getUserTablesWithProjectId } from '../../api/userTables';
 import { fetchUserWithId } from '../../api/user';
+import { buttonGhostStyle, buttonStyle, titleStyle } from '../Dashboard';
 
 const CreatedProjects = () => {
     const dispatch = useDispatch()
@@ -33,11 +34,11 @@ const CreatedProjects = () => {
     return (
         <Grid templateRows={`repeat(15, 1fr)`} height={"90vh"} width={"100%"}>
             <GridItem rowSpan={0.5} paddingBottom={"2px"}>
-                <Heading size='md' width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"} backgroundColor={"lavender"} height={"100%"} alignContent={"center"}>
+                <Heading {...titleStyle} size='md' width={"100%"} textAlign={"center"} border={"20px"} borderRadius={"20px"} height={"100%"} alignContent={"center"}>
                     Angelegte Projects</Heading>
             </GridItem>
             <GridItem rowSpan={0.5}>
-                <Button width={"100%"} disabled={addNewProject} backgroundColor='#ecf39eff' onClick={() => {
+                <Button {...buttonStyle} width={"100%"} disabled={addNewProject} onClick={() => {
                     console.log("click for add project")
                     dispatch({ type: 'projects/setAddNewProject', payload: true })
                 }}>
@@ -53,12 +54,12 @@ const CreatedProjects = () => {
                             <Card minWidth={"200px"} width={"100%"}>
                                 <CardBody padding={"1rem"}>
                                     <Button
-
+                                        {...buttonGhostStyle}
                                         disabled={addNewProject || editProject}
                                         width={"100%"}
                                         border={"10px"} borderRadius={"10px"}
                                         whiteSpace={"wrap"}
-                                        backgroundColor={selectedProject !== null && selectedProject !== undefined && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
+                                        isActive={selectedProject !== null && selectedProject !== undefined && selectedProject.id === p.id}
                                         onClick={() => {
                                             handleGetProjectWithId(p)
                                         }} cursor={"pointer"}
@@ -77,11 +78,12 @@ const CreatedProjects = () => {
                             <Card minWidth={"200px"} width={"100%"}>
                                 <CardBody padding={"1rem"}>
                                     <Button
+                                        {...buttonGhostStyle}
                                         disabled={addNewProject || editProject}
                                         width={"100%"}
                                         border={"10px"} borderRadius={"10px"}
                                         whiteSpace={"wrap"}
-                                        backgroundColor={selectedProject !== null && selectedProject !== undefined && selectedProject.id === p.id ? "#ba2d0bff" : "white"}
+                                        isActive={selectedProject !== null && selectedProject !== undefined && selectedProject.id === p.id}
                                         onClick={() => {
                                             handleGetProjectWithId(p)
                                         }} cursor={"pointer"}

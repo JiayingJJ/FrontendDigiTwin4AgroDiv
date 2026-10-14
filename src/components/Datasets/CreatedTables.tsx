@@ -4,6 +4,7 @@ import { Card, CardBody, Box, Button, HStack, VStack } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
 import { databaseSqlite } from '../sqlite/db';
 import { fetchTableWithId } from '../../api/userTables';
+import { buttonGhostStyle } from '../Dashboard';
 const CreatedTables = () => {
     const dispatch = useDispatch()
     const tables = useSelector((state: any) => state.datasetTable.tables)
@@ -51,18 +52,19 @@ const CreatedTables = () => {
                 return (
                     <Card width={"100%"} key={`${t.id}-created-table`}>
                         <CardBody padding={"10px"}>
-                                <Button
-                                    width={"100%"}
-                                    textTransform='uppercase'
-                                    whiteSpace={"wrap"}
-                                    disabled={addingColumns}
-                                    backgroundColor={selectedTableId === t.id ? "#ba2d0bff" : "white"}
-                                    onClick={() => {
-                                        getTableWithId(t)
-                                    }}
-                                    key={`${t.id}-table-box-created`}>
-                                    {t.table_name}
-                                </Button>
+                            <Button
+                                width={"100%"}
+                                textTransform='uppercase'
+                                whiteSpace={"wrap"}
+                                disabled={addingColumns}
+                                {...buttonGhostStyle}
+                                isActive={selectedTableId === t.id}
+                                onClick={() => {
+                                    getTableWithId(t)
+                                }}
+                                key={`${t.id}-table-box-created`}>
+                                {t.table_name}
+                            </Button>
                         </CardBody>
                     </Card>)
             })}

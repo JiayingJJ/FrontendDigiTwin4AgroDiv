@@ -21,7 +21,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from "react-router-dom";
 import Register from "./components/Register";
-import Dashboard from "./components/Dashboard";
+import Dashboard, { backgroundDefault } from "./components/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 const apiUrl = import.meta.env.VITE_API_URL;
 import { databaseSqlite } from "./components/sqlite/db"
@@ -118,7 +118,7 @@ function App() {
     deleteFileFromOPFS('mydb.sqlite3')
   }, [])
   return (
-    <VStack style={{ backgroundColor: "#f8f1e3", width: "100vw", height: "100vh" }}>
+    <VStack backgroundColor={backgroundDefault} width="100vw" height="100vh">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />

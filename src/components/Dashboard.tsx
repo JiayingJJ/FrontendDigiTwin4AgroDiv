@@ -69,18 +69,35 @@ const Dashboard = () => {
                 height={"10vh"}
                 padding={"1rem 3vw"}
                 gap="2rem"
-                backgroundColor="#31572cff"
+                backgroundColor={backgroundAccent}
             >
-                <Button width="100%" backgroundColor={activePage == "dashboard" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
-                <Button width="100%" backgroundColor={activePage == "maps" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
-                <Button width="100%" backgroundColor={activePage == "projects" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "projects" })}>Projects</Button>
-                <Button width="100%" backgroundColor={activePage == "datenbank" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "datenbank" })}>Datenbank</Button>
-                <Button width="100%" backgroundColor={activePage == "tableview" ? "#ba2d0bff" : "#F7EDE2"} _hover={{ backgroundColor: "#ecf39eff" }} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
+                <Button width="100%" isActive={activePage == "dashboard"} {...buttonStyle} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "dashboard" })}>Start</Button>
+                <Button width="100%" isActive={activePage == "maps"} {...buttonStyle} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "maps" })}>Maps</Button>
+                <Button width="100%" isActive={activePage == "projects"} {...buttonStyle} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "projects" })}>Projects</Button>
+                <Button width="100%" isActive={activePage == "datenbank"} {...buttonStyle} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "datenbank" })}>Datenbank</Button>
+                <Button width="100%" isActive={activePage == "tableview"} {...buttonStyle} onClick={() => dispatch({ type: 'pageInfo/setPageName', payload: "tableview" })}>Datenbank Sicht</Button>
             </HStack>
             {rendernPage()}
             <ModalComponent />
         </VStack>
     );
 }
+
+const colorGood = "hsl(100, 50%, 75%)"
+const colorBad = "hsl(5, 75%, 75%)"
+const buttonDefault = "hsl(41, 66%, 84%)";
+const buttonGhostDefault = "hsl(41, 66%, 84%, 0%)";
+const buttonHovered = "hsl(192, 30%, 80%)";
+const buttonActive = "hsl(338, 26%, 73%)";
+const buttonDisabled = "hsl(40, 7%, 57%)";
+const buttonTextDisabled = "hsl(40, 0%, 20%)";
+export const backgroundDefault = "hsl( 40, 60%, 93%)";
+export const backgroundAccent = "hsl(220, 18%, 23%)";
+export const titleStyle = { backgroundColor: "hsl(220, 39%, 49%)", color: "white" };
+export const buttonStyle = { "backgroundColor": buttonDefault, "_active": { "backgroundColor": buttonActive }, "_hover": { "backgroundColor": buttonHovered }, "_disabled": { "backgroundColor": buttonDisabled, "color": buttonTextDisabled } };
+export const buttonGhostStyle = { ...buttonStyle, "backgroundColor": buttonGhostDefault, "_disabled": { backgroundColor: "unset", color: buttonDisabled, cursor: "not-allowed" } };
+
+export const buttonSubmitStyle = { ...buttonStyle, "backgroundColor": colorGood };
+export const buttonCancelStyle = { ...buttonStyle, "backgroundColor": colorBad };
 
 export default Dashboard;

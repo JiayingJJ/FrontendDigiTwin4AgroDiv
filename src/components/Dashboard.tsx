@@ -83,21 +83,33 @@ const Dashboard = () => {
     );
 }
 
-const colorGood = "hsl(100, 50%, 75%)"
-const colorBad = "hsl(5, 75%, 75%)"
+export const colorGood = "hsl(100, 50%, 75%)"
+export const colorBad = "hsl(5, 75%, 75%)"
+export const colorDanger = "hsl(12, 89%, 39%)"
+export const colorTitle = "hsl(220, 39%, 49%)"
 const buttonDefault = "hsl(41, 66%, 84%)";
+const buttonDefaultTransparent = "hsl(41, 66%, 84%, 35%)";
 const buttonGhostDefault = "hsl(41, 66%, 84%, 0%)";
 const buttonHovered = "hsl(192, 30%, 80%)";
-const buttonActive = "hsl(338, 26%, 73%)";
+export const buttonActive = "hsl(338, 26%, 73%)";
 const buttonDisabled = "hsl(40, 7%, 57%)";
 const buttonTextDisabled = "hsl(40, 0%, 20%)";
 export const backgroundDefault = "hsl( 40, 60%, 93%)";
 export const backgroundAccent = "hsl(220, 18%, 23%)";
-export const titleStyle = { backgroundColor: "hsl(220, 39%, 49%)", color: "white" };
-export const buttonStyle = { "backgroundColor": buttonDefault, "_active": { "backgroundColor": buttonActive }, "_hover": { "backgroundColor": buttonHovered }, "_disabled": { "backgroundColor": buttonDisabled, "color": buttonTextDisabled } };
-export const buttonGhostStyle = { ...buttonStyle, "backgroundColor": buttonGhostDefault, "_disabled": { backgroundColor: "unset", color: buttonDisabled, cursor: "not-allowed" } };
+export const titleStyle = { backgroundColor: colorTitle, color: "white" };
+export const buttonStyle = { "backgroundColor": buttonDefault, "_active": { "backgroundColor": buttonActive }, "_hover": { "backgroundColor": buttonHovered }, "_disabled": { "backgroundColor": buttonDisabled, "color": buttonTextDisabled, cursor: "not-allowed" } };
+export const buttonGhostStyle = { ...buttonStyle, "backgroundColor": buttonGhostDefault, "_disabled": { backgroundColor: "unset", color: buttonDisabled } };
 
-export const buttonSubmitStyle = { ...buttonStyle, "backgroundColor": colorGood };
-export const buttonCancelStyle = { ...buttonStyle, "backgroundColor": colorBad };
+export const buttonGoodStyle = { ...buttonStyle, "backgroundColor": colorGood };
+export const buttonBadStyle = { ...buttonStyle, "backgroundColor": colorBad };
+export const buttonDangerStyle = { ...buttonStyle, "backgroundColor": colorDanger, color: "white" };
+
+export const buttonIconStyle = {
+    ...buttonStyle,
+    backgroundColor: buttonDefaultTransparent, outlineColor: buttonDefault, outlineWidth: "medium",
+    _active: { backgroundColor: buttonDefault },
+    _hover: { backgroundColor: buttonDefault },
+    _disabled: buttonGhostStyle._disabled,
+}
 
 export default Dashboard;

@@ -3,17 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     FormControl,
     FormLabel,
-    FormErrorMessage,
-    FormHelperText,
     Input,
-    Button,
     IconButton,
-    VStack,
     HStack
 } from '@chakra-ui/react'
 import { CiCircleCheck } from "react-icons/ci";
 import { fetchUserWithEmail } from '../../api/user';
 import { updateProjectMembers } from '../../api/projects';
+import { buttonIconStyle } from '../Dashboard';
+import { BiCheck } from 'react-icons/bi';
 const AddMember = () => {
     const selectedProject = useSelector((state: any) => state.projects.selectedProject)
 
@@ -48,13 +46,13 @@ const AddMember = () => {
     }
     return (
         <FormControl>
-            <FormLabel>Geben Sie die Email-Address von den TeammitgliederIn</FormLabel>
+            <FormLabel>Please enter the email address of your team member</FormLabel>
             <HStack>
                 <Input type='email' placeholder={"Email address"} value={valueEmail} onChange={(e) => handleChange(e)} />
                 <IconButton
-                    color='#003569'
-                    aria-label='Search database'
-                    icon={<CiCircleCheck />}
+                    {...buttonIconStyle}
+                    aria-label='Add member'
+                    icon={<BiCheck size="1.5rem" />}
                     onClick={() => handleCheckUser()}
                 />
             </HStack>

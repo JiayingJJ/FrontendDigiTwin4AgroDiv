@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { fetchTableWithId } from '../../api/userTables';
 import { getAllColumnsWithTableId } from '../../api/dataset';
+import { buttonIconStyle } from '../Dashboard';
 const TablesActionForView = () => {
     const dispatch = useDispatch()
     const selectedUserTable = useSelector((state: any) => state.projects.selectedUserTable)
@@ -39,8 +40,12 @@ const TablesActionForView = () => {
     }
     return (
         <HStack>
-            <FaTable cursor="pointer" onClick={() => handleSwitchToDatabasePage()} />
-            <FaDatabase cursor="pointer" onClick={() => handleSwitchToDataPage()} />
+            <IconButton {...buttonIconStyle} aria-label='' onClick={() => handleSwitchToDatabasePage()}>
+                <FaTable />
+            </IconButton>
+            <IconButton {...buttonIconStyle} aria-label='' onClick={() => handleSwitchToDataPage()}>
+                <FaDatabase />
+            </IconButton>
         </HStack>
     );
 }

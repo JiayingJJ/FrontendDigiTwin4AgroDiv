@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteProjectWithId, getProjectWithCreatorId } from '../api/projects';
 import { deleteTableWithId, getTablesWithUserId } from '../api/userTables';
+import { buttonStyle, buttonDangerStyle } from './Dashboard';
 const ModalComponent = () => {
     const dispatch = useDispatch()
     const showModal = useSelector((state: any) => state.modalInfo.showModal)
@@ -71,16 +72,20 @@ const ModalComponent = () => {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='blue' mr={3} onClick={() => {
-                        clickOnSaveBtn()
-                        dispatch({ type: 'modalInfo/setShowModal', payload: false })
-                    }}>
+                    <Button
+                        {...buttonDangerStyle}
+                        mr={3} onClick={() => {
+                            clickOnSaveBtn()
+                            dispatch({ type: 'modalInfo/setShowModal', payload: false })
+                        }}>
                         {saveBtnInfo}
                     </Button>
-                    <Button onClick={() => {
-                        clickOnCancelBtn()
-                        dispatch({ type: 'modalInfo/setShowModal', payload: false })
-                    }}>Cancel</Button>
+                    <Button
+                        {...buttonStyle}
+                        onClick={() => {
+                            clickOnCancelBtn()
+                            dispatch({ type: 'modalInfo/setShowModal', payload: false })
+                        }}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

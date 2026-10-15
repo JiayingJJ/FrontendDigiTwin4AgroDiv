@@ -23,7 +23,7 @@ import AddMember from './AddMember';
 import TablesActionForView from './TablesActionForView';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { getProjectWithCreatorId, removeProjectMemberWithUserId, setProjectDataStatus, updateProjectInfo } from '../../api/projects';
-import { buttonCancelStyle, buttonSubmitStyle } from '../Dashboard';
+import { buttonBadStyle, buttonIconStyle, buttonStyle, buttonGoodStyle, colorDanger } from '../Dashboard';
 
 const ProjectInfo = () => {
     const dispatch = useDispatch()
@@ -54,9 +54,9 @@ const ProjectInfo = () => {
     }
     const handleDeleteProject = async (p: any) => {
         dispatch({ type: 'modalInfo/setShowModal', payload: true })
-        dispatch({ type: 'modalInfo/setModalHeader', payload: "Project löschen" })
-        dispatch({ type: 'modalInfo/setModalBody', payload: `Wollen Sie Project ${p.name} löschen?` })
-        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Bestätigen" })
+        dispatch({ type: 'modalInfo/setModalHeader', payload: "Delete Project" })
+        dispatch({ type: 'modalInfo/setModalBody', payload: (<>Are you sure that you want to delete <strong>{p.name}</strong>?</>) })
+        dispatch({ type: 'modalInfo/setSaveBtnInfo', payload: "Delete" })
         dispatch({ type: 'modalInfo/setModalType', payload: "deleteProject" })
     }
     const handleEditProject = () => {
@@ -111,15 +111,15 @@ const ProjectInfo = () => {
                     <HStack spacing={".5rem"} justifyContent={"space-between"}>
                         <Heading size={"md"}>Project Info</Heading>
                         {selectedProject && userInfo.id === selectedProject.creator_id && <HStack>
-                            <IconButton disabled={editProject} aria-label='Delete project' icon={<MdDeleteForever cursor={editProject ? "not-allowed" : "pointer"} onClick={() => handleDeleteProject(selectedProject)} size="25" />} />
-                            <IconButton disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" onClick={handleEditProject} />} />
+                            <IconButton {...buttonIconStyle} disabled={editProject} aria-label='Edit project' icon={<MdModeEdit cursor={editProject ? "not-allowed" : "pointer"} size="25" />} onClick={handleEditProject} />
+                            <IconButton {...buttonIconStyle} color={colorDanger} disabled={editProject} aria-label='Delete project' icon={<MdDeleteForever cursor={editProject ? "not-allowed" : "pointer"} size="25" />} onClick={() => handleDeleteProject(selectedProject)} />
                         </HStack>}
                     </HStack>
                 </CardHeader>
                 {selectedProject !== null && selectedProject !== undefined && <CardBody>
                     <Stack divider={<StackDivider />} spacing='4'>
                         <Box>
-                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
+                            <Heading size='xs' paddingBottom={"5px"}>
                                 Project Name
                             </Heading>
                             {editProject ? <Input defaultValue={selectedProject.name} backgroundColor={"#ecf39eff"} onChange={(e) => {
@@ -129,7 +129,7 @@ const ProjectInfo = () => {
                             </Text>}
                         </Box>
                         <Box>
-                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
+                            <Heading size='xs' paddingBottom={"5px"}>
                                 Created At
                             </Heading>
                             <Text pt='2' fontSize='sm'>
@@ -137,7 +137,7 @@ const ProjectInfo = () => {
                             </Text>
                         </Box>
                         <Box>
-                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
+                            <Heading size='xs' paddingBottom={"5px"}>
                                 Creator
                             </Heading>
                             <Text pt='2' fontSize='sm'>
@@ -145,7 +145,7 @@ const ProjectInfo = () => {
                             </Text>
                         </Box>
                         <Box>
-                            <Heading size='xs' textTransform='' paddingBottom={"5px"}>
+                            <Heading size='xs' paddingBottom={"5px"}>
                                 Description
                             </Heading>
                             {editProject ? <Input backgroundColor={"#ecf39eff"} defaultValue={selectedProject?.description.Valid === true && selectedProject?.description.String} onChange={(e) => {
@@ -156,12 +156,13 @@ const ProjectInfo = () => {
                         </Box>
                         <Box>
                             <HStack>
-                                <Heading size='xs' textTransform='uppercase' paddingBottom={"5px"}>
+                                <Heading size='xs' paddingBottom={"5px"}>
                                     Members
                                 </Heading>
                                 {userInfo.id === selectedProject.creator_id && <IconButton
-                                    color='#003569'
+                                    {...buttonIconStyle}
                                     aria-label='Search database'
+
                                     icon={<AiOutlineUsergroupAdd />}
                                     onClick={() => handleAddMembersInProject()}
                                 />}
@@ -171,9 +172,9 @@ const ProjectInfo = () => {
                                 {membersForRedux?.map((m: any) => {
                                     return (
                                         <VStack>
-                                            <Badge colorScheme='green' textTransform='' cursor={"pointer"} onClick={() => setMemberActions(!memberActions)}>{m.name}</Badge>
+                                            <Button {...buttonStyle} size="sm" onClick={() => setMemberActions(!memberActions)}>{m.name}</Button>
                                             {memberActions && userInfo.id === selectedProject.creator_id &&
-                                                <IconButton aria-label='Remove member' icon={<MdDeleteForever cursor={"pointer"} onClick={() => handleRemoveMemberFromAProject(m)} size="25" />} />
+                                                <IconButton {...buttonIconStyle} color={colorDanger} aria-label='Remove member' icon={<MdDeleteForever cursor={"pointer"} onClick={() => handleRemoveMemberFromAProject(m)} size="25" />} />
                                             }
                                         </VStack>
                                     )
@@ -182,7 +183,7 @@ const ProjectInfo = () => {
                         </Box>
                         <Box>
                             <HStack>
-                                <Heading size='xs' textTransform='uppercase' paddingBottom={"5px"}>
+                                <Heading size='xs' paddingBottom={"5px"}>
                                     Tables
                                 </Heading>
                             </HStack>
@@ -190,11 +191,11 @@ const ProjectInfo = () => {
                                 {userTablesForProject?.map((ut: any) => {
                                     return (
                                         <VStack>
-                                            <Badge key={`${ut.id}`} colorScheme='green' textTransform='' onClick={() => {
+                                            <Button {...buttonStyle} key={`${ut.id}`} onClick={() => {
                                                 console.log(ut)
                                                 dispatch({ type: 'projects/setSelectedUserTable', payload: ut })
                                                 setViewActions(!viewActions)
-                                            }} cursor={"pointer"}>{ut.table_name}</Badge>
+                                            }}>{ut.table_name}</Button>
                                             {selectedUserTable !== null && selectedUserTable.id === ut.id && viewActions && <TablesActionForView />}
                                         </VStack>
                                     )
@@ -205,8 +206,8 @@ const ProjectInfo = () => {
                 </CardBody>}
                 <CardFooter>
                     {editProject && <HStack>
-                        <Button {...buttonSubmitStyle} onClick={handleUpdateProjectInfo}>Submit</Button>
-                        <Button {...buttonCancelStyle} onClick={handleCancelEdit}>Cancel</Button>
+                        <Button {...buttonGoodStyle} onClick={handleUpdateProjectInfo}>Submit</Button>
+                        <Button {...buttonBadStyle} onClick={handleCancelEdit}>Cancel</Button>
                     </HStack>}
                 </CardFooter>
             </Card>

@@ -1,11 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { VStack, Input, Button, Box, } from '@chakra-ui/react'
+import { VStack, Input, Button, Heading, } from '@chakra-ui/react'
 import { IoIosLogIn } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { fetchUserWithEmail } from '../api/user';
 import { databaseSqlite } from './sqlite/db';
+import { buttonActive, buttonStyle, colorTitle } from './Dashboard';
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
@@ -65,15 +66,17 @@ const Login = () => {
         <VStack display="flex" justifyContent="center" height={"100%"}>
             {/* <Input width="400px" borderColor="#60935D" placeholder='Username' value={valueName}
                 onChange={(e) => handleChange(e, "name")} /> */}
-            <Input width="400px" borderColor="#60935D" placeholder='Email' outline={""} value={valueEmail}
+            <Heading color={buttonActive} marginBottom={"6rem"}> Digital Twin for Argo-Diversity</Heading>
+            <Input width="400px" borderColor="#60935D" placeholder='Email' type="email" outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
-            <Button width="400px" disabled={disabledLogin} rightIcon={<IoIosLogIn />} backgroundColor={"#E8871E"} color="white" onClick={getUserWithEmail}>
+            <Button {...buttonStyle} width="400px" disabled={disabledLogin} rightIcon={<IoIosLogIn size="1.5rem" />} onClick={getUserWithEmail}>
                 Log in
             </Button>
-            <Button colorScheme='teal' variant='ghost' onClick={() => navigate("/register")
+            <Button {...buttonStyle} width="400px" backgroundColor={colorTitle} color={"white"} onClick={() => navigate("/register")
             }>
-                Registieren ein neue Account
+                Register a new Account
             </Button>
+            <Heading size={"sm"} color={buttonActive} marginTop={"3rem"}>Developed by Jiaying He</Heading>
         </VStack>
 
     );

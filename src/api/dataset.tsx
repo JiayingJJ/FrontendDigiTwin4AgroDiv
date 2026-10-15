@@ -73,9 +73,10 @@ export const updateValueInColumns = async (table_id: string, columns: any, colum
 }
 
 export const setUserTableColumnDataStatus = async (id: string, tableId: string, dataStatus: string) => {
+    const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/usertable/column/setDataStatus`, {
         method: "PUT",
-        body: JSON.stringify({ id: id, table_id: tableId, data_status: dataStatus }),
+        body: JSON.stringify({ id: id, table_id: tableId, data_status: dataStatus, updated_at: time }),
     })
     const data = await response.json();
     return data;

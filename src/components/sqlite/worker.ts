@@ -117,10 +117,11 @@ export class Database {
         if (!this.db) throw new Error("Database not initialized");
         this.db.exec({
             sql: `INSERT INTO user_tables
-    (id, user_id, table_name, columns_in_table, created_at, updated_at, deleted_at, data_status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (id, user_id, table_name, columns_in_table, project_id, created_at, updated_at, deleted_at, data_status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
     ON CONFLICT(id) DO UPDATE SET
         table_name      = excluded.table_name,
+        project_id      = excluded.project_id,
         columns_in_table = excluded.columns_in_table,
         updated_at      = excluded.updated_at,
         deleted_at      = excluded.deleted_at,
@@ -130,6 +131,7 @@ export class Database {
                 data.UserID,
                 data.TableName,
                 JSON.stringify(data.ColumnsInTable.RawMessage),
+                data.ProjectID,
                 data.CreatedAt,
                 data.UpdatedAt,
                 data.DeletedAt.Time,

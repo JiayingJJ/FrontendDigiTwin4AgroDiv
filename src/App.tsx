@@ -78,28 +78,26 @@ function App() {
 
       const data = await response.json();
       const list = Object.entries(data).map(([key, value]) => ({ key, value }));
-
       list.forEach(l => {
         if (l.value !== null) {
           if (l.key === "user") {
-            console.log(l)
             l.value.forEach(v => {
               databaseSqlite.insertUser(v)
             });
           } else if (l.key === "user_tables") {
+            const userColumns = list.find(item => item.key === "user_columns")?.value;
             l.value.forEach(v => {
-              databaseSqlite.insertUserTables(v)
+              databaseSqlite.insertUserTables(v, userColumns)
             });
           } else if (l.key === "geo_data") {
             l.value.forEach(v => {
-              console.log(v)
               if (v.data_geo !== null) {
                 databaseSqlite.insertGeoData(v.data_geo)
               }
             });
-          }else if (l.key === "projects") {
+          } else if (l.key === "projects") {
             l.value.forEach(v => {
-                databaseSqlite.insertProjects(v)
+              databaseSqlite.insertProjects(v)
             });
           }
         }

@@ -1,7 +1,7 @@
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
 import * as Comlink from "comlink";
 import type { GeoData, UserTable } from "./types";
-import { getCurrentTime } from "../../helpers";
+import { getColumnNameForSQLite, getCurrentTime, getSQLiteType } from "../../helpers";
 export interface Task {
     id: number;
     text: string;
@@ -113,19 +113,19 @@ export class Database {
         return rows[0] ?? null;
     }
     // user_tables
-    insertUserTables(data: any): void {
+    insertUserTables(data: any, userTableIdData: any): void {
         if (!this.db) throw new Error("Database not initialized");
         this.db.exec({
             sql: `INSERT INTO user_tables
-    (id, user_id, table_name, columns_in_table, project_id, created_at, updated_at, deleted_at, data_status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
-    ON CONFLICT(id) DO UPDATE SET
-        table_name      = excluded.table_name,
-        project_id      = excluded.project_id,
-        columns_in_table = excluded.columns_in_table,
-        updated_at      = excluded.updated_at,
-        deleted_at      = excluded.deleted_at,
-        data_status     = excluded.data_status`,
+                (id, user_id, table_name, columns_in_table, project_id, created_at, updated_at, deleted_at, data_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
+                ON CONFLICT(id) DO UPDATE SET
+                    table_name      = excluded.table_name,
+                    project_id      = excluded.project_id,
+                    columns_in_table = excluded.columns_in_table,
+                    updated_at      = excluded.updated_at,
+                    deleted_at      = excluded.deleted_at,
+                    data_status     = excluded.data_status`,
             bind: [
                 data.ID,
                 data.UserID,
@@ -138,8 +138,42 @@ export class Database {
                 typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String
             ]
         });
+        this.initUserTableId(data, userTableIdData)
     }
 
+    initUserTableId(data: any, userTableIdData: any) {
+        let columnNames: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
+        let columns: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
+        const tableName = "user_table_" + data.ID.replaceAll("-", "")
+        data.ColumnsInTable.RawMessage.map((c: any) => {
+            columnNames.push(getColumnNameForSQLite(c.name.toLowerCase()))
+            columns.push(`  ${getColumnNameForSQLite(c.name.toLowerCase())} ${getSQLiteType(c.type)}`);
+        })
+        const createSQL = `CREATE TABLE IF NOT EXISTS ${tableName} (
+                            ${columns.join(",\n")}
+                            );`;
+
+        this.db.exec(createSQL)
+        const placeholders = columnNames.map(() => "?").join(", ");
+        const insertSQL = `INSERT OR IGNORE INTO ${tableName} (
+                            ${columnNames.join(",\n")}
+                            ) VALUES (${placeholders});`;
+        const dataUserTable = userTableIdData.filter((i: any) => i.name === tableName)
+        dataUserTable[0].result.map((data: any) => {
+            let value: any = [];
+            columnNames.map((c: any) => {
+                value.push(data[c])
+            })
+            this.db.exec({
+                sql: insertSQL,
+                bind: value
+            });
+        })
+    }
+    insertUserTableId(data: any) {
+        console.log(data)
+
+    }
     getUserTablesWithUserId(userId: string): UserTable[] | null {
         const rows = this.query("SELECT * FROM user_tables WHERE user_id = ?", [userId]) as UserTable[];
         return rows ?? null;

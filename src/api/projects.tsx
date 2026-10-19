@@ -8,11 +8,11 @@ export const getAllProjects = async () => {
     const data = await response.json();
     return [data, response.status];
 }
-export const createProject = async (name: string, creatorId: string, members: any, projectDescription: string) => {
+export const createProject = async (name: string, creatorId: string, geoIds: any, members: any, projectDescription: string) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/projects/project`, {
         method: "POST",
-        body: JSON.stringify({ name: name, creator_id: creatorId, members: members, description: projectDescription, created_at: time, updated_at: time, data_status: "pending" }),
+        body: JSON.stringify({ name: name, creator_id: creatorId, members: members, geo_ids: geoIds, description: projectDescription, created_at: time, updated_at: time, data_status: "pending" }),
     })
     const data = await response.json();
     return [data, response.status];
@@ -84,6 +84,25 @@ export const updateProjectInfo = async (projectId: string, name: string, project
     const response = await fetch(`${apiUrl}/projects/project/update/info`, {
         method: "POST",
         body: JSON.stringify({ id: projectId, name: name, description: projectDescription, updated_at: time, data_status: "pending" }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}
+export const updateProjectGeoIds = async (id: string, geoIds: any, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/projects/project/geoids`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time, geo_ids: geoIds }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}
+
+export const removeProjectGeoIdsWithGeoId = async (projectId: string, geoId: string, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/projects/project/remove/geoid`, {
+        method: "PUT",
+        body: JSON.stringify({ project_id: projectId, geo_id: geoId, data_status: dataStatus, updated_at: time }),
     })
     const data = await response.json();
     return [data, response.status];

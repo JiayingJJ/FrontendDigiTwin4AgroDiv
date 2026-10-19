@@ -30,6 +30,7 @@ interface OpenLayersState {
     removeDrawedFeature: boolean;
     editColumn: boolean;
     selectedColumnId:string|null;
+    projectId:string|null;
 }
 
 const initialState: OpenLayersState = {
@@ -61,6 +62,7 @@ const initialState: OpenLayersState = {
     removeDrawedFeature: false,
     editColumn: false,
     selectedColumnId:null,
+    projectId:null,
 }
 
 const openLayersSlice = createSlice({
@@ -200,7 +202,9 @@ const openLayersSlice = createSlice({
          setSelectedColumnId: (state, action) => {
             state.selectedColumnId = action.payload;
         },
-        
+        setProjectId: (state, action) => {
+            state.projectId = action.payload;
+        }
     }
 });
 

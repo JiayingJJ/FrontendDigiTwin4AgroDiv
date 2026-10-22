@@ -10,8 +10,7 @@ import UserCreateANewTable from './UserCreateANewTable';
 import TableWithColumns from './TableWithColumns';
 import CreatedTables from './CreatedTables';
 import { databaseSqlite } from '../sqlite/db';
-import { isZeroTimeString } from '../../helpers';
-import { getCreatedAndSharedInfo } from '../sqlite/helper';
+import { getCreatedAndSharedInfo, isZeroTimeString } from '../../helpers';
 import { buttonStyle, titleStyle } from '../Dashboard';
 const Datasets = () => {
     const dispatch = useDispatch()

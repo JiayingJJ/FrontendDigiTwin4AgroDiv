@@ -14,8 +14,7 @@ import { fetchTableWithId, getTablesWithUserId } from '../../api/userTables';
 import TableViewActions from './TableViewActions';
 import SelectColumn from './SelectColumn';
 import DatasetColumns from '../Maps/DatasetsInMaps/DatasetColumns';
-import { getCreatedAndSharedInfo } from '../sqlite/helper';
-// @flow
+import { getCreatedAndSharedInfo } from '../../helpers';
 type Props = {
 
 };

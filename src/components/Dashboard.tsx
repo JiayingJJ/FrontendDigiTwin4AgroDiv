@@ -10,10 +10,9 @@ import InfoPage from './InfoPage';
 import Datasets from './Datasets/Datasets';
 import DatasetsTable from './TableView/DatasetsTable';
 import { databaseSqlite } from './sqlite/db';
-import { isZeroTimeString } from '../helpers';
+import { getCreatedAndSharedInfo, isZeroTimeString } from '../helpers';
 import ProjectsComponent from './Projects/ProjectsComponent';
 import ModalComponent from './ModalComponent';
-import { getCreatedAndSharedInfo } from './sqlite/helper';
 const Dashboard = () => {
     const dispatch = useDispatch()
     const activePage = useSelector((state: any) => state.page.pageName)

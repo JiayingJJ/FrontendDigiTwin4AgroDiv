@@ -76,6 +76,7 @@ export class Database {
       name  TEXT,
       creator_id TEXT,
       members TEXT,
+      geo_ids TEXT,
       description TEXT,
       created_at TEXT,
       updated_at TEXT,
@@ -196,8 +197,8 @@ export class Database {
         if (!this.db) throw new Error("Database not initialized");
         console.log(data)
         this.db.exec({
-            sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
+            sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, geo_ids, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), JSON.stringify(data.GeoIds.RawMessage),typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
             data.DeletedAt.Time,
             typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
         });

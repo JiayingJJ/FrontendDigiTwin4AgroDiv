@@ -18,6 +18,7 @@ const Dashboard = () => {
     const activePage = useSelector((state: any) => state.page.pageName)
     const userInfo = useSelector((state: any) => state.user)
     const isOnLine = useSelector((state: any) => state.internet.isOnLine)
+    const getUpdate = useSelector((state: any) => state.page.getUpdate)
 
     const rendernPage = () => {
         switch (activePage) {
@@ -36,30 +37,33 @@ const Dashboard = () => {
         }
     }
 
-
-    useEffect(() => {
-        async function fechtData() {
-            if (isOnLine) {
-                const data = await getCreatedAndSharedInfo(userInfo.id)
-                dispatch({ type: 'projects/setAllProjects', payload: data.allProjects })
-                dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
-                dispatch({ type: 'datasetTableView/setTables', payload: data.allUserTables })
-            } else {
-                await databaseSqlite.initDb();
-                const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
-                const filterData = data?.filter((d: any) => {
-                    const notDelete = isZeroTimeString(d.deleted_at)
-                    if (notDelete) {
-                        return d;
-                    }
-                })
-                dispatch({ type: 'datasetTable/setTables', payload: filterData })
-            }
-
+    const fechtData = async () => {
+        if (isOnLine) {
+            const data = await getCreatedAndSharedInfo(userInfo.id)
+            dispatch({ type: 'projects/setAllProjects', payload: data.allProjects })
+            dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
+            dispatch({ type: 'datasetTableView/setTables', payload: data.allUserTables })
+        } else {
+            await databaseSqlite.initDb();
+            const data = await databaseSqlite.getUserTablesWithUserId(userInfo.id)
+            const filterData = data?.filter((d: any) => {
+                const notDelete = isZeroTimeString(d.deleted_at)
+                if (notDelete) {
+                    return d;
+                }
+            })
+            dispatch({ type: 'datasetTable/setTables', payload: filterData })
         }
+
+    }
+    useEffect(() => {
         fechtData()
     }, [])
-
+    useEffect(() => {
+        if (getUpdate) {
+            fechtData()
+        }
+    }, [getUpdate])
     return (
         <VStack width={"100vw"} height={"100vh"}>
             <HStack

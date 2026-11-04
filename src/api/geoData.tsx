@@ -8,11 +8,11 @@ export const getGeoData = async () => {
     return data;
 }
 
-export const insertGeoData = async (userId: string, properties: any, projectId: string|null, geometry_data: any, color: string) => {
+export const insertGeoData = async (userId: string, properties: any, projectId: string | null, geometry_data: any, color: string) => {
     const time = getCurrentTime()
     const response = await fetch(`${apiUrl}/geodata`, {
         method: "POST",
-        body: JSON.stringify({user_id: userId, properties: properties, project_id: projectId, geometry_data: geometry_data, color:color, created_at: time, updated_at: time, data_status: "pending" })
+        body: JSON.stringify({ user_id: userId, properties: properties, project_id: projectId, geometry_data: geometry_data, color: color, created_at: time, updated_at: time, data_status: "pending" })
     })
     const data = await response.json();
     return [data, response.status]
@@ -64,10 +64,10 @@ export const updateGeoDataColor = async (id: string, color: string, dataStatus: 
     return [data, response.status];
 }
 
-export const removeColumnInGeoDataProperties = async (columnId: string, geoDataId: string, tableId:string) => {
+export const removeColumnInGeoDataProperties = async (columnId: string, geoDataId: string, tableId: string) => {
     const time = getCurrentTime();
-    
-     const response = await fetch(`${apiUrl}/geodata/properties/remove`, {
+
+    const response = await fetch(`${apiUrl}/geodata/properties/remove`, {
         method: "PUT",
         body: JSON.stringify({ column_id: columnId, geo_data_id: geoDataId, table_id: tableId, data_status: "pending", updated_at: time }),
     })
@@ -81,4 +81,23 @@ export const getGeoDataWithId = async (geoId: string) => {
     })
     const data = await response.json();
     return data;
+}
+export const updateProjectIdInGeoData = async (id: string, projectIds: any, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/geodata/update/projectids`, {
+        method: "PUT",
+        body: JSON.stringify({ id: id, data_status: dataStatus, updated_at: time, project_ids: projectIds }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}
+
+export const removeProjectIdInGeoData = async (projectId: string, geoId: string, dataStatus: string) => {
+    const time = getCurrentTime()
+    const response = await fetch(`${apiUrl}/geodata/remove/projectid`, {
+        method: "PUT",
+        body: JSON.stringify({ project_id: projectId, geo_id: geoId, data_status: dataStatus, updated_at: time }),
+    })
+    const data = await response.json();
+    return [data, response.status];
 }

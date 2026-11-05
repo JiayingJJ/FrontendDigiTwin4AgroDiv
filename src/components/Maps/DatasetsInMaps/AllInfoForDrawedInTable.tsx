@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, StackDivider, Stack, Box, Text, Button, HStack, VStack } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, Badge, Stack, Box, Text, Button, HStack, VStack, FormControl, FormLabel, Select } from '@chakra-ui/react'
 import { MdDeleteForever } from "react-icons/md";
 import { getColumnWithId } from '../../../api/dataset';
 import { fetchTableWithId } from '../../../api/userTables';
-import { deleteGeoDataWithId, removeColumnInGeoDataProperties, setGeoDataStatus } from '../../../api/geoData';
+import { deleteGeoDataWithId, removeColumnInGeoDataProperties, setGeoDataStatus, updateProjectIdInGeoData } from '../../../api/geoData';
 import { FiPlusCircle } from "react-icons/fi";
 import { MdModeEdit } from "react-icons/md";
 import { removeDataFromUserTablesId } from '../../../api/userTableId';
 import { readableTimestamp } from '../../../helpers';
 import DatasetColumns from './DatasetColumns';
+import { updateProjectGeoIds } from '../../../api/projects';
+import { CiCircleCheck } from 'react-icons/ci';
 const AllInfoForDrawedInTable = () => {
 
     const dispatch = useDispatch()
@@ -21,6 +23,10 @@ const AllInfoForDrawedInTable = () => {
     const tableInfo = useSelector((state: any) => state.openLayers.tableInfo)
     const tables = useSelector((state: any) => state.datasetTable.tables)
     const userInfo = useSelector((state: any) => state.user)
+    const allProjects = useSelector((state: any) => state.projects.allProjects)
+    const projectId = useSelector((state: any) => state.openLayers.projectId)
+    const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
+
     const clickOnSaveBtn = async () => {
 
     }
@@ -51,9 +57,9 @@ const AllInfoForDrawedInTable = () => {
         await getGeoData(column)
         const deleteUserTableIdColumn = await removeDataFromUserTablesId(columnInfo?.id, tableInfo?.id)
         dispatch({ type: 'openLayers/setGetUpdateFromDatabase', payload: true })
-        if(column.geo_data_id&&column.geo_data_id!==null&&column.geo_data_id!==undefined){
+        if (column.geo_data_id && column.geo_data_id !== null && column.geo_data_id !== undefined) {
             const removeColumnFronProperties = await removeColumnInGeoDataProperties(columnInfo?.id, column.geo_data_id, tableInfo?.id)
-            if(removeColumnFronProperties[1] === 200){
+            if (removeColumnFronProperties[1] === 200) {
                 const dataStatus = await setGeoDataStatus(column.geo_data_id, "merged");
             }
         }
@@ -77,41 +83,89 @@ const AllInfoForDrawedInTable = () => {
         dispatch({ type: 'datasetTable/clearInfoForASelectedTable', payload: null })
         dispatch({ type: 'openLayers/setAddNewColumnsDataInGeometry', payload: true })
     }
+    const handleSelectProject = (e: any) => {
+        dispatch({ type: 'openLayers/setProjectId', payload: e.target.value })
+    }
+    const handlePostProjectId = async () => {
+        const data = await updateProjectGeoIds(projectId, selectedGeoInfo.id, "pending")
+        const geoDataData = await updateProjectIdInGeoData(selectedGeoInfo.id, projectId, "pending")
+        dispatch({ type: 'pageInfo/setGetUpdate', payload: true })
+        // const data = await removeProjectGeoIdsWithGeoId(projectId, selectedGeoInfo.id, "pending")
+        console.log(data)
+        console.log(geoDataData)
+    }
+    const getProjectsName = () => {
+        let projects: any = []
+        selectedGeoData?.project_ids.RawMessage.map((p: string) => allProjects.filter((a: any) => {
+            if (a.id === p) {
+                projects.push(a)
+            }
+        }))
+        return projects
+    }
     return (
-        <>
-            <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"}>
-                <HStack style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
-                    <Heading size='md'>Dateneinsätze</Heading>
-                    <Box>
-                        <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" cursor={"pointer"} onClick={() => handleAddNewData()} />
-                    </Box>
-                </HStack>
-                {allInfoInProperties?.map((c: any) => {
-                    return (
-                        // <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
-                        <HStack spacing={".5rem"} justifyContent={"space-around"} key={`${c.id}-dataset-btn`}>
-                            <Button
-                                // disabled={addDrawedInteractionInfo}
-                                backgroundColor={columnInfo?.id === c.id ? "#ba2d0bff" : "#F7EDE2"}
-                                onClick={() => {
-                                    handleGetData(c)
-                                }}
-                                cursor={"pointer"}
-                                key={`${c.id}-geoData-box`}>
-                                <Heading size='xs' textTransform='uppercase' padding={"10px"}>
-                                    {readableTimestamp(c.updated_at)}
-                                </Heading>
-                            </Button>
-                            {c.user_id === userInfo.id && <Box style={{ display: "flex", alignItems: "center" }}>
-                                <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteGeoDataAndColumn(c)} size="25" />
-                                <MdModeEdit cursor={"pointer"} size="25" onClick={() => handleUpdateGeoDataAndColumn(c)} />
-                            </Box>}
-                        </HStack>
-                    )
-                })}
-                <DatasetColumns />
+        <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"}>
+            <VStack style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
+                <Heading size='md'>Project Info</Heading>
+                <Stack direction='row'>
+                    {getProjectsName().map((p: any) => {
+                        return <Badge colorScheme='green'>{p.name}</Badge>
+
+                    })}
+                </Stack>
+                <Box>
+                    <HStack style={{ display: "flex", alignItems: "end", width: "100%" }}>
+                        <FormControl>
+                            <Select placeholder='Select project'
+                                onChange={handleSelectProject}
+                                key={"select-project"}>
+                                {allProjects.map((p: any) => {
+                                    const exist = p?.geo_ids?.RawMessage.filter((e: string) => e === selectedGeoInfo?.id)
+                                    return (
+                                        <option value={p.id} disabled={exist.length !== 0}>{p.name}</option>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
+                        <CiCircleCheck color="green"
+                            size="40"
+                            onClick={() => handlePostProjectId()}
+                        />
+                    </HStack>
+                </Box>
             </VStack>
-        </>
+            <HStack style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
+                <Heading size='md'>Dateneinsätze</Heading>
+                <Box>
+                    <FiPlusCircle style={{ padding: "5px", margin: "5px" }} size="30" cursor={"pointer"} onClick={() => handleAddNewData()} />
+                </Box>
+            </HStack>
+            {allInfoInProperties?.map((c: any) => {
+                return (
+                    // <Card minWidth={"200px"} width={"100%"} key={`${geo.id}-type`}>
+                    <HStack spacing={".5rem"} justifyContent={"space-around"} key={`${c.id}-dataset-btn`}>
+                        <Button
+                            // disabled={addDrawedInteractionInfo}
+                            backgroundColor={columnInfo?.id === c.id ? "#ba2d0bff" : "#F7EDE2"}
+                            onClick={() => {
+                                handleGetData(c)
+                            }}
+                            cursor={"pointer"}
+                            key={`${c.id}-geoData-box`}>
+                            <Heading size='xs' textTransform='uppercase' padding={"10px"}>
+                                {readableTimestamp(c.updated_at)}
+                            </Heading>
+                        </Button>
+                        {c.user_id === userInfo.id && <Box style={{ display: "flex", alignItems: "center" }}>
+                            <MdDeleteForever cursor={"pointer"} onClick={() => handleDeleteGeoDataAndColumn(c)} size="25" />
+                            <MdModeEdit cursor={"pointer"} size="25" onClick={() => handleUpdateGeoDataAndColumn(c)} />
+                        </Box>}
+                    </HStack>
+                )
+            })}
+
+            <DatasetColumns />
+        </VStack>
     );
 }
 

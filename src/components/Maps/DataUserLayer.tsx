@@ -106,9 +106,9 @@ const DataUserLayer = () => {
                 <DrawerContent opacity={0.9}>
                     <DrawerCloseButton />
                     <DrawerHeader>
-                        {selectedGeoData?.user_id === userInfo.id &&
+                        {(addDrawedInteractionInfo || selectedGeoData?.user_id === userInfo.id) &&
                             <HStack>
-                                {(addDrawedInteractionInfo || (selectedGeoInfo !== null && selectedGeoInfo.data_status === "pending")) ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
+                                {addDrawedInteractionInfo ? <Tooltip label={"Ein Punkt oder ein Polygon hinzufügen"} hasArrow >
                                     <Button variant={"unstyled"}>
                                         <FaCloudUploadAlt style={{ padding: "5px", margin: "5px" }} size="30" onClick={() => uploadGeomery()} />
                                     </Button>

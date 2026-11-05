@@ -108,7 +108,7 @@ const AllInfoForDrawedInTable = () => {
             <VStack style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
                 <Heading size='md'>Project Info</Heading>
                 <Stack direction='row'>
-                    {getProjectsName().map((p: any) => {
+                    {selectedGeoData?.project_ids?.RawMessage!==null && getProjectsName().map((p: any) => {
                         return <Badge colorScheme='green'>{p.name}</Badge>
 
                     })}

@@ -101,3 +101,10 @@ export const removeProjectIdInGeoData = async (projectId: string, geoId: string,
     const data = await response.json();
     return [data, response.status];
 }
+export const getOwnedAndSharedGeoDataWithUserId = async (user_id: string) => {
+    const response = await fetch(`${apiUrl}/geodata/user/all/${user_id}`, {
+        method: "GET",
+    })
+    const data = await response.json();
+    return data;
+}

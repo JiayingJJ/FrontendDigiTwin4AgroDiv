@@ -105,7 +105,7 @@ const AllInfoForDrawedInTable = () => {
     }
     return (
         <VStack spacing={".5rem"} overflowX={"hidden"} height={"auto"} width={"100%"}>
-            <VStack style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
+            {userInfo.id === selectedGeoData?.user_id && <VStack style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
                 <Heading size='md'>Project Info</Heading>
                 <Stack direction='row'>
                     {selectedGeoData?.project_ids?.RawMessage!==null && getProjectsName().map((p: any) => {
@@ -133,7 +133,7 @@ const AllInfoForDrawedInTable = () => {
                         />
                     </HStack>
                 </Box>
-            </VStack>
+            </VStack>}
             <HStack style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
                 <Heading size='md'>Dateneinsätze</Heading>
                 <Box>

@@ -23,7 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import GetLocationWithUserInput from './GetLocationWithUserInput';
 import GetUserLocation from './GetUserLocation';
 import CircleStyle from 'ol/style/Circle';
-import { getGeoData, getGeoDataWithUserId } from '../../api/geoData';
+import { getOwnedAndSharedGeoDataWithUserId } from '../../api/geoData';
 import { getColumnWithId } from '../../api/dataset';
 import DataUserLayer from './DataUserLayer';
 import { deepEqual } from '../../helpers';
@@ -262,9 +262,7 @@ const OpenLayersMap = () => {
         })
     }
     const fetchUserGeoData = async () => {
-        const data = await getGeoData();
-        // Get geo_data with UserId
-        const geoDataUserId = await getGeoDataWithUserId(userInfo.id);
+        const data = await getOwnedAndSharedGeoDataWithUserId(userInfo.id)
         const validData = data.filter((d: any) => {
             if (!d.deleted_at.Valid) {
                 return d;

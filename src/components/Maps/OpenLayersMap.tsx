@@ -149,7 +149,7 @@ const OpenLayersMap = () => {
                 selectedPropertiesFromDatabase.map(async (proper: any) => {
                     if (proper.table_id !== undefined) {
                         const data = await getColumnWithId(proper.table_id, proper.column_id);
-                        if(data.deleted_at === null){
+                        if (data.deleted_at === null) {
                             dispatch({ type: 'openLayers/addAllInfoInProperties', payload: data });
                         }
                     }
@@ -468,6 +468,10 @@ const OpenLayersMap = () => {
         }
     }, [getUpdateFromDatabase])
 
+    useEffect(() => {
+        const data = geoDataFromRedux.filter((g: any) => g.id === selectedGeoData?.id)
+        dispatch({ type: 'openLayers/setSelectedGeoData', payload: data[0] })
+    }, [geoDataFromRedux])
     return <HStack width={"95vw"} height={"100%"} marginBottom={"0.5rem"}>
         <Card width={"95vw"} height={"100%"} style={{ color: "#f2f7f5", backgroundColor: "#60935D" }}>
             <CardBody ref={mapDivRef} padding={cardPadding}>

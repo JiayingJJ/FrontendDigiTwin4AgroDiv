@@ -39,7 +39,6 @@ const CreatedProjects = () => {
             </GridItem>
             <GridItem rowSpan={0.5}>
                 <Button {...buttonStyle} width={"100%"} disabled={addNewProject} onClick={() => {
-                    console.log("click for add project")
                     dispatch({ type: 'projects/setAddNewProject', payload: true })
                 }}>
                     Füge ein neue Projekt hinzu

@@ -40,6 +40,7 @@ const Dashboard = () => {
     const fechtData = async () => {
         if (isOnLine) {
             const data = await getCreatedAndSharedInfo(userInfo.id)
+            dispatch({ type: 'openLayers/setGeodata', payload: data.allGeoData })
             dispatch({ type: 'projects/setAllProjects', payload: data.allProjects })
             dispatch({ type: 'datasetTable/setTables', payload: data.allUserTables })
             dispatch({ type: 'datasetTableView/setTables', payload: data.allUserTables })

@@ -1,3 +1,4 @@
+import { getOwnedAndSharedGeoDataWithUserId } from "./api/geoData";
 import { getAllProjectsWithShared, getProjectWithCreatorId } from "./api/projects";
 import { getTablesWithUserId, getUserTablesWithProjectId } from "./api/userTables";
 
@@ -56,6 +57,7 @@ export const getColumnNameForSQLite = (name: string) => {
 export const getCreatedAndSharedInfo = async (userId: string) => {
     let allProjects: any = [];
     let allUserTables: any = [];
+    let allGeoData: any = [];
     // get projects with user as creator
     const projectData = await getProjectWithCreatorId(userId)
     projectData[0].map((d: any) => {
@@ -83,8 +85,16 @@ export const getCreatedAndSharedInfo = async (userId: string) => {
             allUserTables.push(sharedUT);
         })
     }))
+    // get geo_data
+    const geoData = await getOwnedAndSharedGeoDataWithUserId(userId);
+    geoData.map((d: any) => {
+        if (!d.deleted_at.Valid) {
+            allGeoData.push(d);
+        }
+    });
     return {
         "allProjects": allProjects,
-        "allUserTables": allUserTables
+        "allUserTables": allUserTables,
+        "allGeoData": allGeoData
     }
 }

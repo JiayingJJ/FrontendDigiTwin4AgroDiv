@@ -31,6 +31,7 @@ const DataUserLayer = () => {
     const colorRedux = useSelector((state: any) => state.openLayers.userSelectedColor)
     const addNewColumnsDataInGeometry = useSelector((state: any) => state.openLayers.addNewColumnsDataInGeometry)
     const colorPicker = useSelector((state: any) => state.openLayers.colorPicker)
+    const projectId = useSelector((state: any) => state.openLayers.projectId)
 
     const showGeoJSON = () => {
         dispatch({ type: 'openLayers/clearReduxForGeoData', payload: [] })
@@ -41,10 +42,8 @@ const DataUserLayer = () => {
         dispatch({ type: 'openLayers/setShowUserDataLayer', payload: !showUserDataLayer })
     };
     const uploadGeomery = async () => {
-        console.log(userInfo.id)
         const geoData = { "coordinates": geometry, "type": geometryType }
-        console.log(geoData)
-        const data = await insertGeoData(userInfo.id, {}, geoData, colorRedux)
+        const data = await insertGeoData(userInfo.id, {}, projectId, geoData, colorRedux)
         if (data[1] === 500) {
             console.log("Alert Message")
             dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

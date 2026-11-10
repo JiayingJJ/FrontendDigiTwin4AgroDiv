@@ -46,7 +46,7 @@ const CreatedProjects = () => {
             </GridItem>
 
             <GridItem rowSpan={14} overflowY={"auto"}>
-                <VStack spacing={".5rem"} overflowX={"hidden"}>
+                <VStack spacing={".5rem"}>
                     <Heading size='md'>Eigenes Projekt</Heading>
                     {ownedProjects?.map((p: any) => {
                         return (

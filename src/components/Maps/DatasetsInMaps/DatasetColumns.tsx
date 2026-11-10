@@ -204,10 +204,10 @@ const DatasetColumns = () => {
                 <ModalCloseButton />
                 <ModalBody pb={6} overflowY={"auto"}>
                     <Helps />
-                    {tableColumns.map((column: any) => renderDataset(column))}
+                    {tableColumns !== null && tableColumns.map((column: any) => renderDataset(column))}
                 </ModalBody>
                 <ModalFooter>
-                    {tableColumns.length !== 0 &&
+                    {tableColumns !== null && tableColumns.length !== 0 &&
                         <Box>
                             <Button backgroundColor={"#F7EDE2"} _hover={{ backgroundColor: "#ba2d0bff" }} onClick={() => handleSubmit()}>Submit</Button>
                             <Button backgroundColor={"#F7EDE2"} _hover={{ backgroundColor: "#ba2d0bff" }} onClick={() => handleCancel()}>Cancel</Button>

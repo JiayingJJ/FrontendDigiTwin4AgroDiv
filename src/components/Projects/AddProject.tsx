@@ -32,7 +32,7 @@ const AddProject = () => {
     }
     const clickForCreateProject = async (projectName: string, creatorId: string, projectDescription: string) => {
         if (isOnLine) {
-            const data = await createProject(projectName, creatorId, [], projectDescription)
+            const data = await createProject(projectName, creatorId, [], [], projectDescription)
             if (data[1] === 500) {
                 console.log("Alert Message")
                 dispatch({ type: 'alertInfo/setAlertStatus', payload: 'error' })

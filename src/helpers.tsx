@@ -1,6 +1,6 @@
 import { getOwnedAndSharedGeoDataWithUserId } from "./api/geoData";
 import { getAllProjectsWithShared, getProjectWithCreatorId } from "./api/projects";
-import { getTablesWithUserId, getUserTablesWithProjectId } from "./api/userTables";
+import { getOwnedAndSharedUserTablesWithUserId, getTablesWithUserId, getUserTablesWithProjectId } from "./api/userTables";
 
 export const getCurrentTime = () => {
     const now = new Date();
@@ -65,9 +65,9 @@ export const getCreatedAndSharedInfo = async (userId: string) => {
             allProjects.push(d);
         }
     })
-    // get user_tables with user as creator
-    const data = await getTablesWithUserId(userId)
-    data.map((d: any) => {
+    // get user_tables
+    const userTablesData = await getOwnedAndSharedUserTablesWithUserId(userId)
+    userTablesData.map((d: any) => {
         if (!d.deleted_at.Valid) {
             allUserTables.push(d);
         }
@@ -79,11 +79,6 @@ export const getCreatedAndSharedInfo = async (userId: string) => {
         if (!d.deleted_at.Valid) {
             allProjects.push(d);
         }
-        // user_tables
-        const getUserTablesWithSharedProjects = await getUserTablesWithProjectId(d.id)
-        getUserTablesWithSharedProjects.map((sharedUT: any) => {
-            allUserTables.push(sharedUT);
-        })
     }))
     // get geo_data
     const geoData = await getOwnedAndSharedGeoDataWithUserId(userId);

@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, CardHeader, CardBody, CardFooter, Heading, Badge, Stack, Box, Text, Button, HStack, VStack, FormControl, FormLabel, Select } from '@chakra-ui/react'
-import { MdDeleteForever } from "react-icons/md";
+import { Heading, Badge, Stack, Box, Text, Button, HStack, VStack, FormControl, Select, IconButton } from '@chakra-ui/react'
+import { MdDeleteForever, MdCancel } from "react-icons/md";
 import { getColumnWithId } from '../../../api/dataset';
 import { fetchTableWithId } from '../../../api/userTables';
-import { deleteGeoDataWithId, removeColumnInGeoDataProperties, setGeoDataStatus, updateProjectIdInGeoData } from '../../../api/geoData';
+import { removeColumnInGeoDataProperties, removeProjectIdInGeoData, setGeoDataStatus, updateProjectIdInGeoData } from '../../../api/geoData';
 import { FiPlusCircle } from "react-icons/fi";
 import { MdModeEdit } from "react-icons/md";
 import { removeDataFromUserTablesId } from '../../../api/userTableId';
 import { readableTimestamp } from '../../../helpers';
 import DatasetColumns from './DatasetColumns';
-import { updateProjectGeoIds } from '../../../api/projects';
+import { removeProjectGeoIdsWithGeoId, updateProjectGeoIds } from '../../../api/projects';
 import { CiCircleCheck } from 'react-icons/ci';
 const AllInfoForDrawedInTable = () => {
-
     const dispatch = useDispatch()
     const allInfoInProperties = useSelector((state: any) => state.openLayers.allInfoInProperties)
     const addDrawedInteractionInfo = useSelector((state: any) => state.openLayers.addDrawedInteractionInfo)
@@ -26,6 +25,7 @@ const AllInfoForDrawedInTable = () => {
     const allProjects = useSelector((state: any) => state.projects.allProjects)
     const projectId = useSelector((state: any) => state.openLayers.projectId)
     const selectedGeoData = useSelector((state: any) => state.openLayers.selectedGeoData)
+    const [projectAction, setProjectAction] = useState<boolean>(false)
 
     const clickOnSaveBtn = async () => {
 
@@ -90,9 +90,12 @@ const AllInfoForDrawedInTable = () => {
         const data = await updateProjectGeoIds(projectId, selectedGeoInfo.id, "pending")
         const geoDataData = await updateProjectIdInGeoData(selectedGeoInfo.id, projectId, "pending")
         dispatch({ type: 'pageInfo/setGetUpdate', payload: true })
-        // const data = await removeProjectGeoIdsWithGeoId(projectId, selectedGeoInfo.id, "pending")
-        console.log(data)
-        console.log(geoDataData)
+    }
+    const handleRemoveProjectId = async () => {
+        const dataInProject = await removeProjectGeoIdsWithGeoId(projectId, selectedGeoInfo.id, "pending")
+        const dataInGeoData = await removeProjectIdInGeoData(projectId, selectedGeoInfo.id, "pending")
+        setProjectAction(false)
+        dispatch({ type: 'pageInfo/setGetUpdate', payload: true })
     }
     const getProjectsName = () => {
         let projects: any = []
@@ -108,8 +111,18 @@ const AllInfoForDrawedInTable = () => {
             {userInfo.id === selectedGeoData?.user_id && <VStack style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }} backgroundColor={"#90a955ff"} width={"100%"} border={"5px"} borderRadius={"5px"} padding={"5px"}>
                 <Heading size='md'>Project Info</Heading>
                 <Stack direction='row'>
-                    {selectedGeoData?.project_ids?.RawMessage!==null && getProjectsName().map((p: any) => {
-                        return <Badge colorScheme='green'>{p.name}</Badge>
+                    {selectedGeoData?.project_ids?.RawMessage !== null && getProjectsName().map((p: any) => {
+                        return <VStack>
+                            <Badge colorScheme={projectId === p.id ? 'red' : 'green'} onClick={() => {
+                                setProjectAction(true)
+                                dispatch({ type: 'openLayers/setProjectId', payload: p.id })
+                            }}>{p.name}</Badge>
+                            {projectAction && p.id === projectId &&
+                                <HStack>
+                                    <IconButton aria-label='delete project' icon={<MdDeleteForever />} onClick={() => handleRemoveProjectId()} />
+                                    <IconButton aria-label='cancel' icon={<MdCancel />} onClick={() => { setProjectAction(false) }} />
+                                </HStack>}
+                        </VStack>
 
                     })}
                 </Stack>

@@ -66,7 +66,7 @@ const Login = () => {
         <VStack display="flex" justifyContent="center" height={"100%"}>
             {/* <Input width="400px" borderColor="#60935D" placeholder='Username' value={valueName}
                 onChange={(e) => handleChange(e, "name")} /> */}
-            <Heading color={buttonActive} marginBottom={"6rem"}> Digital Twin for Argo-Diversity</Heading>
+            <Heading color={buttonActive} marginBottom={"6rem"}> Digital Twin for Agro-Diversity</Heading>
             <Input width="400px" borderColor="#60935D" placeholder='Email' type="email" outline={""} value={valueEmail}
                 onChange={(e) => handleChange(e, "email")} />
             <Button {...buttonStyle} width="400px" disabled={disabledLogin} rightIcon={<IoIosLogIn size="1.5rem" />} onClick={getUserWithEmail}>

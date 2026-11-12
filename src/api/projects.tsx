@@ -108,7 +108,7 @@ export const removeProjectGeoIdsWithGeoId = async (projectId: string, geoId: str
     return [data, response.status];
 }
 export const getOwnedAndSharedProjectsWithUserId = async (user_id: string) => {
-    const response = await fetch(`${apiUrl}/projects/all/${user_id}`, {
+    const response = await fetch(`${apiUrl}/projects/user/all/${user_id}`, {
         method: "GET",
     })
     const data = await response.json();

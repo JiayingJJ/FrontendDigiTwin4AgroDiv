@@ -78,7 +78,7 @@ export const setUserTableProjectAsNull = async (id: string, dataStatus: string) 
     return data;
 }
 export const getOwnedAndSharedUserTablesWithUserId = async (user_id: string) => {
-    const response = await fetch(`${apiUrl}/usertable/user/all/${user_id}`, {
+    const response = await fetch(`${apiUrl}/usertables/user/all/${user_id}`, {
         method: "GET"
     })
     const data = await response.json();

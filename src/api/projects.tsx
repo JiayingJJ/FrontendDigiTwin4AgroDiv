@@ -72,7 +72,7 @@ export const removeProjectMemberWithUserId = async (projectId: string, memberId:
 }
 
 export const getAllProjectsWithShared = async (user_id: string) => {
-    const response = await fetch(`${apiUrl}/projects/all/${user_id}`, {
+    const response = await fetch(`${apiUrl}/projects/shared/${user_id}`, {
         method: "GET",
     })
     const data = await response.json();
@@ -103,6 +103,13 @@ export const removeProjectGeoIdsWithGeoId = async (projectId: string, geoId: str
     const response = await fetch(`${apiUrl}/projects/project/remove/geoid`, {
         method: "PUT",
         body: JSON.stringify({ project_id: projectId, geo_id: geoId, data_status: dataStatus, updated_at: time }),
+    })
+    const data = await response.json();
+    return [data, response.status];
+}
+export const getOwnedAndSharedProjectsWithUserId = async (user_id: string) => {
+    const response = await fetch(`${apiUrl}/projects/all/${user_id}`, {
+        method: "GET",
     })
     const data = await response.json();
     return [data, response.status];

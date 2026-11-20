@@ -91,9 +91,7 @@ function App() {
             });
           } else if (l.key === "geo_data") {
             l.value.forEach(v => {
-              if (v.data_geo !== null) {
-                databaseSqlite.insertGeoData(v.data_geo)
-              }
+                databaseSqlite.insertGeoData(v)
             });
           } else if (l.key === "projects") {
             l.value.forEach(v => {

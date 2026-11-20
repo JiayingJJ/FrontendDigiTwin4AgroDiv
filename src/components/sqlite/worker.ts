@@ -62,6 +62,7 @@ export class Database {
     id TEXT PRIMARY KEY,
     user_id  TEXT,
     properties TEXT,
+    project_ids TEXT,
     color TEXT,
     geometry_data TEXT,
     created_at TEXT,
@@ -198,7 +199,7 @@ export class Database {
         console.log(data)
         this.db.exec({
             sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, geo_ids, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), JSON.stringify(data.GeoIds.RawMessage),typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
+            bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), JSON.stringify(data.GeoIds.RawMessage), typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
             data.DeletedAt.Time,
             typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
         });
@@ -206,24 +207,22 @@ export class Database {
     // geo_data
     insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        data.forEach(e => {
-            this.db.exec({
-                sql: `INSERT OR IGNORE INTO geo_data
-        (id, table_id, column_id, user_id, properties, geometry_data, created_at, updated_at, deleted_at, data_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                bind: [
-                    e.ID,
-                    e.TableID,
-                    e.ColumnID,
-                    e.UserID,
-                    JSON.stringify(e.Properties.RawMessage),
-                    JSON.stringify(e.GeometryData.RawMessage),
-                    e.CreatedAt,
-                    e.UpdatedAt,
-                    e.DeletedAt.Time,
-                    e.DataStatus.String
-                ]
-            });
+        this.db.exec({
+            sql: `INSERT OR IGNORE INTO geo_data
+        (id, user_id, properties, color, project_ids, geometry_data, created_at, updated_at, deleted_at, data_status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            bind: [
+                data.ID,
+                data.UserID,
+                JSON.stringify(data.Properties.RawMessage),
+                data.Color.String,
+                JSON.stringify(data.ProjectIds.RawMessage),
+                JSON.stringify(data.GeometryData.RawMessage),
+                data.CreatedAt,
+                data.UpdatedAt,
+                data.DeletedAt.Time,
+                data.DataStatus.String
+            ]
         });
 
     }

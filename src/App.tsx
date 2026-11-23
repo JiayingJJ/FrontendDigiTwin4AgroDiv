@@ -88,10 +88,13 @@ function App() {
             const userColumns = list.find(item => item.key === "user_columns")?.value;
             l.value.forEach(v => {
               databaseSqlite.insertUserTables(v, userColumns)
+              if (v.ColumnsInTable.RawMessage !== null) {
+                databaseSqlite.initUserTableId(v, userColumns)
+              }
             });
           } else if (l.key === "geo_data") {
             l.value.forEach(v => {
-                databaseSqlite.insertGeoData(v)
+              databaseSqlite.insertGeoData(v)
             });
           } else if (l.key === "projects") {
             l.value.forEach(v => {

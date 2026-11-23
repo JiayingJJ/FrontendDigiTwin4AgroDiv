@@ -139,12 +139,10 @@ export class Database {
                 typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String
             ]
         });
-        if(data.ColumnsInTable.RawMessage!==null){
-            this.initUserTableId(data, userTableIdData)
-        }
     }
 
-    initUserTableId(data: any, userTableIdData: any) {
+    async initUserTableId(data: any, userTableIdData: any) {
+        const existRows: any = [];
         let columnNames: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
         let columns: any[] = ["id TEXT PRIMARY KEY", "user_id TEXT", "created_at TEXT", "updated_at TEXT", "deleted_at TEXT", "data_status TEXT"];
         const tableName = "user_table_" + data.ID.replaceAll("-", "")
@@ -160,15 +158,30 @@ export class Database {
         const placeholders = columnNames.map(() => "?").join(", ");
         const updateColumns = columnNames.filter((name) => name !== "id");
         const updateSQL = updateColumns.map((name) => `${name} = excluded.${name}`).join(", ");
+        this.db.exec({
+            sql: `PRAGMA table_info("${tableName}")`,
+            rowMode: "object",
+            resultRows: existRows
+        });
+        let newRows: any = [];
+        if (existRows.length !== columnNames.length) {
+            newRows = columnNames.filter((c: string) => !existRows.some((r: any) => r.name == c))
+        }
+        newRows.map((r: string) => {
+            const alertSQL = `ALTER TABLE ${tableName}
+            ADD COLUMN ${r} TEXT;`;
+            console.log(alertSQL)
+            this.db.exec(alertSQL)
+        })
         const insertSQL = `
         INSERT INTO ${tableName} (${columnNames.join(", ")})
         VALUES (${placeholders})
         ON CONFLICT(id) DO UPDATE SET ${updateSQL}
         `;
         const dataUserTable = userTableIdData.filter((i: any) => i.name === tableName)
-        dataUserTable.length !== 0 && dataUserTable[0].result.map((data: any) => {
+        dataUserTable[0].result !== null && dataUserTable[0].result.map((data: any) => {
             let value: any = [];
-            columnNames.map((c: any) => {
+            columnNames !== null && columnNames.map((c: any) => {
                 value.push(data[c])
             })
             this.db.exec({
@@ -176,10 +189,6 @@ export class Database {
                 bind: value
             });
         })
-    }
-    insertUserTableId(data: any) {
-        console.log(data)
-
     }
     getUserTablesWithUserId(userId: string): UserTable[] | null {
         const rows = this.query("SELECT * FROM user_tables WHERE user_id = ?", [userId]) as UserTable[];

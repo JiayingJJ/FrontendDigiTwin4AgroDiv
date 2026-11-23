@@ -71,7 +71,7 @@ function App() {
   }
   const initDataInOPFS = async () => {
     try {
-      await databaseSqlite.initDb();
+      await databaseSqlite.initDb(userInfo.id);
       await checkStatus();
       const response = await fetch(`${apiUrl}/api/data/${userInfo.id}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);

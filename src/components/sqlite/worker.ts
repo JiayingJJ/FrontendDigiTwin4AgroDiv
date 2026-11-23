@@ -139,12 +139,14 @@ export class Database {
                 typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String
             ]
         });
-        this.initUserTableId(data, userTableIdData)
+        if(data.ColumnsInTable.RawMessage!==null){
+            this.initUserTableId(data, userTableIdData)
+        }
     }
 
     initUserTableId(data: any, userTableIdData: any) {
         let columnNames: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
-        let columns: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
+        let columns: any[] = ["id TEXT PRIMARY KEY", "user_id TEXT", "created_at TEXT", "updated_at TEXT", "deleted_at TEXT", "data_status TEXT"];
         const tableName = "user_table_" + data.ID.replaceAll("-", "")
         data.ColumnsInTable.RawMessage !== null && data.ColumnsInTable.RawMessage.map((c: any) => {
             columnNames.push(getColumnNameForSQLite(c.name.toLowerCase()))
@@ -156,9 +158,13 @@ export class Database {
 
         this.db.exec(createSQL)
         const placeholders = columnNames.map(() => "?").join(", ");
-        const insertSQL = `INSERT OR IGNORE INTO ${tableName} (
-                            ${columnNames.join(",\n")}
-                            ) VALUES (${placeholders});`;
+        const updateColumns = columnNames.filter((name) => name !== "id");
+        const updateSQL = updateColumns.map((name) => `${name} = excluded.${name}`).join(", ");
+        const insertSQL = `
+        INSERT INTO ${tableName} (${columnNames.join(", ")})
+        VALUES (${placeholders})
+        ON CONFLICT(id) DO UPDATE SET ${updateSQL}
+        `;
         const dataUserTable = userTableIdData.filter((i: any) => i.name === tableName)
         dataUserTable.length !== 0 && dataUserTable[0].result.map((data: any) => {
             let value: any = [];
@@ -195,7 +201,6 @@ export class Database {
     // projects
     insertProjects(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
-        console.log(data)
         this.db.exec({
             sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, geo_ids, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), JSON.stringify(data.GeoIds.RawMessage), typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,

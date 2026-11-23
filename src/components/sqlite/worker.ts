@@ -146,7 +146,7 @@ export class Database {
         let columnNames: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
         let columns: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
         const tableName = "user_table_" + data.ID.replaceAll("-", "")
-        data.ColumnsInTable.RawMessage.map((c: any) => {
+        data.ColumnsInTable.RawMessage !== null && data.ColumnsInTable.RawMessage.map((c: any) => {
             columnNames.push(getColumnNameForSQLite(c.name.toLowerCase()))
             columns.push(`  ${getColumnNameForSQLite(c.name.toLowerCase())} ${getSQLiteType(c.type)}`);
         })
@@ -160,7 +160,7 @@ export class Database {
                             ${columnNames.join(",\n")}
                             ) VALUES (${placeholders});`;
         const dataUserTable = userTableIdData.filter((i: any) => i.name === tableName)
-        dataUserTable[0].result.map((data: any) => {
+        dataUserTable.length !== 0 && dataUserTable[0].result.map((data: any) => {
             let value: any = [];
             columnNames.map((c: any) => {
                 value.push(data[c])

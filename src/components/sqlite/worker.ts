@@ -15,7 +15,7 @@ export interface Task {
 export class Database {
     private db: any = null;
 
-    async initDb(userId: string) {
+    async initDb(email: string) {
         // console.log('crossOriginIsolated:', self.crossOriginIsolated)
         if (!self.crossOriginIsolated) {
             throw new Error('Worker is not cross-origin isolated! OPFS not available.')
@@ -25,7 +25,7 @@ export class Database {
         if (!sqlite3.oo1.OpfsDb) {
             throw new Error("OPFS is not available...")
         }
-        this.db = new sqlite3.oo1.OpfsDb(`/mydb/${userId}.sqlite3`);
+        this.db = new sqlite3.oo1.OpfsDb(`/mydb/${email}.sqlite3`);
         // console.log(
         //     "OPFS is available, created persisted database at",
         //     this.db.filename

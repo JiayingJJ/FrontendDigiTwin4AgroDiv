@@ -1,6 +1,6 @@
 import sqlite3InitModule from "@sqlite.org/sqlite-wasm";
 import * as Comlink from "comlink";
-import type { GeoData, UserTable } from "./types";
+import type { GeoData, ProjectsParams, User, UserTable } from "./types";
 import { getColumnNameForSQLite, getCurrentTime, getSQLiteType } from "../../helpers";
 export interface Task {
     id: number;

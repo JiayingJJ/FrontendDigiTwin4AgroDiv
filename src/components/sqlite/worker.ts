@@ -141,7 +141,7 @@ export class Database {
         });
     }
 
-    async initUserTableId(data: any, userTableIdData: any) {
+    initUserTableId(data: any, userTableIdData: any) {
         const existRows: any = [];
         let columnNames: any[] = ["id", "user_id", "created_at", "updated_at", "deleted_at", "data_status"];
         let columns: any[] = ["id TEXT PRIMARY KEY", "user_id TEXT", "created_at TEXT", "updated_at TEXT", "deleted_at TEXT", "data_status TEXT"];
@@ -250,7 +250,18 @@ export class Database {
     insertProjects(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         this.db.exec({
-            sql: "INSERT OR IGNORE INTO projects (id, name, creator_id, members, geo_ids, description, created_at, updated_at, deleted_at, data_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            sql: `
+            INSERT OR IGNORE INTO projects (id, name, creator_id, members, geo_ids, description, created_at, updated_at, deleted_at, data_status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                    name      = excluded.name,
+                    creator_id      = excluded.creator_id,
+                    members = excluded.members,
+                    geo_ids = excluded.geo_ids,
+                    description = excluded.description,
+                    updated_at      = excluded.updated_at,
+                    deleted_at      = excluded.deleted_at,
+                    data_status     = excluded.data_status`,
             bind: [data.ID, data.Name, data.CreatorID, JSON.stringify(data.Members.RawMessage), JSON.stringify(data.GeoIds.RawMessage), typeof data.Description === "string" ? data.Description : data.Description.String, data.CreatedAt, data.UpdatedAt,
             data.DeletedAt.Time,
             typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
@@ -263,6 +274,10 @@ export class Database {
     }
     getProjectsWithDataStatus(status: string): ProjectsParams[] | null {
         const rows = this.query("SELECT * FROM projects WHERE data_status = ?", [status]) as ProjectsParams[];
+        return rows ?? null;
+    }
+    getProjectsWithDataStatusAndUserAsCreator(status: string, userId: string): ProjectsParams[] | null {
+        const rows = this.query("SELECT * FROM projects WHERE data_status = ? AND creator_id = ?", [status, userId]) as ProjectsParams[];
         return rows ?? null;
     }
     // geo_data

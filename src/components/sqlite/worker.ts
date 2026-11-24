@@ -114,7 +114,7 @@ export class Database {
         return rows[0] ?? null;
     }
     // user_tables
-    insertUserTables(data: any, userTableIdData: any): void {
+    insertUserTables(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         this.db.exec({
             sql: `INSERT INTO user_tables

@@ -1,12 +1,12 @@
-export type WorkerAction = 'init' | 'sync' | 'query' | 'execute' | 'close' | 'export' | 'INIT_DB' |'INIT_DB_RESPONSE';
+export type WorkerAction = 'init' | 'sync' | 'query' | 'execute' | 'close' | 'export' | 'INIT_DB' | 'INIT_DB_RESPONSE';
 
 export type WorkerMessage = {
-    type: WorkerAction;
+  type: WorkerAction;
 }
 
 export interface WorkerRequest {
-  id:      number;
-  action:  WorkerAction;
+  id: number;
+  action: WorkerAction;
   payload: WorkerPayload;
 }
 
@@ -16,16 +16,16 @@ export type WorkerPayload =
   | { sql: string; params?: unknown[] }          // query, execute
 
 export interface WorkerResponse {
-  id:      number;
+  id: number;
   result?: unknown;
-  error?:  string;
+  error?: string;
 }
 
 // Query Ergebnis
 export type QueryResult<T = Record<string, unknown>> = T[];
 export interface User {
-  id:    string;
-  name:  string;
+  id: string;
+  name: string;
   email: string;
   created_at: string;
   updated_at: string;
@@ -34,27 +34,41 @@ export interface User {
 }
 
 export interface UserTable {
-    ID: string;
-    UserID: string;
-    TableName: string;
-    ColumnsInTable: string;
-    CreatedAt: string;
-    UpdatedAt: string;
-    DeletedAt: string;
-    DataStatus: string;
+  ID: string;
+  UserID: string;
+  TableName: string;
+  ProjectID: string;
+  ColumnsInTable: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  DataStatus: string;
 }
-export interface GeoData {
-    ID: string;
-    TableID: string;
-    ColumnID: string;
-    Properties: string;
-    GeometryData: string;
-    CreatedAt: string;
-    UpdatedAt: string;
-    DeletedAt: string;
-    DataStatus: string;
+export interface ProjectsParams {
+  ID: string;
+  Name: string;
+  CreatorID: string;
+  Members: string;
+  GeoIds: string;
+  Description: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  DataStatus: string;
+}export interface GeoData {
+  ID: string;
+  UserID: string;
+  ProjectIds: string;
+  Properties: string;
+  Color: string;
+  GeometryData: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  DataStatus: string;
 }
 export interface DatabaseForm {
   user_tables: UserTable[],
-  geo_data: GeoData[]
+  geo_data: GeoData[],
+  projects: ProjectsParams[],
 }

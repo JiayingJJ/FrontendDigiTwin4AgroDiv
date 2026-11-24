@@ -190,8 +190,47 @@ export class Database {
             });
         })
     }
-    getUserTablesWithUserId(userId: string): UserTable[] | null {
-        const rows = this.query("SELECT * FROM user_tables WHERE user_id = ?", [userId]) as UserTable[];
+    insertUserTableId(id: string, data: any) {
+        let columnNames: any[] = ["id"];
+        let values: any[] = [id];
+        const tableName = "user_table_" + id.replaceAll("-", "")
+
+        data.map((c: any) => {
+            columnNames.push(getColumnNameForSQLite(c.name.toLowerCase()))
+            values.push(c.value)
+        })
+        const placeholders = values.map(() => "?").join(", ");
+        const insertSQL = `
+        INSERT INTO ${tableName} (${columnNames.join(", ")})
+        VALUES (${placeholders})
+        `;
+        this.db.exec({
+            sql: insertSQL,
+            bind: values
+        });
+    }
+    getUserTablesWithUserId(): UserTable[] | null {
+        const rows = this.query("SELECT * FROM user_tables") as UserTable[];
+        return rows ?? null;
+    }
+    getUserTablesWithId(id: string): UserTable | null {
+        const rows: UserTable[] = [];
+
+        this.db.exec({
+            sql: `
+                    SELECT *
+                    FROM user_tables
+                    WHERE id = ?
+                `,
+            bind: [id],
+            rowMode: "object",
+            resultRows: rows
+        });
+
+        return rows[0] ?? null;
+    }
+    getUserTableIdWithId(tableName: string): any[] | null {
+        const rows = this.query(`SELECT * FROM ${tableName}`);
         return rows ?? null;
     }
 
@@ -217,13 +256,30 @@ export class Database {
             typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String]
         });
     }
+    getProjectsWithUserId(): ProjectsParams[] | null {
+        const rows = this.query("SELECT * FROM projects") as ProjectsParams[];
+        console.log(rows)
+        return rows ?? null;
+    }
+    getProjectsWithDataStatus(status: string): ProjectsParams[] | null {
+        const rows = this.query("SELECT * FROM projects WHERE data_status = ?", [status]) as ProjectsParams[];
+        return rows ?? null;
+    }
     // geo_data
     insertGeoData(data: any): void {
         if (!this.db) throw new Error("Database not initialized");
         this.db.exec({
             sql: `INSERT OR IGNORE INTO geo_data
         (id, user_id, properties, color, project_ids, geometry_data, created_at, updated_at, deleted_at, data_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+                    properties      = excluded.properties,
+                    color      = excluded.color,
+                    project_ids = excluded.project_ids,
+                    geometry_data = excluded.geometry_data,
+                    updated_at      = excluded.updated_at,
+                    deleted_at      = excluded.deleted_at,
+                    data_status     = excluded.data_status`,
             bind: [
                 data.ID,
                 data.UserID,
@@ -234,7 +290,7 @@ export class Database {
                 data.CreatedAt,
                 data.UpdatedAt,
                 data.DeletedAt.Time,
-                data.DataStatus.String
+                typeof data.DataStatus === "string" ? data.DataStatus : data.DataStatus.String
             ]
         });
 
@@ -243,7 +299,10 @@ export class Database {
         const rows = this.query("SELECT * FROM geo_data WHERE data_status = ?", [status]) as GeoData[];
         return rows ?? null;
     }
-
+    getGeoDataWithUserId(): GeoData[] | null {
+        const rows = this.query("SELECT * FROM geo_data") as GeoData[];
+        return rows ?? null;
+    }
     // ── Read ─────────────────────────────────────────────────────────────────
     getTasks(): Task[] {
         return this.query("SELECT * FROM tasks ORDER BY id DESC") as Task[];
